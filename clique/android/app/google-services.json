@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "617641390138",
+    "firebase_url": "https://clique-23cc6.firebaseio.com",
+    "project_id": "clique-23cc6",
+    "storage_bucket": "clique-23cc6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617641390138:android:42cb806abe0f10e9",
+        "android_client_info": {
+          "package_name": "com.clique.merchantapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617641390138-v7ups7htkpn8n1tbrjco3asnifstda2t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsiLdu_UqGWN4gbpFVKu5FC8djAHcOouc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617641390138-c1jnl7g4vrqprff2eenh9outhlhg6jq8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "617641390138-di32k32d99f1478q6gc7tgduqd6624jr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.clique.mobile"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:617641390138:android:be70c8567059bbf0",
+        "android_client_info": {
+          "package_name": "com.clique.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "617641390138-v7ups7htkpn8n1tbrjco3asnifstda2t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsiLdu_UqGWN4gbpFVKu5FC8djAHcOouc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "617641390138-c1jnl7g4vrqprff2eenh9outhlhg6jq8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "617641390138-di32k32d99f1478q6gc7tgduqd6624jr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.clique.mobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

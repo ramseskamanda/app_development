@@ -1,0 +1,21 @@
+Background location tracking (Add manual override of the notifications)
+Finish Cloud Functions for: Events, image thumbnail, daily cleaner
+Allow on-device checks for faster transaction rejections
+Add UI for rewards screen
+
+Test on a physical device
+
+Futurisic Shit like, ya know, Not now:
+Enable One-Device Login by checking device token vs Firestore-based device token
+Resolve TODOs from the comments
+Allow for changing of the profile info
+Search bar
+Drawer pages
+Wallet page
+Creating events
+Allow for users to pick how many of a specific reward they want to buy
+
+remove little circle on profile page
+find prettier way of doing see friends
+change email to username 
+change color of plus
