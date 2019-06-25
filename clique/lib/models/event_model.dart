@@ -4,7 +4,7 @@ class Event {
   int _capacity;
   GeoPoint _location;
   int _estimatedAttending;
-  List<String> _medias;
+  String _media;
   String _creatorId;
   bool _public;
   Timestamp _time;
@@ -16,7 +16,7 @@ class Event {
   int get capacity => _capacity ?? 0;
   GeoPoint get location => _location;
   int get estimatedAttending => _estimatedAttending ?? 0;
-  List<String> get medias => _medias ?? <String>[];
+  String get media => _media ?? '';
   String get creatorId => _creatorId ?? '';
   bool get public => _public ?? false;
   Timestamp get time => _time ?? Timestamp.now();
@@ -31,7 +31,7 @@ class Event {
     _capacity = doc['capacity'];
     _location = doc['location'];
     _estimatedAttending = doc['estimated_attending'];
-    _medias = doc['medias'].cast<String>();
+    _media = doc['medias'];
     _creatorId = doc['creator_id'];
     _public = doc['public'];
     _time = doc['start_time'];

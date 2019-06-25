@@ -35,7 +35,7 @@ class EventTile extends StatelessWidget {
                   width: double.infinity,
                   height: double.infinity,
                   fit: BoxFit.cover,
-                  imageUrl: event.medias[0],
+                  imageUrl: event.media,
                   errorWidget: (_, __, ___) => const Icon(Icons.error),
                   placeholder: (_, __) =>
                       const Center(child: CircularProgressIndicator()),
