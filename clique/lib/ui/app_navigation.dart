@@ -2,6 +2,7 @@ import 'package:clique/services/service_locator.dart';
 import 'package:clique/services/user_service.dart';
 import 'package:clique/ui/ui.dart';
 import 'package:clique/models/user_profile.dart';
+import 'package:clique/util/notification_mixin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
@@ -12,7 +13,7 @@ class Application extends StatefulWidget {
   _ApplicationState createState() => _ApplicationState();
 }
 
-class _ApplicationState extends State<Application> {
+class _ApplicationState extends State<Application> with NotificationMixin {
   int _currentTab;
   GlobalKey<InnerDrawerState> _drawerKey;
 

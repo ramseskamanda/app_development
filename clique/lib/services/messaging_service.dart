@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:clique/bloc/notification_bloc.dart';
+import 'package:clique/services/service_locator.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class MessagingService {
@@ -13,7 +15,7 @@ class MessagingService {
 
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
-        print('on message $message');
+        locator<NotificationBloc>().sink.add(message.keys.toList().first);
       },
       onResume: (Map<String, dynamic> message) async {
         print('on resume $message');

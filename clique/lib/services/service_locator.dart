@@ -1,4 +1,5 @@
 import 'package:clique/bloc/login_form_bloc.dart';
+import 'package:clique/bloc/notification_bloc.dart';
 import 'package:clique/bloc/signup_form_bloc.dart';
 import 'package:clique/services/authentication_service.dart';
 import 'package:clique/services/events_service.dart';
@@ -25,6 +26,8 @@ Future<void> setupLocator() async {
   locator.registerFactory<FriendsManagerService>(() => FriendsManagerService());
   locator.registerSingleton<UserService>(UserService());
 
+  locator.registerSingleton<NotificationBloc>(NotificationBloc());
+
   locator.registerFactory(() => SignUpFormBloc());
   locator.registerFactory(() => LoginFormBloc());
 }
@@ -34,4 +37,5 @@ Future<void> setupLocator() async {
 ///and the likes to this method even though it never gets called ¯\\_(ツ)_/¯
 void disposeLocatorResources() {
   locator<AuthService>().dispose();
+  locator<NotificationBloc>().dispose();
 }

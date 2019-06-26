@@ -1,4 +1,4 @@
-package com.example.clique
+package com.clique.mobile
 
 import android.os.Bundle
 

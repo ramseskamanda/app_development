@@ -14,17 +14,13 @@ class _FriendsListState extends State<FriendsList> {
         automaticallyImplyLeading: true,
         title: const Text('Your Friends'),
       ),
-      body: StreamBuilder<Object>(
-          stream: null,
-          builder: (context, snapshot) {
-            return Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: ListView.builder(
-                itemBuilder: (BuildContext context, int index) =>
-                    FriendTile(index: index + 1),
-              ),
-            );
-          }),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: ListView.builder(
+          itemBuilder: (BuildContext context, int index) =>
+              FriendTile(index: index + 1),
+        ),
+      ),
     );
   }
 }
