@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.0"
+  background_fetch:
+    dependency: transitive
+    description:
+      name: background_fetch
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.0"
   barcode_scan:
     dependency: "direct main"
     description:
@@ -78,6 +85,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
+  device_info:
+    dependency: transitive
+    description:
+      name: device_info
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0+2"
   email_validator:
     dependency: "direct main"
     description:
@@ -118,6 +132,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_background_geolocation:
+    dependency: "direct main"
+    description:
+      name: flutter_background_geolocation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.10"
   flutter_cache_manager:
     dependency: transitive
     description:

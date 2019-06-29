@@ -24,6 +24,15 @@ class EventsService {
     return userEventAttending.where('user', isEqualTo: uid).getDocuments();
   }
 
+  Future<Event> getEventById(String id) {
+    return _firestore
+        .collection('events')
+        .document(id)
+        .get()
+        .then((doc) => Event.fromDoc(doc))
+        .catchError((e) => null);
+  }
+
   StreamTransformer _eventTransformer =
       StreamTransformer<QuerySnapshot, List<Event>>.fromHandlers(
     handleData: (QuerySnapshot snapshot, EventSink<List<Event>> sink) {

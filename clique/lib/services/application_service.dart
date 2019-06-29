@@ -1,3 +1,4 @@
+import 'package:clique/services/location_service.dart';
 import 'package:clique/services/messaging_service.dart';
 import 'package:clique/services/service_locator.dart';
 import 'package:flutter/services.dart';
@@ -12,5 +13,6 @@ Future<void> setupApplicationSettings() async {
     DeviceOrientation.portraitDown,
   ]);
   locator<MessagingService>().setupMessagingService();
+  locator<GeoLocationService>().setupGeoLocation();
   //TODO: add a check to see the firebaseMessaging token vs firestore token
 }

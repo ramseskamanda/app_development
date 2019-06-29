@@ -1,4 +1,6 @@
 PODS:
+  - background_fetch (0.1.1):
+    - Flutter
   - barcode_scan (0.0.1):
     - Flutter
     - MTBBarcodeScanner
@@ -12,9 +14,14 @@ PODS:
     - Firebase/Core
     - Firebase/Firestore (~> 6.0)
     - Flutter
+  - CocoaLumberjack (3.5.3):
+    - CocoaLumberjack/Core (= 3.5.3)
+  - CocoaLumberjack/Core (3.5.3)
   - connectivity (0.0.1):
     - Flutter
     - Reachability
+  - device_info (0.0.1):
+    - Flutter
   - Firebase/Auth (6.0.0):
     - Firebase/CoreOnly
     - FirebaseAuth (~> 6.0.0)
@@ -89,6 +96,9 @@ PODS:
     - GoogleUtilities/UserDefaults (~> 6.0)
     - Protobuf (~> 3.1)
   - Flutter (1.0.0)
+  - flutter_background_geolocation (0.2.0):
+    - CocoaLumberjack (~> 3.0)
+    - Flutter
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -168,13 +178,16 @@ PODS:
     - FMDB (~> 2.7.2)
 
 DEPENDENCIES:
+  - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - barcode_scan (from `.symlinks/plugins/barcode_scan/ios`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
+  - device_info (from `.symlinks/plugins/device_info/ios`)
   - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
+  - flutter_background_geolocation (from `.symlinks/plugins/flutter_background_geolocation/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
@@ -184,6 +197,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - BoringSSL-GRPC
+    - CocoaLumberjack
     - Firebase
     - FirebaseAnalytics
     - FirebaseAnalyticsInterop
@@ -208,12 +222,16 @@ SPEC REPOS:
     - Reachability
 
 EXTERNAL SOURCES:
+  background_fetch:
+    :path: ".symlinks/plugins/background_fetch/ios"
   barcode_scan:
     :path: ".symlinks/plugins/barcode_scan/ios"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
+  device_info:
+    :path: ".symlinks/plugins/device_info/ios"
   firebase_auth:
     :path: ".symlinks/plugins/firebase_auth/ios"
   firebase_core:
@@ -222,6 +240,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
+  flutter_background_geolocation:
+    :path: ".symlinks/plugins/flutter_background_geolocation/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
   path_provider:
@@ -234,10 +254,13 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite/ios"
 
 SPEC CHECKSUMS:
+  background_fetch: 385552e57d3bde2c7a3abd6b1edc76b87823b6c4
   barcode_scan: 33f586d02270046fc6559135038b34b5754eaa4f
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
   cloud_firestore: bea98f51ff83b368d2984d3a6b9a6ac8dd89bf63
+  CocoaLumberjack: 2f44e60eb91c176d471fdba43b9e3eae6a721947
   connectivity: c72716e202a1225ec4810740d5cb56b8ae3bf4cc
+  device_info: 3ebad48f726348f69abd802f3334a8d1ed795fbd
   Firebase: fa80b9d987ca014a1ba9357496ef2a0178b28b12
   firebase_auth: ba238762663f6b3503cc5468c50d652df1306185
   firebase_core: 44f31f51532812598f0f9f4af0caa705b9edfc19
@@ -251,6 +274,7 @@ SPEC CHECKSUMS:
   FirebaseInstanceID: 0e0348a3c00a734fa376a070f5ad4533ad975cb5
   FirebaseMessaging: c796d50864dc822a3c06c9c1c1444b37732b795b
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  flutter_background_geolocation: fc9b54bdcaedea40e324cae19e9d8aac7bc045d6
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   google_sign_in: 27e70a98b529f0b076d4b19f231b81da28b1750b
   GoogleAppMeasurement: 7f028ea162b72c8f326daec74afc95d94f7a47d6
@@ -272,4 +296,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: ebd43b443038e611b86ede96e613bd6033c49497
 
-COCOAPODS: 1.7.2
+COCOAPODS: 1.7.3

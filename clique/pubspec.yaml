@@ -29,6 +29,7 @@ dependencies:
   cached_network_image: ^0.8.0
   barcode_scan: ^1.0.0
   simple_permissions: ^0.1.9
+  flutter_background_geolocation: ^1.0.10
 
   #Networking/API
   google_sign_in: ^4.0.2

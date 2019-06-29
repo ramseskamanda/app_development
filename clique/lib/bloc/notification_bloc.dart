@@ -1,12 +1,26 @@
+import 'dart:async';
+
+import 'package:clique/models/firebase_message.dart';
 import 'package:rxdart/rxdart.dart';
 
 class NotificationBloc {
-  BehaviorSubject<String> _notification = BehaviorSubject<String>();
+  BehaviorSubject<Map<String, dynamic>> _notification =
+      BehaviorSubject<Map<String, dynamic>>();
 
   NotificationBloc();
 
-  Sink<String> get sink => _notification.sink;
-  Stream<String> get stream => _notification.stream;
+  Sink<Map<String, dynamic>> get sink => _notification.sink;
+  Stream<FirebaseMessage> get stream =>
+      _notification.stream.transform(_streamTransformer);
+
+  StreamTransformer<Map<String, dynamic>, FirebaseMessage> _streamTransformer =
+      StreamTransformer<Map<String, dynamic>, FirebaseMessage>.fromHandlers(
+    handleData: (value, sink) {
+      if (value != null) sink.add(FirebaseMessage.fromDoc(value));
+    },
+    handleError: (Object error, _, EventSink sink) => sink.addError(error),
+    handleDone: (sink) => sink.close(),
+  );
 
   void dispose() {
     _notification.close();

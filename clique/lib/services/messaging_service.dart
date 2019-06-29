@@ -14,15 +14,12 @@ class MessagingService {
     if (Platform.isIOS) _iOSPersmissionsRequest();
 
     _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        locator<NotificationBloc>().sink.add(message.keys.toList().first);
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print('on resume $message');
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print('on launch $message');
-      },
+      onMessage: (Map<String, dynamic> message) async =>
+          locator<NotificationBloc>().sink.add(message),
+      onResume: (Map<String, dynamic> message) async =>
+          locator<NotificationBloc>().sink.add(message),
+      onLaunch: (Map<String, dynamic> message) async =>
+          locator<NotificationBloc>().sink.add(message),
     );
   }
 

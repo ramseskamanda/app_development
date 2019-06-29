@@ -5,6 +5,7 @@ import 'package:clique/services/authentication_service.dart';
 import 'package:clique/services/events_service.dart';
 import 'package:clique/services/friends_manager_service.dart';
 import 'package:clique/services/local_storage_service.dart';
+import 'package:clique/services/location_service.dart';
 import 'package:clique/services/market_service.dart';
 import 'package:clique/services/messaging_service.dart';
 import 'package:clique/services/user_service.dart';
@@ -20,6 +21,7 @@ Future<void> setupLocator() async {
   var instance = await LocalStorageService.getInstance();
   locator.registerSingleton<LocalStorageService>(instance);
   locator.registerSingleton<MessagingService>(MessagingService());
+  locator.registerSingleton<GeoLocationService>(GeoLocationService());
   locator.registerSingleton<AuthService>(AuthService());
   locator.registerSingleton<EventsService>(EventsService());
   locator.registerSingleton<MarketService>(MarketService());
