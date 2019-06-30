@@ -4,7 +4,7 @@ Allow on-device checks for faster transaction rejections
 Add UI for rewards screen
 Add UI for tapping on events and rewards
 Make proper Notification Model
-Add location services for android (https://github.com/transistorsoft/flutter_background_geolocation/blob/master/docs/INSTALL-ANDROID.md)
+Configure geolocation plugin for android (https://github.com/transistorsoft/flutter_background_geolocation/blob/master/docs/INSTALL-ANDROID.md)
 
 Test on a physical device
 

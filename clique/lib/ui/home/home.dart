@@ -1,6 +1,7 @@
 import 'package:clique/models/event_model.dart';
 import 'package:clique/models/user_profile.dart';
 import 'package:clique/services/events_service.dart';
+import 'package:clique/services/location_service.dart';
 import 'package:clique/services/service_locator.dart';
 import 'package:clique/ui/home/event_tile.dart';
 import 'package:clique/ui/widgets/widgets.dart';
@@ -18,6 +19,10 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: PaddedFAB(
+        icon: Icons.bug_report,
+        onPressed: locator<GeoLocationService>().debugGeofencesAndSchedule,
+      ),
       body: StreamBuilder<List<Event>>(
         stream: locator<EventsService>().allEvents,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
