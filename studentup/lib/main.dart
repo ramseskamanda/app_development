@@ -1,0 +1,36 @@
+import 'package:studentup/router.dart';
+import 'package:studentup/services/service_locator.dart';
+import 'package:studentup/services/application_service.dart';
+import 'package:studentup/ui/ui.dart';
+import 'package:studentup/util/env.dart';
+import 'package:flutter/material.dart';
+
+void main() async {
+  await setupLocator();
+  await setupApplicationSettings();
+  runApp(MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: Environment.appName,
+      theme: ThemeData.light(),
+      debugShowCheckedModeBanner: false,
+      home: SplashScreen(),
+      onGenerateRoute: Router.generateRoute,
+    );
+  }
+
+  @override
+  void dispose() {
+    disposeLocatorResources();
+    super.dispose();
+  }
+}
