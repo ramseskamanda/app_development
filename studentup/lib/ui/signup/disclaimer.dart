@@ -1,4 +1,4 @@
-import 'package:studentup/util/login_types.dart';
+import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/material.dart';
 
 class Disclaimer extends StatelessWidget {

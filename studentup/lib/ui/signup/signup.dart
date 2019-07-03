@@ -8,6 +8,8 @@ import 'package:studentup/util/env.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+export './disclaimer.dart';
+
 class SignUp extends StatefulWidget {
   @override
   _SignUpState createState() => _SignUpState();
@@ -46,7 +48,7 @@ class _SignUpState extends State<SignUp> {
       tag: Environment.logoHeroTag,
       child: CircleAvatar(
         radius: MediaQuery.of(context).size.width * 0.134,
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.lightGreen,
       ),
     );
   }
@@ -83,14 +85,14 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        autovalidate: true,
-        key: _key,
-        child: Center(
-          child: SingleChildScrollView(
-            child: SizedBox(
-              height: MediaQuery.of(context).size.height * 0.9,
-              width: MediaQuery.of(context).size.width * 0.86,
+      body: Center(
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.9,
+            width: MediaQuery.of(context).size.width * 0.86,
+            child: Form(
+              autovalidate: true,
+              key: _key,
               child: Column(
                 children: <Widget>[
                   Spacer(flex: 3),
@@ -119,17 +121,7 @@ class _SignUpState extends State<SignUp> {
                     validator: bloc.passwordValidator,
                   ),
                   Spacer(),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: GoogleButton(),
-                      ),
-                      SizedBox(width: 8.0),
-                      Expanded(
-                        child: FacebookButton(),
-                      ),
-                    ],
-                  ),
+                  GoogleButton(),
                   SignUpButton(formKey: _key, bloc: bloc),
                   _buildAccountReminder(context),
                   Spacer(flex: 4),

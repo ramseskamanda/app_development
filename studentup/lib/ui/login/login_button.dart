@@ -1,7 +1,7 @@
+import 'package:provider/provider.dart';
 import 'package:studentup/bloc/login_form_bloc.dart';
+import 'package:studentup/notifiers/authentication_notifier.dart';
 import 'package:studentup/router.dart';
-import 'package:studentup/util/env.dart';
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 
 class LoginButton extends StatefulWidget {
@@ -14,26 +14,19 @@ class LoginButton extends StatefulWidget {
 }
 
 class _LoginButtonState extends State<LoginButton> {
-  Future<void> _handleLogin() async {
-    bool _success = await widget.bloc.handleLogin(widget.formKey);
-    if (_success)
-      Navigator.pushReplacementNamed(context, Router.homeRoute);
-    else
-      _showErrorMessage();
-  }
-
-  void _showErrorMessage() {
-    Flushbar(
-      duration: const Duration(seconds: 2),
-      title: 'Failed Login',
-      icon: Icon(Icons.error),
-      leftBarIndicatorColor: Colors.deepOrangeAccent,
-      message: Environment.failedLoginMessage,
-    ).show(context);
+  Future<void> _handleLogin(AuthenticationNotifier auth) async {
+    bool _validated = widget.formKey.currentState.validate();
+    bool _loggedIn = await auth.loginWithEmail(
+      email: widget.bloc.emailValue,
+      password: widget.bloc.passwordValue,
+    );
+    if (_validated && _loggedIn)
+      Navigator.of(context).pushReplacementNamed(Router.homeRoute);
   }
 
   @override
   Widget build(BuildContext context) {
+    AuthenticationNotifier _auth = Provider.of<AuthenticationNotifier>(context);
     return Row(
       children: <Widget>[
         Expanded(
@@ -42,7 +35,9 @@ class _LoginButtonState extends State<LoginButton> {
               builder: (context, snapshot) {
                 return RaisedButton(
                   child: const Text('Sign In'),
-                  onPressed: (snapshot.data ?? false) ? _handleLogin : null,
+                  onPressed: ((snapshot.data ?? false) && !_auth.isLoading)
+                      ? () => _handleLogin(_auth)
+                      : null,
                 );
               }),
         ),

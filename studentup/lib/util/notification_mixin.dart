@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:studentup/bloc/notification_bloc.dart';
 import 'package:studentup/models/firebase_message.dart';
 import 'package:studentup/services/service_locator.dart';
-import 'package:studentup/util/message_type.dart';
+import 'package:studentup/util/enums/message_type.dart';
 import 'package:flutter/material.dart';
 
 mixin NotificationMixin<T extends StatefulWidget> on State<T> {

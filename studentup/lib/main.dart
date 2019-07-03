@@ -1,4 +1,6 @@
+import 'package:provider/provider.dart';
 import 'package:studentup/router.dart';
+import 'package:studentup/services/provider_service.dart';
 import 'package:studentup/services/service_locator.dart';
 import 'package:studentup/services/application_service.dart';
 import 'package:studentup/ui/ui.dart';
@@ -19,12 +21,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: Environment.appName,
-      theme: ThemeData.light(),
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
-      onGenerateRoute: Router.generateRoute,
+    return MultiProvider(
+      providers: setupProviders(),
+      child: MaterialApp(
+        title: Environment.appName,
+        theme: ThemeData(primarySwatch: Colors.lightGreen),
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+        onGenerateRoute: Router.generateRoute,
+      ),
     );
   }
 

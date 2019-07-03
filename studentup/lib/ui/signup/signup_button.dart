@@ -1,8 +1,9 @@
+import 'package:provider/provider.dart';
 import 'package:studentup/bloc/signup_form_bloc.dart';
+import 'package:studentup/notifiers/authentication_notifier.dart';
 import 'package:studentup/router.dart';
-import 'package:studentup/util/env.dart';
-import 'package:studentup/util/login_types.dart';
-import 'package:flushbar/flushbar.dart';
+import 'package:studentup/ui/widgets/flushbars.dart';
+import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/material.dart';
 
 class SignUpButton extends StatefulWidget {
@@ -15,33 +16,28 @@ class SignUpButton extends StatefulWidget {
 }
 
 class _SignUpButtonState extends State<SignUpButton> {
-  Future<void> _handleRegistration() async {
+  Future<void> _handleRegistration(AuthenticationNotifier auth) async {
     bool _proceed = await Navigator.of(context).pushNamed(
           Router.disclaimer,
           arguments: LoginType.email,
         ) ??
         false;
     if (!_proceed) return;
-    bool _success = await widget.bloc.handleSignUp(widget.formKey);
-    if (_success) {
+    bool _validated = widget.formKey.currentState.validate();
+    bool _signedUp = await auth.signUpWithEmail(
+      name: widget.bloc.nameValue,
+      email: widget.bloc.emailValue,
+      password: widget.bloc.passwordValue,
+    );
+    if (_validated && _signedUp)
       Navigator.of(context).pushReplacementNamed(Router.homeRoute);
-    } else {
-      _showFailedRegistration();
-    }
-  }
-
-  void _showFailedRegistration() {
-    Flushbar(
-      duration: const Duration(seconds: 2),
-      title: 'Failed Registration',
-      icon: Icon(Icons.error),
-      leftBarIndicatorColor: Colors.redAccent,
-      message: Environment.failedRegistrationMessage,
-    ).show(context);
+    else
+      showFailedRegistration(context);
   }
 
   @override
   Widget build(BuildContext context) {
+    AuthenticationNotifier _auth = Provider.of<AuthenticationNotifier>(context);
     return Row(
       children: <Widget>[
         Expanded(
@@ -50,8 +46,9 @@ class _SignUpButtonState extends State<SignUpButton> {
             builder: (context, snapshot) {
               return RaisedButton(
                 child: const Text('Register'),
-                onPressed:
-                    (snapshot.data ?? false) ? _handleRegistration : null,
+                onPressed: ((snapshot.data ?? false) && !_auth.isLoading)
+                    ? () => _handleRegistration(_auth)
+                    : null,
               );
             },
           ),

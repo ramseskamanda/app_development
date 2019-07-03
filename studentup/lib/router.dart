@@ -1,10 +1,7 @@
-import 'package:studentup/services/authentication_service.dart';
-import 'package:studentup/services/service_locator.dart';
-import 'package:studentup/ui/error/error_screen.dart';
-import 'package:studentup/ui/signup/disclaimer.dart';
+import 'package:provider/provider.dart';
+import 'package:studentup/notifiers/authentication_notifier.dart';
 import 'package:studentup/ui/ui.dart';
-import 'package:studentup/util/error_message.dart';
-import 'package:studentup/util/login_types.dart';
+import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -12,6 +9,7 @@ import 'package:page_transition/page_transition.dart';
 class Router {
   //Default routes
   ///Default Sign Up route, therefore should NOT have a / in front of it
+  static const String onboarding = 'onboarding';
   static const String signupRoute = 'signup';
   static const String loginRoute = 'login';
   static const String errorRoute = 'error';
@@ -21,10 +19,12 @@ class Router {
   static const String homeRoute = '/app';
   static const String friendsListRoute = '/friends';
 
-  static String get initialRoute {
-    final AuthService auth = locator<AuthService>();
+  static String initialRoute(BuildContext context) {
+    final AuthenticationNotifier auth =
+        Provider.of<AuthenticationNotifier>(context);
     final bool signedUp = auth.hasSignedUp;
     final bool signedIn = auth.isLoggedIn;
+    print(signedIn);
     return signedUp ? (signedIn ? homeRoute : loginRoute) : signupRoute;
   }
 
@@ -40,6 +40,11 @@ class Router {
           child: FriendsList(),
           type: PageTransitionType.downToUp,
         );
+      case onboarding:
+        return PageTransition(
+          child: Onboarding(),
+          type: PageTransitionType.fade,
+        );
       case signupRoute:
         return PageTransition(
           child: SignUp(),
@@ -47,7 +52,7 @@ class Router {
         );
       case loginRoute:
         return PageTransition(
-          child: Login(error: settings.arguments as ErrorMessage),
+          child: Login(error: settings.arguments as bool),
           type: PageTransitionType.fade,
         );
       case disclaimer:

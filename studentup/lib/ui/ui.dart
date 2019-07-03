@@ -8,3 +8,4 @@ export './profile/friends_list.dart';
 export './signup/signup.dart';
 export './splash/splash.dart';
 export './widgets/widgets.dart';
+export './onboarding/onboarding.dart';

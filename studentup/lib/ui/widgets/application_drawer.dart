@@ -1,6 +1,6 @@
+import 'package:provider/provider.dart';
+import 'package:studentup/notifiers/authentication_notifier.dart';
 import 'package:studentup/router.dart';
-import 'package:studentup/services/authentication_service.dart';
-import 'package:studentup/services/service_locator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +17,7 @@ class ApplicationDrawer extends StatelessWidget {
               child: GestureDetector(
                 child: Icon(CupertinoIcons.restart),
                 onTap: () {
-                  locator<AuthService>().logout();
+                  Provider.of<AuthenticationNotifier>(context).logout();
                   Navigator.of(context).pushReplacementNamed(Router.loginRoute);
                 },
               ),

@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+import 'package:studentup/notifiers/authentication_notifier.dart';
 import 'package:studentup/util/validators.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +31,7 @@ class _EmailTextFormFieldState extends State<EmailTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    AuthenticationNotifier _auth = Provider.of<AuthenticationNotifier>(context);
     return TextFormField(
       controller: _controller,
       validator: Validator.email,
@@ -38,6 +41,7 @@ class _EmailTextFormFieldState extends State<EmailTextFormField> {
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         hintText: 'Email',
+        errorText: _auth.hasError ? _auth.error : null,
         prefixIcon: Icon(CupertinoIcons.mail),
       ),
     );

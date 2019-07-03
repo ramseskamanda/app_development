@@ -1,1 +1,10 @@
 setup plugins for android
+add support for @asynchronous (for isLoading in the Notifiers)
+add provider error checking to all text input fields
+add better logger
+
+Details:
+    Make email field's action button be 'Next'
+    Make eye next to password fields bigger
+    Empty controller.value after failed login/signup attempt
+    Clear error once it's been read^^^

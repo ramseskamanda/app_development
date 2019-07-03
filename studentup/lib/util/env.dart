@@ -1,13 +1,16 @@
 class Environment {
-  //App wide strings
-  static const String appName = 'studentup Alpha';
+  //App wide settings
+  static const String appName = 'Studentup';
+  static const String slogan = 'Start-up your future';
+  static const Duration splashScreenDuration = Duration(milliseconds: 2110);
+  static const Duration flushbarDuration = Duration(milliseconds: 2110);
   //Hero Tags
   static const String logoHeroTag = 'app_logo_icon';
   //Local Storage keys
   static const String signedUpKey = 'signedUp';
   //Messages and misc.
   static const String fatalErrorMessage =
-      'Unfortunately, a fatal error occured. We are investigating it but in the meantime, the app needs to restart.';
+      'Unfortunately, a fatal error occured. We are investigating it but in the meantime, the app will restart in 30 seconds.';
   static const String failedRegistrationMessage =
       'The attempt at registering your account was unsuccesful. Please try again later.';
   static const String failedAuthenticationMessage =

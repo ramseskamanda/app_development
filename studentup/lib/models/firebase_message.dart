@@ -1,4 +1,4 @@
-import 'package:studentup/util/message_type.dart';
+import 'package:studentup/util/enums/message_type.dart';
 
 class FirebaseMessage {
   Map<String, dynamic> _data;

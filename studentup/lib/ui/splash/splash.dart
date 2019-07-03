@@ -1,11 +1,9 @@
 import 'dart:async';
 
+import 'package:provider/provider.dart';
+import 'package:studentup/notifiers/authentication_notifier.dart';
 import 'package:studentup/router.dart';
-import 'package:studentup/services/authentication_service.dart';
-import 'package:studentup/services/service_locator.dart';
 import 'package:studentup/util/env.dart';
-import 'package:studentup/util/error_message.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,42 +18,25 @@ class _SplashScreenState extends State<SplashScreen> {
     _startTimer();
   }
 
-  _startTimer() {
-    //TODO: set to 2110 for production
-    Duration _duration = Duration(milliseconds: 100);
-    return Timer(_duration, _navigate);
-  }
+  Timer _startTimer() => Timer(Environment.splashScreenDuration, _navigate);
 
-  Future<FirebaseUser> _handleAutoLogin() async {
-    AuthService _auth = locator<AuthService>();
-    //UserService _userService = locator<UserService>();
-    FirebaseUser _user = await _auth.currentUser;
-    return _user; //_userService.createUserProfile(_user);
-  }
-
-  _navigate() async {
-    switch (Router.initialRoute) {
+  Future<void> _navigate() async {
+    switch (Router.initialRoute(context)) {
       case Router.homeRoute:
-        FirebaseUser _user = await _handleAutoLogin();
-        if (_user != null) {
+        if (await Provider.of<AuthenticationNotifier>(context)
+            .handleAutoLogin())
           Navigator.of(context).pushReplacementNamed(Router.homeRoute);
-        } else {
-          ErrorMessage _error = ErrorMessage(
-            code: 'ACCOUNT_DISCONNECTED',
-            importance: ErrorImportance.medium,
-            details: 'This account was disconnected. Please login again.',
-          );
+        else
           Navigator.of(context).pushReplacementNamed(
             Router.loginRoute,
-            arguments: _error,
+            arguments: true,
           );
-        }
         break;
       case Router.loginRoute:
         Navigator.of(context).pushReplacementNamed(Router.loginRoute);
         break;
       case Router.signupRoute:
-        Navigator.of(context).pushReplacementNamed(Router.signupRoute);
+        Navigator.of(context).pushReplacementNamed(Router.onboarding);
         break;
       default:
         Navigator.of(context).pushReplacementNamed(Router.loginRoute);
@@ -65,12 +46,31 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.lightGreen,
       child: Center(
         child: Hero(
           tag: Environment.logoHeroTag,
-          child: CircleAvatar(
-            radius: MediaQuery.of(context).size.width * 0.15,
-            backgroundColor: Colors.blue,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              CircleAvatar(
+                radius: MediaQuery.of(context).size.width * 0.15,
+                backgroundColor: Colors.white,
+              ),
+              SizedBox(height: 16.0),
+              Text(
+                Environment.appName,
+                style: TextStyle(
+                  fontSize: 32.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (Provider.of<AuthenticationNotifier>(context).isLoading) ...[
+                SizedBox(height: 16.0),
+                CircularProgressIndicator(),
+              ],
+            ],
           ),
         ),
       ),
