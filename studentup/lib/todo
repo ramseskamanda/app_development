@@ -12,3 +12,5 @@ Details:
     Empty controller.value after failed login/signup attempt
     Clear error once it's been read^^^
     Add almuni text in profile
+    Add tapping to badges
+    Test whether SliverAppBar.snap is appreciated or not
