@@ -31,6 +31,7 @@ class AuthenticationNotifier extends BaseNotifier {
   set hasSignedUp(bool value) =>
       storageService.saveToDisk(Environment.signedUpKey, value);
   bool get isLoggedIn => _isLoggedIn;
+  Future<FirebaseUser> get currentUser async => _auth.currentUser();
 
   Future<bool> signUpWithEmail({
     @required String name,

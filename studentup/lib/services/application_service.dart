@@ -12,5 +12,4 @@ Future<void> setupApplicationSettings() async {
     DeviceOrientation.portraitDown,
   ]);
   locator<MessagingService>().setupMessagingService();
-  //TODO: add a check to see the firebaseMessaging token vs firestore token
 }

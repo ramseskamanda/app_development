@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/scheduler.dart';
 import 'package:studentup/bloc/login_form_bloc.dart';
 import 'package:studentup/router.dart';

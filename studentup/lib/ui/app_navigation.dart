@@ -1,3 +1,4 @@
+import 'package:studentup/notifiers/userprofile_notifier.dart';
 import 'package:studentup/ui/ui.dart';
 import 'package:studentup/util/notification_mixin.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,14 +55,8 @@ class _ApplicationState extends State<Application> with NotificationMixin {
     return MultiProvider(
       providers: <SingleChildCloneableWidget>[
         Provider<GlobalKey<InnerDrawerState>>.value(value: _drawerKey),
-        StreamProvider<Object>.value(
-          initialData: null,
-          stream: null, //locator<UserService>().currentUser.asStream(),
-          catchError: (context, error) {
-            print(error);
-            return null;
-          },
-        ),
+        ChangeNotifierProvider<UserProfileNotifier>(
+            builder: (_) => UserProfileNotifier()..initialize()),
       ],
       child: WillPopScope(
         onWillPop: () async => false,

@@ -24,7 +24,7 @@ Future<void> setupLocator() async {
 
 ///Disposes of all services and singletons
 ///For good practice add all services that use StreamSubscriptions
-///and the likes to this method even though it never gets called ¯\\_(ツ)_/¯
+///and the likes to this method
 void disposeLocatorResources() {
   locator<NotificationBloc>().dispose();
 }
