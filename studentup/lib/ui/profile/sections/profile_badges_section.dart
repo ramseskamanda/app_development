@@ -7,6 +7,7 @@ class ProfileBadgesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double _height = MediaQuery.of(context).size.width * 0.088;
+    final int _length = 8;
     return Section(
       title: Text(
         'Badges',
@@ -17,10 +18,10 @@ class ProfileBadgesSection extends StatelessWidget {
         height: _height * 2.2,
         child: ListView.separated(
           scrollDirection: Axis.horizontal,
-          itemCount: 8,
+          itemCount: _length,
           separatorBuilder: (context, index) => const SizedBox(width: 12.0),
           itemBuilder: (context, index) {
-            if (index == 0) return SizedBox(width: 16.0);
+            if (index == 0 || index == _length) return SizedBox(width: 16.0);
             return Badge(badge: BadgeModel(ranking: 2), radius: _height);
           },
         ),

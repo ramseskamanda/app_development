@@ -1,51 +1,51 @@
-import 'package:studentup/ui/widgets/widgets.dart';
+import 'package:flutter_inner_drawer/inner_drawer.dart';
+import 'package:provider/provider.dart';
+import 'package:studentup/ui/home/discussions_list.dart';
+import 'package:studentup/ui/home/trending.dart';
+import 'package:studentup/ui/widgets/screen_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Home extends StatefulWidget {
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
+class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<InnerDrawerState> _drawerKey =
+        Provider.of<GlobalKey<InnerDrawerState>>(context);
     return Scaffold(
-      body: StreamBuilder<Object>(
-        stream: null,
-        builder: (BuildContext context, AsyncSnapshot snapshot) => HomeScreen(),
-      ),
-    );
-  }
-}
-
-class HomeScreen extends StatelessWidget {
-  HomeScreen({Key key}) : super(key: key);
-
-  Widget _buildSliver(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Center(
-        child: const Icon(Icons.home),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        CupertinoSliverNavigationBar(
-          transitionBetweenRoutes: false,
-          leading: ProfileDrawerButton(),
-          largeTitle: const Text('Events'),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).size.height * 0.11,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            snap: true,
+            floating: true,
+            backgroundColor: Colors.transparent,
+            elevation: 0.0,
+            leading: IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: _drawerKey.currentState.open,
+            ),
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.message),
+                onPressed: () => print('messages'),
+              ),
+            ],
           ),
-          sliver: _buildSliver(context),
-        ),
-      ],
+          SliverPadding(
+            padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).size.height * 0.11,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                <Widget>[
+                  ScreenTitle('Home'),
+                  TrendingCompetitions(),
+                  DiscussionsList(),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
