@@ -3,7 +3,6 @@ import 'package:studentup/ui/ui.dart';
 import 'package:studentup/util/notification_mixin.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
 
 class Application extends StatefulWidget {
@@ -12,8 +11,7 @@ class Application extends StatefulWidget {
 }
 
 class _ApplicationState extends State<Application> with NotificationMixin {
-  int _currentTab;
-  GlobalKey<InnerDrawerState> _drawerKey;
+  int _currentTab = 0;
 
   List<Widget> _tabs = <Widget>[
     Home(),
@@ -36,44 +34,26 @@ class _ApplicationState extends State<Application> with NotificationMixin {
     ),
   ];
 
-  void _updateTab(int index) {
-    setState(() {
-      _currentTab = index;
-    });
-  }
-
-  @override
-  void initState() {
-    assert(_navigationBar.length == _tabs.length);
-    super.initState();
-    _currentTab = 0;
-    _drawerKey = GlobalKey<InnerDrawerState>();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: <SingleChildCloneableWidget>[
-        Provider<GlobalKey<InnerDrawerState>>.value(value: _drawerKey),
         ChangeNotifierProvider<UserProfileNotifier>(
-            builder: (_) => UserProfileNotifier()..initialize()),
+          builder: (_) => UserProfileNotifier()..initialize(),
+        ),
       ],
       child: WillPopScope(
         onWillPop: () async => false,
-        child: InnerDrawer(
-          key: _drawerKey,
-          swipe: true,
-          onTapClose: true,
-          animationType: InnerDrawerAnimation.quadratic,
-          position: InnerDrawerPosition.start,
-          child: ApplicationDrawer(),
-          scaffold: CupertinoTabScaffold(
-            tabBuilder: (BuildContext context, int index) => _tabs[index],
-            tabBar: CupertinoTabBar(
-              currentIndex: _currentTab,
-              onTap: _updateTab,
-              items: _navigationBar,
-            ),
+        child: CupertinoTabScaffold(
+          tabBuilder: (BuildContext context, int index) => _tabs[index],
+          tabBar: CupertinoTabBar(
+            currentIndex: _currentTab,
+            items: _navigationBar,
+            onTap: (int index) {
+              setState(() {
+                _currentTab = index;
+              });
+            },
           ),
         ),
       ),

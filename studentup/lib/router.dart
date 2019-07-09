@@ -24,7 +24,6 @@ class Router {
         Provider.of<AuthenticationNotifier>(context);
     final bool signedUp = auth.hasSignedUp;
     final bool signedIn = auth.isLoggedIn;
-    print(signedIn);
     return signedUp ? (signedIn ? homeRoute : loginRoute) : signupRoute;
   }
 
