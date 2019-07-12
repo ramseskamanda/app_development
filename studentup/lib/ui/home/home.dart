@@ -4,6 +4,7 @@ import 'package:studentup/ui/widgets/screen_title.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup/ui/widgets/widgets.dart';
+import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 
 class Home extends StatelessWidget {
   @override
@@ -18,13 +19,10 @@ class Home extends StatelessWidget {
               forceElevated: innerBoxIsScrolled,
               backgroundColor: Colors.transparent,
               elevation: 0.0,
-              leading: IconButton(
-                icon: ProfileDrawerButton(),
-                onPressed: () {},
-              ),
+              leading: ProfileDrawerButton(),
               actions: <Widget>[
                 IconButton(
-                  icon: Icon(Icons.message),
+                  icon: Icon(FeatherIcons.send),
                   onPressed: () => print('messages'),
                 ),
               ],
@@ -43,8 +41,8 @@ class Home extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    //ScreenTitle('Home'),
-                    //TrendingCompetitions(),
+                    ScreenTitle('Home'),
+                    TrendingCompetitions(),
                     //DiscussionsList(),
                   ],
                 ),

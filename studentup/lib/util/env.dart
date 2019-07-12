@@ -20,6 +20,16 @@ class Environment {
   //Default values for common variables
   static const String defaultPhotoUrl = 'default';
   static const String defaultBio = 'You biographical quote.';
+  static const List<String> searchCategories = <String>[
+    'All',
+    'Category',
+    'Category',
+    'Category',
+    'Category',
+    'Category',
+    'Category',
+    'Category',
+  ];
   //Common errors and permission keys
   static const String permissionDeniedCamera = "PERMISSION_NOT_GRANTED";
 }

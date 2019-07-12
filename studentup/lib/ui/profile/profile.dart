@@ -5,7 +5,6 @@ import 'package:studentup/ui/profile/user_information/profile_head.dart';
 import 'package:studentup/ui/profile/sections/profile_badges_section.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup/ui/widgets/widgets.dart';
 
 class Profile extends StatelessWidget {
   @override
@@ -18,14 +17,32 @@ class Profile extends StatelessWidget {
             floating: true,
             backgroundColor: Colors.transparent,
             elevation: 0.0,
-            leading: IconButton(
-              icon: ProfileDrawerButton(),
-              onPressed: () {},
+            centerTitle: false,
+            title: null,
+            titleSpacing: 0.0,
+            leading: Center(
+              child: InkWell(
+                radius: 80.0,
+                customBorder: CircleBorder(),
+                onTap: () => print('Edit Profile'),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Text(
+                    'Edit',
+                    softWrap: false,
+                    style: Theme.of(context).textTheme.button.copyWith(
+                        color: CupertinoColors.activeBlue, fontSize: 18.0),
+                  ),
+                ),
+              ),
             ),
             actions: <Widget>[
-              FlatButton(
-                child: const Text('Edit'),
-                onPressed: () {},
+              IconButton(
+                icon: Icon(
+                  CupertinoIcons.settings,
+                  size: 32.0,
+                ),
+                onPressed: () => print('notifications settings'),
               ),
             ],
           ),

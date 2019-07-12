@@ -5,6 +5,8 @@ add better logger
 add a check to see the firebaseMessaging token vs firestore token
 add email verification after sign up
 add connectivity with overlay and changenotifier
+change the ui of the search bar
+Add animations everywhere
 
 Details:
     Make email field's action button be 'Next'
@@ -15,3 +17,8 @@ Details:
     Add tapping to badges
     Test whether SliverAppBar.snap is appreciated or not
     Add color palette to all the images with text on top of it
+    Change names of classes and folders to be industry standard
+    Change main screens classes to be *Tab.dart
+    Fix all the unnecessary imports
+    Wrap tabview in padding instead of having same padding everywhere
+    Maybe cut corners looks better than rounded?

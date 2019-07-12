@@ -35,12 +35,12 @@ class ProfileDrawerButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Padding(
+    return IconButton(
+      icon: Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: _buildIcon(context),
       ),
-      onTap: () {},
+      onPressed: () => print('open drawer'),
     );
   }
 }

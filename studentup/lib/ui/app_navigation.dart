@@ -1,4 +1,6 @@
 import 'package:studentup/notifiers/userprofile_notifier.dart';
+import 'package:studentup/ui/notifications/notifications.dart';
+import 'package:studentup/ui/search/search.dart';
 import 'package:studentup/ui/ui.dart';
 import 'package:studentup/util/notification_mixin.dart';
 import 'package:flutter/cupertino.dart';
@@ -15,18 +17,23 @@ class _ApplicationState extends State<Application> with NotificationMixin {
 
   List<Widget> _tabs = <Widget>[
     Home(),
-    Marketplace(),
+    SearchTab(),
+    Notifications(),
     Profile(),
   ];
 
   List<BottomNavigationBarItem> _navigationBar = <BottomNavigationBarItem>[
     BottomNavigationBarItem(
-      icon: Icon(Icons.view_list),
-      title: const Text('Events'),
+      icon: Icon(CupertinoIcons.home),
+      title: const Text('Home'),
     ),
     BottomNavigationBarItem(
-      icon: Icon(CupertinoIcons.shopping_cart),
-      title: const Text('Market'),
+      icon: Icon(CupertinoIcons.search),
+      title: const Text('Search'),
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(CupertinoIcons.bell),
+      title: const Text('Notifications'),
     ),
     BottomNavigationBarItem(
       icon: Icon(CupertinoIcons.profile_circled),
@@ -36,6 +43,7 @@ class _ApplicationState extends State<Application> with NotificationMixin {
 
   @override
   Widget build(BuildContext context) {
+    assert(_navigationBar.length == _tabs.length);
     return MultiProvider(
       providers: <SingleChildCloneableWidget>[
         ChangeNotifierProvider<UserProfileNotifier>(

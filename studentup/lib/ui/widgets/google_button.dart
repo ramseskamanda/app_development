@@ -13,6 +13,7 @@ class GoogleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     AuthenticationNotifier _auth = Provider.of<AuthenticationNotifier>(context);
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Expanded(
           child: GoogleSignInButton(

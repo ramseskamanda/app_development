@@ -2,7 +2,7 @@ export './app_navigation.dart';
 export './error/error_screen.dart';
 export './home/home.dart';
 export './login/login.dart';
-export './market/market.dart';
+export './notifications/notifications.dart';
 export './profile/profile.dart';
 export './profile/friends_list.dart';
 export './signup/signup.dart';
