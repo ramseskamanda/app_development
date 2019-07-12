@@ -18,6 +18,7 @@ class Router {
   ///App-level routes SHOULD have a / in front
   static const String homeRoute = '/app';
   static const String friendsListRoute = '/friends';
+  static const String messageList = '/messageList';
 
   static String initialRoute(BuildContext context) {
     final AuthenticationNotifier auth =

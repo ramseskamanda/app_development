@@ -1,9 +1,15 @@
+import 'package:flutter/material.dart' show Curve, Curves;
+
 class Environment {
   //App wide settings
   static const String appName = 'Studentup';
   static const String slogan = 'Start-up your future';
   static const Duration splashScreenDuration = Duration(milliseconds: 2110);
   static const Duration flushbarDuration = Duration(milliseconds: 2110);
+  static const Duration pageTransitionDuration = Duration(milliseconds: 150);
+  static const Curve pageTransitionCurve = Curves.linear;
+  static const int homePageIndex = 0;
+  static const int messagingPageIndex = 1;
   //Hero Tags
   static const String logoHeroTag = 'app_logo_icon';
   //Local Storage keys
