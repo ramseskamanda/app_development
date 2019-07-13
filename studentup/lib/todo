@@ -22,3 +22,6 @@ Details:
     Fix all the unnecessary imports
     Wrap tabview in padding instead of having same padding everywhere
     Maybe cut corners looks better than rounded?
+    Make the change in icons for the search bar smoother
+    Fix clear button in search bar
+    Checkout this thread: https://ux.stackexchange.com/questions/97219/is-there-any-research-on-the-usability-of-the-pull-to-refresh-gesture

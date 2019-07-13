@@ -11,7 +11,7 @@ class TrendingCompetitions extends StatelessWidget {
         'Trending competitions',
         style: Theme.of(context).textTheme.title,
       ),
-      onMoreCallback: () {},
+      onMoreCallback: () => print('See more'),
       child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.3,
         child: ListView.separated(

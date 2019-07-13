@@ -1,6 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:catcher/catcher_plugin.dart';
-import 'package:studentup/app_settings.dart';
+//import 'package:studentup/app_settings.dart';
 import 'package:studentup/router.dart';
 import 'package:studentup/services/provider_service.dart';
 import 'package:studentup/services/service_locator.dart';
@@ -13,11 +13,12 @@ void main() async {
   await setupLocator();
   await setupApplicationSettings();
 
-  Catcher(
+  /* Catcher(
     MyApp(),
     debugConfig: Settings.debugOptions,
     releaseConfig: Settings.releaseOptions,
-  );
+  ); */
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {

@@ -1,9 +1,8 @@
-//import 'package:studentup/ui/home/discussions_list.dart';
 import 'package:provider/provider.dart';
-import 'package:studentup/ui/home/home_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup/ui/home/message_screen.dart';
+import 'package:studentup/ui/home/home_screen/home_screen.dart';
+import 'package:studentup/ui/home/message_screen/message_screen.dart';
 
 class Home extends StatefulWidget {
   final int messaging;
@@ -36,8 +35,8 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Provider<PageController>.value(
       value: _pageController,
-      child: Scaffold(
-        body: PageView(
+      child: SafeArea(
+        child: PageView(
           controller: _pageController,
           physics: ClampingScrollPhysics(),
           children: <Widget>[

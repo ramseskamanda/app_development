@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:studentup/notifiers/authentication_notifier.dart';
 import 'package:studentup/notifiers/userprofile_notifier.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,7 @@ class ProfileDrawerButton extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 8.0),
         child: _buildIcon(context),
       ),
-      onPressed: () => print('open drawer'),
+      onPressed: () => Provider.of<AuthenticationNotifier>(context).logout(),
     );
   }
 }

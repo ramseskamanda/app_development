@@ -1,6 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Section extends StatelessWidget {
+class Section extends StatefulWidget {
   final Text title;
   final void Function() onMoreCallback;
   final Widget child;
@@ -12,6 +13,11 @@ class Section extends StatelessWidget {
     @required this.child,
   }) : super(key: key);
 
+  @override
+  _SectionState createState() => _SectionState();
+}
+
+class _SectionState extends State<Section> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,13 +31,15 @@ class Section extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              title,
-              GestureDetector(
-                onTap: onMoreCallback,
+              widget.title,
+              FlatButton(
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                splashColor: Colors.transparent,
+                onPressed: widget.onMoreCallback,
                 child: Text(
                   'See all',
-                  style: title.style?.copyWith(
-                        color: Theme.of(context).accentColor,
+                  style: widget.title.style?.copyWith(
+                        color: CupertinoColors.activeBlue,
                         fontWeight: FontWeight.w400,
                       ) ??
                       TextStyle(
@@ -43,7 +51,7 @@ class Section extends StatelessWidget {
           ),
         ),
         SizedBox(height: 16.0),
-        child,
+        widget.child,
       ],
     );
   }
