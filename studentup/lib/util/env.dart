@@ -28,13 +28,13 @@ class Environment {
   static const String defaultBio = 'You biographical quote.';
   static const List<String> searchCategories = <String>[
     'All',
-    'Category',
-    'Category',
-    'Category',
-    'Category',
-    'Category',
-    'Category',
-    'Category',
+    'Category 1',
+    'Category 2',
+    'Category 3',
+    'Category 4',
+    'Category 5',
+    'Category 6',
+    'Category 7',
   ];
   //Common errors and permission keys
   static const String permissionDeniedCamera = "PERMISSION_NOT_GRANTED";

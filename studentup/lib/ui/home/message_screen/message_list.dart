@@ -7,7 +7,7 @@ import 'package:studentup/ui/home/message_screen/message_thread_tile.dart';
 import 'package:studentup/ui/widgets/search_bar.dart';
 import 'package:studentup/util/env.dart';
 
-class MessagesScreen extends StatelessWidget {
+class MessagesList extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _key =
       GlobalKey<RefreshIndicatorState>();
 

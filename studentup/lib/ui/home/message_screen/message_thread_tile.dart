@@ -3,6 +3,7 @@ import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:studentup/services/navigation_service.dart';
 import 'package:studentup/ui/widgets/limited_text.dart';
 
 final String _kTestText =
@@ -25,7 +26,7 @@ class MessageThreadTile extends StatelessWidget {
     if (_slidableKey.currentState.overallMoveAnimation.isCompleted)
       _slidableKey.currentState.close();
     else
-      print('Navigate to messages with $index');
+      NavigationService.messagingNavigator.currentState.pushNamed('/friends');
   }
 
   @override

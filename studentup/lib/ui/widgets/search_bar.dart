@@ -23,6 +23,7 @@ class _SearchBarState extends State<SearchBar> {
 
   @override
   void dispose() {
+    print('disposing of search bar');
     _typeAheadController.dispose();
     _suggestionsBoxController.close();
     super.dispose();
@@ -45,7 +46,11 @@ class _SearchBarState extends State<SearchBar> {
               ? null
               : IconButton(
                   icon: const Icon(CupertinoIcons.clear_circled_solid),
-                  onPressed: _typeAheadController.clear,
+                  onPressed: () {
+                    setState(() {
+                      _typeAheadController.text = '';
+                    });
+                  },
                 ),
           contentPadding: const EdgeInsets.symmetric(vertical: 0.0),
           filled: true,
@@ -57,7 +62,7 @@ class _SearchBarState extends State<SearchBar> {
         ),
       ),
       suggestionsCallback: (pattern) {
-        if (pattern.isEmpty || pattern == null) return null;
+        if (pattern == null || pattern.isEmpty) return null;
         return Future.delayed(
           Duration(seconds: 1),
           () => <String>[

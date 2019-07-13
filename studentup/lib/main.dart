@@ -1,7 +1,8 @@
 import 'package:provider/provider.dart';
-import 'package:catcher/catcher_plugin.dart';
+//import 'package:catcher/catcher_plugin.dart';
 //import 'package:studentup/app_settings.dart';
 import 'package:studentup/router.dart';
+import 'package:studentup/services/navigation_service.dart';
 import 'package:studentup/services/provider_service.dart';
 import 'package:studentup/services/service_locator.dart';
 import 'package:studentup/services/application_service.dart';
@@ -30,9 +31,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: setupProviders(),
+      providers: appWideProviders,
       child: MaterialApp(
-        navigatorKey: Catcher.navigatorKey,
+        navigatorKey: NavigationService.globalNavigator,
         title: Environment.appName,
         theme: ThemeData(primarySwatch: Colors.lightGreen),
         debugShowCheckedModeBanner: false,

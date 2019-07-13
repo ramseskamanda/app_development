@@ -47,7 +47,7 @@ class Router {
         );
       case signupRoute:
         return PageTransition(
-          child: Onboarding(), //SignUp(),
+          child: SignUp(),
           type: PageTransitionType.fade,
         );
       case loginRoute:

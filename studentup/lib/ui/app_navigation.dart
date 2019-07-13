@@ -1,4 +1,4 @@
-import 'package:studentup/notifiers/userprofile_notifier.dart';
+import 'package:studentup/services/provider_service.dart';
 import 'package:studentup/ui/notifications/notifications.dart';
 import 'package:studentup/ui/search/search.dart';
 import 'package:studentup/ui/ui.dart';
@@ -45,11 +45,7 @@ class _ApplicationState extends State<Application> with NotificationMixin {
   Widget build(BuildContext context) {
     assert(_navigationBar.length == _tabs.length);
     return MultiProvider(
-      providers: <SingleChildCloneableWidget>[
-        ChangeNotifierProvider<UserProfileNotifier>(
-          builder: (_) => UserProfileNotifier()..initialize(),
-        ),
-      ],
+      providers: userBasedProviders,
       child: WillPopScope(
         onWillPop: () async => false,
         child: CupertinoTabScaffold(
