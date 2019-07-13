@@ -1,11 +1,19 @@
 import 'package:feather_icons_flutter/feather_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup/ui/home/trending.dart';
 import 'package:studentup/ui/widgets/profile_drawer_button.dart';
 import 'package:studentup/util/env.dart';
 
 class HomeScreen extends StatelessWidget {
+  final GlobalKey<RefreshIndicatorState> _key =
+      GlobalKey<RefreshIndicatorState>();
+
+  Future<void> _onRefresh() async {
+    Future.delayed(Duration(seconds: 1), () => print('Refreshed'));
+  }
+
   @override
   Widget build(BuildContext context) {
     final PageController _pageController = Provider.of<PageController>(context);
@@ -32,11 +40,17 @@ class HomeScreen extends StatelessWidget {
           padding: EdgeInsets.only(
             bottom: MediaQuery.of(context).size.height * 0.11,
           ),
-          child: ListView(
-            children: <Widget>[
-              TrendingCompetitions(),
-              //DiscussionsList(),
-            ],
+          child: LiquidPullToRefresh(
+            key: _key,
+            height: 50.0,
+            showChildOpacityTransition: true,
+            onRefresh: _onRefresh,
+            child: ListView(
+              children: <Widget>[
+                TrendingCompetitions(),
+                //DiscussionsList(),
+              ],
+            ),
           ),
         ),
       ),

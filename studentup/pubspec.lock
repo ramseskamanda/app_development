@@ -242,13 +242,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.15.8"
-  intro_views_flutter:
-    dependency: "direct main"
-    description:
-      name: intro_views_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.6.0"
   keyboard_visibility:
     dependency: transitive
     description:
@@ -263,6 +256,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.1"
+  liquid_swipe:
+    dependency: "direct main"
+    description:
+      name: liquid_swipe
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   logging:
     dependency: transitive
     description:
