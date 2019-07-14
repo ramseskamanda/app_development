@@ -1,6 +1,7 @@
 import 'package:flutter/scheduler.dart';
+import 'package:provider/provider.dart';
 import 'package:studentup/bloc/login_form_bloc.dart';
-import 'package:studentup/router.dart';
+import 'package:studentup/routers/global_router.dart';
 import 'package:studentup/services/service_locator.dart';
 import 'package:studentup/ui/login/login_button.dart';
 import 'package:studentup/ui/widgets/dialogs.dart';
@@ -63,7 +64,8 @@ class _LoginState extends State<Login> {
       children: <Widget>[
         const Text('Don\'t have an account yet? '),
         GestureDetector(
-          onTap: () => Navigator.of(context).pushNamed(Router.signupRoute),
+          onTap: () =>
+              Provider.of<GlobalRouter>(context).push(GlobalRouter.signupRoute),
           child: Text(
             'Register now!',
             style: TextStyle(decoration: TextDecoration.underline),

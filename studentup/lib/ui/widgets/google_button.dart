@@ -1,7 +1,7 @@
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup/notifiers/authentication_notifier.dart';
-import 'package:studentup/router.dart';
+import 'package:studentup/routers/global_router.dart';
 import 'package:studentup/ui/widgets/flushbars.dart';
 import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +11,8 @@ import 'package:flutter/material.dart';
 class GoogleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    AuthenticationNotifier _auth = Provider.of<AuthenticationNotifier>(context);
+    final AuthenticationNotifier _auth = Provider.of(context);
+    final GlobalRouter globalRouter = Provider.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -20,15 +21,18 @@ class GoogleButton extends StatelessWidget {
             onPressed: _auth.isLoading
                 ? null
                 : () async {
-                    bool _proceed = await Navigator.of(context).pushNamed(
-                          Router.disclaimer,
+                    bool _proceed = await globalRouter.push(
+                          GlobalRouter.disclaimer,
                           arguments: LoginType.google,
                         ) ??
                         false;
                     if (!_proceed) return;
                     bool _success = await _auth.loginWithGoogle();
                     if (_success)
-                      Navigator.pushReplacementNamed(context, Router.homeRoute);
+                      globalRouter.push(
+                        GlobalRouter.homeRoute,
+                        replaceCurrentView: true,
+                      );
                     else
                       showAuthenticationErrorMessage(context);
                   },

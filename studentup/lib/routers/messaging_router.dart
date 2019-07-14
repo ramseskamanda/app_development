@@ -1,15 +1,14 @@
-import 'package:catcher/core/catcher.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:studentup/ui/home/message_screen/message_list.dart';
 import 'package:studentup/ui/profile/friends_list.dart';
 
-class NavigationService {
-  static final GlobalKey<NavigatorState> messagingNavigator =
-      GlobalKey<NavigatorState>();
+class MessagingRouter {
+  static final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
 
-  static get globalNavigator => Catcher.navigatorKey;
+  static final String initialRoute = '/';
 
-  static Route<dynamic> generateMessagingRoutes(RouteSettings settings) {
+  static Route<dynamic> generateRoutes(RouteSettings settings) {
     switch (settings.name) {
       case '/friends':
         return PageTransition(
@@ -18,7 +17,7 @@ class NavigationService {
         );
       default:
         return PageTransition(
-          child: FriendsList(),
+          child: MessagesList(),
           type: PageTransitionType.rightToLeft,
         );
     }

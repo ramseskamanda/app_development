@@ -1,8 +1,8 @@
 import 'package:provider/provider.dart';
 import 'package:studentup/bloc/login_form_bloc.dart';
 import 'package:studentup/notifiers/authentication_notifier.dart';
-import 'package:studentup/router.dart';
 import 'package:flutter/material.dart';
+import 'package:studentup/routers/global_router.dart';
 
 class LoginButton extends StatefulWidget {
   final GlobalKey<FormState> formKey;
@@ -21,7 +21,8 @@ class _LoginButtonState extends State<LoginButton> {
       password: widget.bloc.passwordValue,
     );
     if (_validated && _loggedIn)
-      Navigator.of(context).pushReplacementNamed(Router.homeRoute);
+      Provider.of<GlobalRouter>(context)
+          .push(GlobalRouter.homeRoute, replaceCurrentView: true);
   }
 
   @override

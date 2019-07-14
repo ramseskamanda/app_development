@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+import 'package:studentup/routers/global_router.dart';
 import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/material.dart';
 
@@ -7,6 +9,7 @@ class Disclaimer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalRouter globalRouter = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Disclaimer'),
@@ -16,11 +19,12 @@ class Disclaimer extends StatelessWidget {
           children: <Widget>[
             RaisedButton(
               child: const Text('Proceed'),
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () => globalRouter.popCurrentRoute<bool>(result: true),
             ),
             RaisedButton(
               child: const Text('Cancel'),
-              onPressed: () => Navigator.pop(context, false),
+              onPressed: () =>
+                  globalRouter.popCurrentRoute<bool>(result: false),
             ),
           ],
         ),

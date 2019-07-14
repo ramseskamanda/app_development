@@ -1,8 +1,8 @@
 import 'package:provider/provider.dart';
 import 'package:studentup/notifiers/authentication_notifier.dart';
-import 'package:studentup/router.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:studentup/routers/global_router.dart';
 
 class ApplicationDrawer extends StatelessWidget {
   @override
@@ -18,7 +18,8 @@ class ApplicationDrawer extends StatelessWidget {
                 child: Icon(CupertinoIcons.restart),
                 onTap: () {
                   Provider.of<AuthenticationNotifier>(context).logout();
-                  Navigator.of(context).pushReplacementNamed(Router.loginRoute);
+                  Provider.of<GlobalRouter>(context)
+                      .push(GlobalRouter.loginRoute, replaceCurrentView: true);
                 },
               ),
             )

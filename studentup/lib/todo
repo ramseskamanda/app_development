@@ -7,6 +7,7 @@ add email verification after sign up
 add connectivity with overlay and changenotifier
 change the ui of the search bar
 Add animations everywhere
+Make BaseModel keep track of documentID
 
 Details:
     Make email field's action button be 'Next'

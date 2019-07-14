@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:provider/provider.dart';
 import 'package:studentup/notifiers/authentication_notifier.dart';
-import 'package:studentup/router.dart';
+import 'package:studentup/routers/global_router.dart';
 import 'package:studentup/util/env.dart';
 import 'package:flutter/material.dart';
 
@@ -21,25 +21,27 @@ class _SplashScreenState extends State<SplashScreen> {
   Timer _startTimer() => Timer(Environment.splashScreenDuration, _navigate);
 
   Future<void> _navigate() async {
-    switch (Router.initialRoute(context)) {
-      case Router.homeRoute:
+    final GlobalRouter globalRouter = Provider.of(context);
+    switch (globalRouter.initialRoute(context)) {
+      case GlobalRouter.homeRoute:
         if (await Provider.of<AuthenticationNotifier>(context)
             .handleAutoLogin())
-          Navigator.of(context).pushReplacementNamed(Router.homeRoute);
+          globalRouter.push(GlobalRouter.homeRoute, replaceCurrentView: true);
         else
-          Navigator.of(context).pushReplacementNamed(
-            Router.loginRoute,
+          globalRouter.push(
+            GlobalRouter.loginRoute,
+            replaceCurrentView: true,
             arguments: true,
           );
         break;
-      case Router.loginRoute:
-        Navigator.of(context).pushReplacementNamed(Router.loginRoute);
+      case GlobalRouter.loginRoute:
+        globalRouter.push(GlobalRouter.loginRoute, replaceCurrentView: true);
         break;
-      case Router.signupRoute:
-        Navigator.of(context).pushReplacementNamed(Router.onboarding);
+      case GlobalRouter.signupRoute:
+        globalRouter.push(GlobalRouter.onboarding, replaceCurrentView: true);
         break;
       default:
-        Navigator.of(context).pushReplacementNamed(Router.loginRoute);
+        globalRouter.push(GlobalRouter.loginRoute, replaceCurrentView: true);
     }
   }
 

@@ -19,12 +19,13 @@ class NotifiableIcon<T extends CountNotifier> extends StatelessWidget {
         Consumer<T>(
           builder: (context, notifier, child) {
             if (notifier.countIsZero) return Container();
+            final bool _expanded = notifier.count > 9;
             return Align(
-              alignment: Alignment.topRight,
+              alignment: Alignment.topLeft,
               child: CircleAvatar(
                 backgroundColor: Colors.red,
-                child: Text('${notifier.count}'),
-                radius: 10.0,
+                child: Text('${_expanded ? '9+' : notifier.count}'),
+                radius: _expanded ? 12.0 : 10.0,
               ),
             );
           },

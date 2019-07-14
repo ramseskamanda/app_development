@@ -1,12 +1,14 @@
+import 'package:catcher/core/catcher.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup/notifiers/authentication_notifier.dart';
+import 'package:studentup/routers/base_router.dart';
 import 'package:studentup/ui/ui.dart';
 import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-class Router {
+class GlobalRouter extends BaseRouter {
   //Default routes
   ///Default Sign Up route, therefore should NOT have a / in front of it
   static const String onboarding = 'onboarding';
@@ -17,10 +19,12 @@ class Router {
   //App routes
   ///App-level routes SHOULD have a / in front
   static const String homeRoute = '/app';
-  static const String friendsListRoute = '/friends';
-  static const String messageList = '/messageList';
+  static const String messaging = '/messaging';
 
-  static String initialRoute(BuildContext context) {
+  GlobalRouter() : super(key: Catcher.navigatorKey);
+
+  @override
+  String initialRoute(BuildContext context) {
     final AuthenticationNotifier auth =
         Provider.of<AuthenticationNotifier>(context);
     final bool signedUp = auth.hasSignedUp;
@@ -28,17 +32,13 @@ class Router {
     return signedUp ? (signedIn ? homeRoute : loginRoute) : signupRoute;
   }
 
-  static Route<dynamic> generateRoute(RouteSettings settings) {
+  @override
+  Route<dynamic> generateRoutes(RouteSettings settings) {
     switch (settings.name) {
       case homeRoute:
         return PageTransition(
           child: Application(),
           type: PageTransitionType.fade,
-        );
-      case friendsListRoute:
-        return PageTransition(
-          child: FriendsList(),
-          type: PageTransitionType.downToUp,
         );
       case onboarding:
         return PageTransition(

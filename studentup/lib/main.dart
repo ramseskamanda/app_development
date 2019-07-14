@@ -1,8 +1,7 @@
 import 'package:provider/provider.dart';
+import 'package:studentup/routers/global_router.dart';
 //import 'package:catcher/catcher_plugin.dart';
 //import 'package:studentup/app_settings.dart';
-import 'package:studentup/router.dart';
-import 'package:studentup/services/navigation_service.dart';
 import 'package:studentup/services/provider_service.dart';
 import 'package:studentup/services/service_locator.dart';
 import 'package:studentup/services/application_service.dart';
@@ -32,13 +31,17 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: appWideProviders,
-      child: MaterialApp(
-        navigatorKey: NavigationService.globalNavigator,
-        title: Environment.appName,
-        theme: ThemeData(primarySwatch: Colors.lightGreen),
-        debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
-        onGenerateRoute: Router.generateRoute,
+      child: Consumer<GlobalRouter>(
+        builder: (context, router, child) {
+          return MaterialApp(
+            navigatorKey: router.key,
+            title: Environment.appName,
+            theme: ThemeData(primarySwatch: Colors.lightGreen),
+            debugShowCheckedModeBanner: false,
+            home: SplashScreen(),
+            onGenerateRoute: router.generateRoutes,
+          );
+        },
       ),
     );
   }

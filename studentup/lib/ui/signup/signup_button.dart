@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:studentup/bloc/signup_form_bloc.dart';
 import 'package:studentup/notifiers/authentication_notifier.dart';
-import 'package:studentup/router.dart';
+import 'package:studentup/routers/global_router.dart';
 import 'package:studentup/ui/widgets/flushbars.dart';
 import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +17,10 @@ class SignUpButton extends StatefulWidget {
 
 class _SignUpButtonState extends State<SignUpButton> {
   Future<void> _handleRegistration(AuthenticationNotifier auth) async {
-    bool _proceed = await Navigator.of(context).pushNamed(
-          Router.disclaimer,
+    final GlobalRouter globalRouter = Provider.of(context);
+
+    bool _proceed = await globalRouter.push(
+          GlobalRouter.disclaimer,
           arguments: LoginType.email,
         ) ??
         false;
@@ -30,7 +32,7 @@ class _SignUpButtonState extends State<SignUpButton> {
       password: widget.bloc.passwordValue,
     );
     if (_validated && _signedUp)
-      Navigator.of(context).pushReplacementNamed(Router.homeRoute);
+      globalRouter.push(GlobalRouter.homeRoute, replaceCurrentView: true);
     else
       showFailedRegistration(context);
   }

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup/router.dart';
+import 'package:provider/provider.dart';
+import 'package:studentup/routers/global_router.dart';
 
 class PageTemplate extends Container {
   final Brightness brightness;
@@ -73,8 +74,10 @@ class PageTemplate extends Container {
                           .title
                           .copyWith(color: contrastColor),
                     ),
-                    onPressed: () => Navigator.of(context)
-                        .pushReplacementNamed(Router.signupRoute),
+                    onPressed: () => Provider.of<GlobalRouter>(context).push(
+                      GlobalRouter.signupRoute,
+                      replaceCurrentView: true,
+                    ),
                   ),
                 ],
               ),

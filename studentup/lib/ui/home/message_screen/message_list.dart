@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup/ui/home/message_screen/message_thread_tile.dart';
-import 'package:studentup/ui/widgets/search_bar.dart';
 import 'package:studentup/util/env.dart';
 
 class MessagesList extends StatelessWidget {
@@ -47,14 +46,6 @@ class MessagesList extends StatelessWidget {
           itemCount: 10,
           separatorBuilder: (context, index) => SizedBox(height: 4.0),
           itemBuilder: (context, index) {
-            if (index == 0)
-              return Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 8.0,
-                  horizontal: 16.0,
-                ),
-                child: SearchBar(FocusNode()),
-              );
             return MessageThreadTile(
               index: index,
             );

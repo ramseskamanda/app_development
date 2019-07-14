@@ -1,6 +1,6 @@
 import 'package:studentup/services/provider_service.dart';
 import 'package:studentup/ui/notifications/notifications.dart';
-import 'package:studentup/ui/search/search.dart';
+import 'package:studentup/ui/search/search_root.dart';
 import 'package:studentup/ui/ui.dart';
 import 'package:studentup/util/notification_mixin.dart';
 import 'package:flutter/cupertino.dart';
@@ -17,7 +17,7 @@ class _ApplicationState extends State<Application> with NotificationMixin {
 
   List<Widget> _tabs = <Widget>[
     Home(),
-    SearchTab(),
+    SearchRoot(),
     Notifications(),
     Profile(),
   ];
