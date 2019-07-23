@@ -1,3 +1,4 @@
 enum MessageType {
-  Event,
+  text,
+  image
 }

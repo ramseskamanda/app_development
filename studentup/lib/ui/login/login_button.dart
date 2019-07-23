@@ -21,8 +21,8 @@ class _LoginButtonState extends State<LoginButton> {
       password: widget.bloc.passwordValue,
     );
     if (_validated && _loggedIn)
-      Provider.of<GlobalRouter>(context)
-          .push(GlobalRouter.homeRoute, replaceCurrentView: true);
+      Navigator.of(context, rootNavigator: true)
+          .pushReplacementNamed(GlobalRouter.homeRoute);
   }
 
   @override

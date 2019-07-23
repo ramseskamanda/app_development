@@ -17,11 +17,9 @@ class SignUpButton extends StatefulWidget {
 
 class _SignUpButtonState extends State<SignUpButton> {
   Future<void> _handleRegistration(AuthenticationNotifier auth) async {
-    final GlobalRouter globalRouter = Provider.of(context);
-
-    bool _proceed = await globalRouter.push(
+    bool _proceed = await Navigator.of(context).pushNamed<bool>(
           GlobalRouter.disclaimer,
-          arguments: LoginType.email,
+          arguments: AuthType.email,
         ) ??
         false;
     if (!_proceed) return;
@@ -32,7 +30,7 @@ class _SignUpButtonState extends State<SignUpButton> {
       password: widget.bloc.passwordValue,
     );
     if (_validated && _signedUp)
-      globalRouter.push(GlobalRouter.homeRoute, replaceCurrentView: true);
+      Navigator.of(context).pushReplacementNamed(GlobalRouter.homeRoute);
     else
       showFailedRegistration(context);
   }

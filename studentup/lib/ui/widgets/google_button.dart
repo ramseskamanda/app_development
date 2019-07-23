@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 class GoogleButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final AuthenticationNotifier _auth = Provider.of(context);
-    final GlobalRouter globalRouter = Provider.of(context);
+    final AuthenticationNotifier _auth =
+        Provider.of<AuthenticationNotifier>(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -21,18 +21,16 @@ class GoogleButton extends StatelessWidget {
             onPressed: _auth.isLoading
                 ? null
                 : () async {
-                    bool _proceed = await globalRouter.push(
+                    bool _proceed = await Navigator.of(context).pushNamed<bool>(
                           GlobalRouter.disclaimer,
-                          arguments: LoginType.google,
+                          arguments: AuthType.google,
                         ) ??
                         false;
                     if (!_proceed) return;
                     bool _success = await _auth.loginWithGoogle();
                     if (_success)
-                      globalRouter.push(
-                        GlobalRouter.homeRoute,
-                        replaceCurrentView: true,
-                      );
+                      Navigator.of(context)
+                          .pushReplacementNamed(GlobalRouter.homeRoute);
                     else
                       showAuthenticationErrorMessage(context);
                   },

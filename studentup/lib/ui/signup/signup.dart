@@ -1,4 +1,3 @@
-import 'package:provider/provider.dart';
 import 'package:studentup/bloc/signup_form_bloc.dart';
 import 'package:studentup/routers/global_router.dart';
 import 'package:studentup/services/service_locator.dart';
@@ -72,8 +71,7 @@ class _SignUpState extends State<SignUp> {
       children: <Widget>[
         const Text('Already have an account? '),
         GestureDetector(
-          onTap: () => Provider.of<GlobalRouter>(context)
-              .push(GlobalRouter.loginRoute, replaceCurrentView: true),
+          onTap: () => Navigator.of(context).pushNamed(GlobalRouter.loginRoute),
           child: Text(
             'Sign in!',
             style: TextStyle(decoration: TextDecoration.underline),

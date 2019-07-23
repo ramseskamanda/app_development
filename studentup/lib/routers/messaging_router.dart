@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:studentup/ui/home/message_screen/message_list.dart';
+import 'package:studentup/ui/home/chat_screen/chats.dart';
 import 'package:studentup/ui/profile/friends_list.dart';
 
 class MessagingRouter {
-  static final GlobalKey<NavigatorState> key = GlobalKey<NavigatorState>();
-
-  static final String initialRoute = '/';
+  static String get initialRoute => '/';
 
   static Route<dynamic> generateRoutes(RouteSettings settings) {
     switch (settings.name) {
@@ -17,7 +15,7 @@ class MessagingRouter {
         );
       default:
         return PageTransition(
-          child: MessagesList(),
+          child: Chats(),
           type: PageTransitionType.rightToLeft,
         );
     }

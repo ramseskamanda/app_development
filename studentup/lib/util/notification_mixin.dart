@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:studentup/bloc/notification_bloc.dart';
 import 'package:studentup/models/firebase_message.dart';
 import 'package:studentup/services/service_locator.dart';
-import 'package:studentup/util/enums/message_type.dart';
 import 'package:flutter/material.dart';
+import 'package:studentup/util/enums/notification_types.dart';
 
 mixin NotificationMixin<T extends StatefulWidget> on State<T> {
   StreamSubscription<FirebaseMessage> _notifications;
@@ -22,7 +22,7 @@ mixin NotificationMixin<T extends StatefulWidget> on State<T> {
 
   Future<void> _onData(FirebaseMessage message) async {
     switch (message.type) {
-      case MessageType.Event:
+      case NotificationType.Event:
         showAboutDialog(context: context);
         break;
       default:

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:studentup/routers/global_router.dart';
 
 class PageTemplate extends Container {
@@ -74,10 +73,8 @@ class PageTemplate extends Container {
                           .title
                           .copyWith(color: contrastColor),
                     ),
-                    onPressed: () => Provider.of<GlobalRouter>(context).push(
-                      GlobalRouter.signupRoute,
-                      replaceCurrentView: true,
-                    ),
+                    onPressed: () => Navigator.of(context, rootNavigator: true)
+                        .pushReplacementNamed(GlobalRouter.signupRoute),
                   ),
                 ],
               ),

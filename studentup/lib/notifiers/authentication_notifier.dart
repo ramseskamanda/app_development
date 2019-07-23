@@ -85,7 +85,7 @@ class AuthenticationNotifier extends BaseNotifier {
       final FirebaseUser user = await _auth.signInWithCredential(credential);
 
       if (user != null) hasSignedUp = true;
-      isLoading = false;
+      //isLoading = false;
 
       return user != null;
     } on PlatformException catch (e) {

@@ -1,14 +1,13 @@
-import 'package:catcher/core/catcher.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup/notifiers/authentication_notifier.dart';
-import 'package:studentup/routers/base_router.dart';
+import 'package:studentup/ui/home/chat_screen/conversation.dart';
 import 'package:studentup/ui/ui.dart';
 import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-class GlobalRouter extends BaseRouter {
+class GlobalRouter {
   //Default routes
   ///Default Sign Up route, therefore should NOT have a / in front of it
   static const String onboarding = 'onboarding';
@@ -19,12 +18,9 @@ class GlobalRouter extends BaseRouter {
   //App routes
   ///App-level routes SHOULD have a / in front
   static const String homeRoute = '/app';
-  static const String messaging = '/messaging';
+  static const String conversation = '/messaging';
 
-  GlobalRouter() : super(key: Catcher.navigatorKey);
-
-  @override
-  String initialRoute(BuildContext context) {
+  static String initialRoute(BuildContext context) {
     final AuthenticationNotifier auth =
         Provider.of<AuthenticationNotifier>(context);
     final bool signedUp = auth.hasSignedUp;
@@ -32,8 +28,7 @@ class GlobalRouter extends BaseRouter {
     return signedUp ? (signedIn ? homeRoute : loginRoute) : signupRoute;
   }
 
-  @override
-  Route<dynamic> generateRoutes(RouteSettings settings) {
+  static Route<dynamic> generateRoutes(RouteSettings settings) {
     switch (settings.name) {
       case homeRoute:
         return PageTransition(
@@ -57,8 +52,13 @@ class GlobalRouter extends BaseRouter {
         );
       case disclaimer:
         return PageTransition<bool>(
-          child: Disclaimer(type: settings.arguments as LoginType),
+          child: Disclaimer(type: settings.arguments as AuthType),
           type: PageTransitionType.downToUp,
+        );
+      case conversation:
+        return PageTransition(
+          child: Conversation(id: settings.arguments as int),
+          type: PageTransitionType.rightToLeftWithFade,
         );
       default:
         return PageTransition(

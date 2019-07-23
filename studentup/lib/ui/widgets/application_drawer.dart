@@ -18,8 +18,8 @@ class ApplicationDrawer extends StatelessWidget {
                 child: Icon(CupertinoIcons.restart),
                 onTap: () {
                   Provider.of<AuthenticationNotifier>(context).logout();
-                  Provider.of<GlobalRouter>(context)
-                      .push(GlobalRouter.loginRoute, replaceCurrentView: true);
+                  Navigator.of(context)
+                      .pushReplacementNamed(GlobalRouter.loginRoute);
                 },
               ),
             )

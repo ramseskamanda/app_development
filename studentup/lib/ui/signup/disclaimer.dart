@@ -1,15 +1,12 @@
-import 'package:provider/provider.dart';
-import 'package:studentup/routers/global_router.dart';
 import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/material.dart';
 
 class Disclaimer extends StatelessWidget {
-  final LoginType type;
+  final AuthType type;
   Disclaimer({Key key, this.type}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final GlobalRouter globalRouter = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Disclaimer'),
@@ -19,12 +16,13 @@ class Disclaimer extends StatelessWidget {
           children: <Widget>[
             RaisedButton(
               child: const Text('Proceed'),
-              onPressed: () => globalRouter.popCurrentRoute<bool>(result: true),
+              onPressed: () =>
+                  Navigator.of(context, rootNavigator: true).pop<bool>(true),
             ),
             RaisedButton(
               child: const Text('Cancel'),
               onPressed: () =>
-                  globalRouter.popCurrentRoute<bool>(result: false),
+                  Navigator.of(context, rootNavigator: true).pop<bool>(false),
             ),
           ],
         ),

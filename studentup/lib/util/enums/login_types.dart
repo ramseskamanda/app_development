@@ -1,4 +1,4 @@
-enum LoginType {
+enum AuthType {
   email,
   facebook,
   google,

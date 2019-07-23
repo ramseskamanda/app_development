@@ -1,24 +1,19 @@
-import 'package:studentup/routers/base_router.dart';
 import 'package:studentup/ui/search/search.dart';
 import 'package:studentup/ui/search/search_category.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 
-class SearchRouter extends BaseRouter {
+class SearchRouter {
   // Search routes
   /// SearchTab-level routes SHOULD ALWAYS have a '/' in front
   /// That is to mean it's relative to the initial route
   static const String root = '/';
   static const String category = '/category';
 
-  SearchRouter() : super(key: GlobalKey<NavigatorState>());
+  static String get initialRoute => root;
 
-  @override
-  String initialRoute(BuildContext context) => root;
-
-  @override
-  Route<dynamic> generateRoutes(RouteSettings settings) {
+  static Route<dynamic> generateRoutes(RouteSettings settings) {
     switch (settings.name) {
       case root:
         return PageTransition(

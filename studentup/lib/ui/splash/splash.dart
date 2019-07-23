@@ -21,27 +21,25 @@ class _SplashScreenState extends State<SplashScreen> {
   Timer _startTimer() => Timer(Environment.splashScreenDuration, _navigate);
 
   Future<void> _navigate() async {
-    final GlobalRouter globalRouter = Provider.of(context);
-    switch (globalRouter.initialRoute(context)) {
+    switch (GlobalRouter.initialRoute(context)) {
       case GlobalRouter.homeRoute:
         if (await Provider.of<AuthenticationNotifier>(context)
             .handleAutoLogin())
-          globalRouter.push(GlobalRouter.homeRoute, replaceCurrentView: true);
+          Navigator.of(context).pushReplacementNamed(GlobalRouter.homeRoute);
         else
-          globalRouter.push(
+          Navigator.of(context).pushReplacementNamed(
             GlobalRouter.loginRoute,
-            replaceCurrentView: true,
             arguments: true,
           );
         break;
       case GlobalRouter.loginRoute:
-        globalRouter.push(GlobalRouter.loginRoute, replaceCurrentView: true);
+        Navigator.of(context).pushReplacementNamed(GlobalRouter.loginRoute);
         break;
       case GlobalRouter.signupRoute:
-        globalRouter.push(GlobalRouter.onboarding, replaceCurrentView: true);
+        Navigator.of(context).pushReplacementNamed(GlobalRouter.onboarding);
         break;
       default:
-        globalRouter.push(GlobalRouter.loginRoute, replaceCurrentView: true);
+        Navigator.of(context).pushReplacementNamed(GlobalRouter.loginRoute);
     }
   }
 

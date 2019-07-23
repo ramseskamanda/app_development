@@ -3,7 +3,6 @@ import 'package:studentup/notifiers/authentication_notifier.dart';
 import 'package:studentup/notifiers/message_notifier.dart';
 import 'package:studentup/notifiers/saved_profiles_notifier.dart';
 import 'package:studentup/notifiers/userprofile_notifier.dart';
-import 'package:studentup/routers/global_router.dart';
 
 /// Sets up all necessary providers for the application to run smoothly
 ///   * AuthenticationNotifier
@@ -11,7 +10,6 @@ import 'package:studentup/routers/global_router.dart';
 get appWideProviders {
   return <SingleChildCloneableWidget>[
     ChangeNotifierProvider(builder: (_) => AuthenticationNotifier()),
-    Provider(builder: (_) => GlobalRouter()),
   ];
 }
 

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:studentup/routers/search_router.dart';
 import 'package:studentup/util/env.dart';
 
@@ -12,9 +11,8 @@ class SearchCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String categoryName = Environment.searchCategories[index];
-    final SearchRouter searchRouter = Provider.of<SearchRouter>(context);
     return GestureDetector(
-      onTap: () => searchRouter.push(
+      onTap: () => Navigator.of(context).pushNamed(
         SearchRouter.category,
         arguments: categoryName,
       ),

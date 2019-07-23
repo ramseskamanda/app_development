@@ -4,12 +4,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:provider/provider.dart';
-import 'package:studentup/routers/global_router.dart';
 import 'package:studentup/util/env.dart';
 
 dynamic showAutoLoginErrorMessage(BuildContext context) {
-  final GlobalRouter globalRouter = Provider.of(context);
   if (Platform.isIOS)
     showCupertinoDialog(
       context: context,
@@ -23,7 +20,7 @@ dynamic showAutoLoginErrorMessage(BuildContext context) {
             CupertinoDialogAction(
               isDefaultAction: true,
               child: const Text('Go to Sign In'),
-              onPressed: globalRouter.popCurrentRoute,
+              onPressed: Navigator.of(context).pop,
             ),
           ],
         );
@@ -41,7 +38,7 @@ dynamic showAutoLoginErrorMessage(BuildContext context) {
           actions: <Widget>[
             FlatButton(
               child: const Text('O.K.'),
-              onPressed: globalRouter.popCurrentRoute,
+              onPressed: Navigator.of(context).pop,
             ),
           ],
         );

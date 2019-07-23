@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:studentup/notifiers/saved_profiles_notifier.dart';
 import 'package:studentup/ui/search/search_screen_delegate.dart';
 import 'package:studentup/ui/widgets/notifiable_icon.dart';
-import 'package:studentup/ui/widgets/profile_drawer_button.dart';
 import 'package:studentup/util/theme.dart';
 
 class SearchCategoryView extends StatelessWidget {

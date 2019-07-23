@@ -1,3 +1,4 @@
+import 'package:catcher/catcher_plugin.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup/routers/global_router.dart';
 //import 'package:catcher/catcher_plugin.dart';
@@ -31,17 +32,13 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: appWideProviders,
-      child: Consumer<GlobalRouter>(
-        builder: (context, router, child) {
-          return MaterialApp(
-            navigatorKey: router.key,
-            title: Environment.appName,
-            theme: ThemeData(primarySwatch: Colors.lightGreen),
-            debugShowCheckedModeBanner: false,
-            home: SplashScreen(),
-            onGenerateRoute: router.generateRoutes,
-          );
-        },
+      child: MaterialApp(
+        navigatorKey: Catcher.navigatorKey,
+        title: Environment.appName,
+        theme: ThemeData(primarySwatch: Colors.lightGreen),
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen(),
+        onGenerateRoute: GlobalRouter.generateRoutes,
       ),
     );
   }
