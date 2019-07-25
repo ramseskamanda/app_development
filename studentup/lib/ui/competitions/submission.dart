@@ -69,16 +69,12 @@ class Submission extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 16.0),
-                            ListTile(
-                              onTap: () => print('object'),
-                              leading: Icon(Icons.attach_file),
-                              title: const Text(
-                                'Add attachments, if necessary',
-                                style: TextStyle(
-                                  color: CupertinoColors.inactiveGray,
-                                ),
+                            for (int i in [0, 1, 2, 3])
+                              FileAttachment(
+                                key: ValueKey(i),
+                                isAddButton: i == 3,
+                                index: i,
                               ),
-                            ),
                           ],
                         ),
                       ),
@@ -95,6 +91,42 @@ class Submission extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class FileAttachment extends StatelessWidget {
+  final bool isAddButton;
+  final int index;
+
+  const FileAttachment({Key key, this.isAddButton, this.index})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: isAddButton ? () => print('object') : null,
+      leading:
+          isAddButton ? Icon(Icons.attach_file) : Icon(Icons.insert_drive_file),
+      trailing: isAddButton
+          ? null
+          : IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () => print('delete'),
+            ),
+      title: isAddButton
+          ? const Text(
+              'Add attachments, if necessary',
+              style: TextStyle(
+                color: CupertinoColors.inactiveGray,
+              ),
+            )
+          : Text(
+              'File #$index',
+              style: TextStyle(
+                color: CupertinoColors.black,
+              ),
+            ),
     );
   }
 }

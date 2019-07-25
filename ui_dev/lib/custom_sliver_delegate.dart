@@ -22,7 +22,6 @@ class CustomSliverDelegate extends SliverPersistentHeaderDelegate {
     this.stackChildHeight,
   });
 
-  //TODO: Fix this widget
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {

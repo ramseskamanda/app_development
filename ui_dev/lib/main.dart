@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ui_dev/competitions/submitted.dart';
+import 'package:ui_dev/leaderboard/leaderboard_root.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.lightGreen),
-      home: Submitted(),
+      home: LeaderBoardRoot(),
     );
   }
 }
