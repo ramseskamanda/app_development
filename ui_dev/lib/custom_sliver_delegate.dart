@@ -56,11 +56,15 @@ class CustomSliverDelegate extends SliverPersistentHeaderDelegate {
             child: Opacity(
               opacity: hideChildWhenExpanded ? percent : 1.0,
               child: Center(
-                child: CircleAvatar(
-                  radius: stackChildHeight / 2,
-                  backgroundImage: CachedNetworkImageProvider(
-                    'https://via.placeholder.com/150',
-                    errorListener: () => print('object'),
+                child: Material(
+                  elevation: 6.0,
+                  shape: CircleBorder(),
+                  child: CircleAvatar(
+                    radius: stackChildHeight / 2,
+                    backgroundImage: CachedNetworkImageProvider(
+                      'https://via.placeholder.com/150',
+                      errorListener: () => print('object'),
+                    ),
                   ),
                 ),
               ),
