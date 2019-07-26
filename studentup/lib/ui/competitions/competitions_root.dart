@@ -7,6 +7,10 @@ import 'package:ui_dev/stadium_button.dart';
 import 'package:ui_dev/test_data.dart';
 
 class CompetitionPage extends StatelessWidget {
+  final bool isOwner;
+
+  const CompetitionPage({Key key, this.isOwner = false}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,13 +63,19 @@ class CompetitionPage extends StatelessWidget {
                       ],
                       Text(
                         'Studentup',
-                        style: Theme.of(context).textTheme.title,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline
+                            .copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 16.0),
                       Text(
-                        'Competition Title',
+                        'Competition Title for the science of data',
                         softWrap: true,
-                        style: Theme.of(context).textTheme.display1,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.display1.copyWith(
+                            color: CupertinoColors.black,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 12.0),
                       SizedBox(
@@ -84,7 +94,10 @@ class CompetitionPage extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
-                                Text('20 places left / 100'),
+                                if (isOwner)
+                                  Text('80 participants signed up')
+                                else
+                                  Text('20 places left / 100'),
                                 Text('15 days to go'),
                               ],
                             ),
@@ -110,22 +123,42 @@ class CompetitionPage extends StatelessWidget {
                         const SizedBox(height: 16.0),
                       ],
                       const Text(
-                        'Description',
+                        'Description that talks about how data is the future and the future is data and makes complete sense because it s a great description.',
+                        textAlign: TextAlign.center,
                         softWrap: true,
                       ),
                       const SizedBox(height: 16.0),
-                      const Text('Your Team'),
-                      const SizedBox(height: 12.0),
-                      for (var i = 0; i < 3; i++)
-                        TeamMemberListTile(isUser: i == 0),
-                      if (true) const TeamMemberListTile(add: true),
-                      const SizedBox(height: 16.0),
-                      StadiumButton(
-                        text: TestData.isSignedUp
-                            ? 'Submit Answer'
-                            : 'Participate',
-                        onPressed: () => print('object'),
-                      ),
+                      if (!isOwner) ...[
+                        Text(
+                          'Your Team',
+                          style: Theme.of(context)
+                              .textTheme
+                              .title
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 12.0),
+                        for (var i = 0; i < 3; i++)
+                          TeamMemberListTile(isUser: i == 0),
+                        if (true) const TeamMemberListTile(add: true),
+                        const SizedBox(height: 16.0),
+                        StadiumButton(
+                          text: TestData.isSignedUp
+                              ? 'Submit Answer'
+                              : 'Participate',
+                          onPressed: () => print('object'),
+                        ),
+                      ] else ...[
+                        FlatButton(
+                          child: const Text('Download attachment'),
+                          textColor: Theme.of(context).accentColor,
+                          onPressed: () => print('object'),
+                        ),
+                        const SizedBox(height: 24.0),
+                        StadiumButton(
+                          text: 'Select Winners',
+                          onPressed: () => print('object'),
+                        )
+                      ],
                     ],
                   ),
                 ],

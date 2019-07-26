@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ui_dev/competitions/file_attachment.dart';
 import 'package:ui_dev/custom_sliver_delegate.dart';
 import 'package:ui_dev/stadium_button.dart';
 
@@ -91,42 +92,6 @@ class Submission extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-class FileAttachment extends StatelessWidget {
-  final bool isAddButton;
-  final int index;
-
-  const FileAttachment({Key key, this.isAddButton, this.index})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: isAddButton ? () => print('object') : null,
-      leading:
-          isAddButton ? Icon(Icons.attach_file) : Icon(Icons.insert_drive_file),
-      trailing: isAddButton
-          ? null
-          : IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () => print('delete'),
-            ),
-      title: isAddButton
-          ? const Text(
-              'Add attachments, if necessary',
-              style: TextStyle(
-                color: CupertinoColors.inactiveGray,
-              ),
-            )
-          : Text(
-              'File #$index',
-              style: TextStyle(
-                color: CupertinoColors.black,
-              ),
-            ),
     );
   }
 }

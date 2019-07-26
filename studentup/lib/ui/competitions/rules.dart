@@ -2,9 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:ui_dev/stadium_button.dart';
 import 'package:ui_dev/test_data.dart';
 
+enum RuleSet {
+  EndUser,
+  Companies,
+}
+
 class CompetitionRules extends StatelessWidget {
+  final RuleSet rulesSet;
+
+  const CompetitionRules({Key key, @required this.rulesSet}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    List<String> rules = rulesSet == RuleSet.EndUser
+        ? TestData.rulesUser
+        : TestData.rulesCompanies;
+    List<IconData> icons = rulesSet == RuleSet.EndUser
+        ? TestData.iconsUser
+        : TestData.iconsCompanies;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -13,12 +28,6 @@ class CompetitionRules extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
           onPressed: () => print('object'),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.more_horiz),
-            onPressed: () => print('object'),
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -30,8 +39,7 @@ class CompetitionRules extends StatelessWidget {
                 style: Theme.of(context).textTheme.display1,
               ),
             ),
-            for (int i = 0; i < TestData.rules.length; i++)
-              RuleTile(TestData.rules[i], TestData.icons[i]),
+            for (int i = 0; i < rules.length; i++) RuleTile(rules[i], icons[i]),
             SizedBox(height: 16.0),
             StadiumButton(
               text: 'Accept',
