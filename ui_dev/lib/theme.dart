@@ -22,3 +22,10 @@ List<BoxShadow> getSimpleBoxShadow({Color color}) {
     ),
   ];
 }
+
+final List<Color> medalColors = <Color>[
+  Colors.transparent,
+  Colors.yellow,
+  Colors.grey,
+  Colors.brown,
+];

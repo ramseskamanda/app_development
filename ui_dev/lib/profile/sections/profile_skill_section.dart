@@ -1,35 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup/ui/widgets/section.dart';
-import 'package:studentup/ui/widgets/stadium_button.dart';
-import 'package:studentup/util/theme.dart';
+import 'package:ui_dev/stadium_button.dart';
+import 'package:ui_dev/theme.dart';
 
 class ProfileSkillSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Section(
-      title: Text(
-        'Skills',
-        style: Theme.of(context).textTheme.title,
-      ),
-      onMoreCallback: () {},
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SkillCard(),
-            SizedBox(height: 8.0),
-            SkillCard(),
-            SizedBox(height: 12.0),
-            StadiumButton(
-              text: 'Skill',
-              icon: CupertinoIcons.add,
-              onPressed: () {},
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          SkillCard(),
+          SizedBox(height: 8.0),
+          SkillCard(),
+          SizedBox(height: 12.0),
+          StadiumButton.icon(
+            text: 'Add Skill',
+            icon: CupertinoIcons.add,
+            onPressed: () {},
+          ),
+        ],
       ),
     );
   }
@@ -42,7 +34,7 @@ class SkillCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(6.0),
-        boxShadow: AppTheme.getSimpleBoxShadow(
+        boxShadow: getSimpleBoxShadow(
           color: Theme.of(context).accentColor,
         ),
       ),

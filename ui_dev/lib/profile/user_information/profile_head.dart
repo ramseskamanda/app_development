@@ -1,20 +1,19 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup/models/badge_model.dart';
-import 'package:studentup/ui/widgets/badge.dart';
-import 'package:studentup/util/theme.dart';
+import 'package:ui_dev/badge.dart';
+import 'package:ui_dev/badge_model.dart';
+import 'package:ui_dev/theme.dart';
 
 class ProfileAboutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.3,
-      //FIXME: dunno why but this shit 🔽 don't work 🤷‍
-      width: MediaQuery.of(context).size.height * 0.88,
+      padding: const EdgeInsets.symmetric(horizontal: 32.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(6.0),
-        boxShadow: AppTheme.getSimpleBoxShadow(
+        boxShadow: getSimpleBoxShadow(
           color: Theme.of(context).accentColor,
         ),
       ),
