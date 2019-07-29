@@ -53,7 +53,7 @@ class AccountSwitch extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            'Ramses Kamanda',
+            'ramseskamanda',
             style: Theme.of(context)
                 .textTheme
                 .subhead

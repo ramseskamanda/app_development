@@ -2,7 +2,11 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ui_dev/profile/account_switch.dart';
+import 'package:ui_dev/profile/contact_options.dart';
+import 'package:ui_dev/profile/edit_profile.dart';
 import 'package:ui_dev/profile/sections/profile_badges_section.dart';
+import 'package:ui_dev/profile/sections/profile_education_section.dart';
+import 'package:ui_dev/profile/sections/profile_experience_section.dart';
 import 'package:ui_dev/profile/sections/profile_skill_section.dart';
 import 'package:ui_dev/profile/user_information/profile_head.dart';
 import 'package:ui_dev/profile/user_information/profile_picture.dart';
@@ -18,6 +22,8 @@ class Profile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool _isOther = false;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -33,7 +39,13 @@ class Profile extends StatelessWidget {
                   .button
                   .copyWith(color: CupertinoColors.activeBlue),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(
+                CupertinoPageRoute(
+                  builder: (context) => EditProfile(),
+                ),
+              );
+            },
           ),
         ),
         actions: <Widget>[
@@ -59,6 +71,8 @@ class Profile extends StatelessWidget {
               const SizedBox(height: 16.0),
               ProfileText(),
               const SizedBox(height: 16.0),
+              if (_isOther) ContactOptions(),
+              const SizedBox(height: 16.0),
               ProfileBadges(),
               const SizedBox(height: 48.0),
               ProfileAboutCard(),
@@ -67,7 +81,10 @@ class Profile extends StatelessWidget {
               const SizedBox(height: 32.0),
               ProfileSkillSection(),
               const SizedBox(height: 32.0),
-              ProfileBadgesSection(),
+              ProfileEducationSection(),
+              const SizedBox(height: 32.0),
+              ProfileExperienceSection(),
+              const SizedBox(height: 32.0),
             ],
           ),
         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ui_dev/profile/profile.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +9,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.lightGreen),
-      home: Profile(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('UI Development'),
+        ),
+        body: Center(
+          child: Text(
+            'Welcome',
+            style: Theme.of(context).textTheme.title,
+          ),
+        ),
+      ),
     );
   }
 }
