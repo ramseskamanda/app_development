@@ -1,0 +1,12 @@
+enum SearchCategory {
+  ALL,
+  CODING,
+  DESIGN,
+  MANAGEMENT,
+  MARKETING,
+  OTHER,
+  ANOTHER,
+  AND,
+  ANOTHERONE,
+  TEST,
+}

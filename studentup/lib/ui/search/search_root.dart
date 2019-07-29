@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:studentup/routers/search_router.dart';
+import 'package:ui_dev/search/search.dart';
 
 class SearchRoot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async => false,
-      child: Navigator(
-        key: GlobalKey<NavigatorState>(),
-        onGenerateRoute: SearchRouter.generateRoutes,
-        initialRoute: SearchRouter.initialRoute,
-      ),
-    );
+    return SearchTab();
   }
 }
+
+/*
+WillPopScope(
+  onWillPop: () async => false,
+  child: Navigator(
+    key: GlobalKey<NavigatorState>(),
+    onGenerateRoute: SearchRouter.generateRoutes,
+    initialRoute: SearchRouter.initialRoute,
+  ),
+);
+*/

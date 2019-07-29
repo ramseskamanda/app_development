@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ui_dev/competitions/competition_feedback.dart';
 import 'package:ui_dev/competitions/podium_placement.dart';
+import 'package:ui_dev/competitions/summary.dart';
 import 'package:ui_dev/stadium_button.dart';
 
 class WinnerSelectionRoot extends StatefulWidget {
@@ -11,11 +13,13 @@ class WinnerSelectionRoot extends StatefulWidget {
 class _WinnerSelectionRootState extends State<WinnerSelectionRoot> {
   final List<Widget> _pages = <Widget>[
     PodiumPlacementScreen(),
-    //NewCompetitionDeadline(),
+    CompetitionFeedback(),
+    SummaryOwner(),
   ];
 
   PageController _controller;
   IconButton _leadingIconButton;
+  IconButton _trailingIconButton;
   bool _lastPage;
 
   void _onPageChanged(int index) {
@@ -41,6 +45,16 @@ class _WinnerSelectionRootState extends State<WinnerSelectionRoot> {
                   curve: Curves.bounceIn,
                 ),
               );
+        _trailingIconButton = index == _controller.initialPage
+            ? IconButton(
+                key: ValueKey('favorites'),
+                icon: Icon(CupertinoIcons.heart),
+                onPressed: () => print('object'),
+              )
+            : IconButton(
+                icon: Icon(Icons.no_encryption, color: Colors.transparent),
+                onPressed: null,
+              );
       });
     }
   }
@@ -53,6 +67,11 @@ class _WinnerSelectionRootState extends State<WinnerSelectionRoot> {
     _leadingIconButton = IconButton(
       key: ValueKey(_controller.initialPage),
       icon: Icon(Icons.close),
+      onPressed: () => print('object'),
+    );
+    _trailingIconButton = IconButton(
+      key: ValueKey('favorites'),
+      icon: Icon(CupertinoIcons.heart),
       onPressed: () => print('object'),
     );
   }
@@ -71,12 +90,20 @@ class _WinnerSelectionRootState extends State<WinnerSelectionRoot> {
         backgroundColor: Colors.transparent,
         leading: AnimatedSwitcher(
           duration: kTabScrollDuration,
+          switchInCurve: Curves.easeInOutCirc,
+          switchOutCurve: Curves.easeInOutCirc,
           transitionBuilder: (child, animation) => RotationTransition(
             child: FadeTransition(opacity: animation, child: child),
             turns: animation,
           ),
           child: _leadingIconButton,
         ),
+        actions: <Widget>[
+          AnimatedSwitcher(
+            duration: kTabScrollDuration,
+            child: _trailingIconButton,
+          )
+        ],
       ),
       body: SafeArea(
         child: Stack(
@@ -90,7 +117,7 @@ class _WinnerSelectionRootState extends State<WinnerSelectionRoot> {
             Align(
               alignment: Alignment.bottomCenter,
               child: StadiumButton(
-                text: _lastPage ? 'Publish' : 'Next',
+                text: _lastPage ? 'Submit' : 'Next',
                 onPressed: _lastPage
                     ? () => print('object')
                     : () => _controller.nextPage(

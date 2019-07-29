@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ui_dev/search/search_user_profile_card.dart';
 
 class SearchScreenDelegate extends SearchDelegate<String> {
   @override
@@ -15,9 +14,12 @@ class SearchScreenDelegate extends SearchDelegate<String> {
     return <Widget>[
       IconButton(
         icon: Icon(CupertinoIcons.clear_circled_solid),
-        color: CupertinoColors.extraLightBackgroundGray,
-        highlightColor: CupertinoColors.lightBackgroundGray,
-        onPressed: () => query = '',
+        color: CupertinoColors.lightBackgroundGray,
+        splashColor: Theme.of(context).accentColor,
+        onPressed: () {
+          query = '';
+          showSuggestions(context);
+        },
       ),
     ];
   }
@@ -32,27 +34,54 @@ class SearchScreenDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    final Random rand = Random();
-    return ListView.builder(
-      itemCount: rand.nextInt(15),
-      itemExtent: 75.0,
-      itemBuilder: (context, index) => ListTile(
-        title: Text('Top ${rand.nextInt(100)} Employers in $query'),
-        subtitle: Text('#${rand.nextInt(100)} will shock you!'),
+    final List results = _getResults();
+    return Padding(
+      padding: const EdgeInsets.all(4.0),
+      child: GridView.builder(
+        itemCount: results.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 4.0,
+          mainAxisSpacing: 4.0,
+        ),
+        itemBuilder: (context, index) => UserProfileCard(),
       ),
     );
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return ListView.builder(
-      itemCount: query.isEmpty ? 10 : query.length,
-      itemExtent: 75.0,
+    List _suggestions;
+    if (query.isEmpty)
+      _suggestions = _getSuggestions(initial: true);
+    else
+      _suggestions = _getSuggestions();
+    return ListView.separated(
+      itemCount: _suggestions.length,
+      separatorBuilder: (context, index) => Divider(),
       itemBuilder: (context, index) => ListTile(
-        title: Text('Top ${query.length} Employers in $query'),
-        subtitle: Text('#${query.length} will shock you!'),
+        title: Text(_suggestions[index]),
+        subtitle: Text('#4 will shock you!'),
         onTap: () => close(context, query),
       ),
     );
+  }
+
+  List _getResults() {
+    return Iterable.generate(10)
+        .map((i) => 'Results show this might be it: $query')
+        .toList();
+  }
+
+  List _getSuggestions({initial = false}) {
+    if (initial) {
+      return Iterable.generate(10)
+          .map((i) => 'This is a generic query...')
+          .toList();
+    } else {
+      return Iterable.generate(10)
+          .map((i) => 'You might be interested din $query')
+          .toList();
+    }
   }
 }

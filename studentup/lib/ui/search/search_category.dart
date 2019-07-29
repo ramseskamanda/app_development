@@ -1,29 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup/notifiers/saved_profiles_notifier.dart';
-import 'package:studentup/ui/search/search_screen_delegate.dart';
-import 'package:studentup/ui/widgets/notifiable_icon.dart';
-import 'package:studentup/util/theme.dart';
+import 'package:ui_dev/search/search_enum.dart';
+import 'package:ui_dev/search/search_screen_delegate.dart';
+import 'package:ui_dev/search/search_user_profile_card.dart';
 
-class SearchCategoryView extends StatelessWidget {
-  final String searchCategory;
+class CategoryScreen extends StatelessWidget {
+  final SearchCategory category;
 
-  const SearchCategoryView({Key key, @required this.searchCategory})
-      : super(key: key);
+  const CategoryScreen({Key key, @required this.category}) : super(key: key);
+
+  Future<void> _onSearch(BuildContext context) async {
+    String result = await showSearch(
+      context: context,
+      delegate: SearchScreenDelegate(),
+    );
+    print(result);
+  }
 
   @override
   Widget build(BuildContext context) {
-    Future<void> _onSearch() async {
-      String result = await showSearch(
-        context: context,
-        delegate: SearchScreenDelegate(),
-      );
-      print(result);
-    }
+    final s = category.toString().split('.')[1].toLowerCase();
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(searchCategory),
+        title: Text('${s[0].toUpperCase()}${s.substring(1)}'),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
         centerTitle: true,
@@ -31,46 +31,24 @@ class SearchCategoryView extends StatelessWidget {
           IconButton(
             icon: const Icon(CupertinoIcons.search),
             iconSize: 28.0,
-            onPressed: _onSearch,
+            onPressed: () => _onSearch(context),
           ),
           IconButton(
-            icon: NotifiableIcon<SavedProfilesNotifier>(
-                iconData: CupertinoIcons.heart),
+            icon: Icon(CupertinoIcons.heart),
             onPressed: () => print('Go To Saved Profiles'),
           ),
         ],
       ),
-      body: ListView.separated(
-        itemCount: 10,
-        separatorBuilder: (context, index) => SizedBox(height: 16.0),
-        itemBuilder: (context, index) => SearchUserCard(),
-      ),
-    );
-  }
-}
-
-class SearchUserCard extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.2,
-        decoration: BoxDecoration(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(6.0),
-          boxShadow: AppTheme.getSimpleBoxShadow(
-            color: Theme.of(context).accentColor,
+      body: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: GridView.builder(
+          itemCount: 20,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 4.0,
+            mainAxisSpacing: 4.0,
           ),
-        ),
-        child: ListTile(
-          title: const Text('Ramses Kamanda'),
-          subtitle: const Text(
-            'This man has a great bio and has accomplished a lot.',
-            softWrap: true,
-            overflow: TextOverflow.ellipsis,
-          ),
-          onTap: () => print('😄'),
+          itemBuilder: (context, index) => UserProfileCard(),
         ),
       ),
     );

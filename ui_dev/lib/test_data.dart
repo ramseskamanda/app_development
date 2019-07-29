@@ -32,4 +32,6 @@ class TestData {
     Icons.hourglass_full,
     Icons.import_contacts,
   ];
+
+  static final String randomPicture = 'https://picsum.photos/200';
 }
