@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/competitions/file_attachment.dart';
-import 'package:ui_dev/custom_sliver_delegate.dart';
-import 'package:ui_dev/stadium_button.dart';
+import 'package:studentup/ui/competitions/file_attachment.dart';
+import 'package:studentup/ui/widgets/custom_sliver_delegate.dart';
+import 'package:studentup/ui/widgets/stadium_button.dart';
 
 class Submission extends StatelessWidget {
   @override

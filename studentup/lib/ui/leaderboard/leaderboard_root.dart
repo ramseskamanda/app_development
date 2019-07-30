@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/evil_icons.dart';
-import 'package:ui_dev/leaderboard/leaderboard_list.dart';
-import 'package:ui_dev/leaderboard/prize_list.dart';
+import 'package:flutter_icons/flutter_icons.dart';
+import 'package:studentup/ui/leaderboard/leaderboard_list.dart';
+import 'package:studentup/ui/leaderboard/prize_list.dart';
 
 class LeaderBoardRoot extends StatelessWidget {
   final List<Tab> _tabs = [

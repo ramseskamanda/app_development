@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ui_dev/models/message_model.dart';
+import 'package:studentup/models/message_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ChatBubble extends StatefulWidget {

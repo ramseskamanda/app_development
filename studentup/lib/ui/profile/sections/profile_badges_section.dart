@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/badge_model.dart';
-import 'package:ui_dev/theme.dart';
+import 'package:studentup/models/badge_model.dart';
+
+import '../../widgets/theme.dart';
 
 class ProfileBadgesSection extends StatelessWidget {
   @override

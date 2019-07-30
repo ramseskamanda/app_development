@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/competitions/new_competition_categories.dart';
-import 'package:ui_dev/competitions/new_competition_deadline.dart';
-import 'package:ui_dev/competitions/new_competition_info.dart';
-import 'package:ui_dev/stadium_button.dart';
+import 'package:studentup/ui/competitions/new_competition_categories.dart';
+import 'package:studentup/ui/competitions/new_competition_deadline.dart';
+import 'package:studentup/ui/competitions/new_competition_info.dart';
+import 'package:studentup/ui/widgets/stadium_button.dart';
 
 class NewCompetitionRoot extends StatefulWidget {
   @override

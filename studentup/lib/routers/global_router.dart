@@ -1,6 +1,5 @@
 import 'package:provider/provider.dart';
 import 'package:studentup/notifiers/authentication_notifier.dart';
-import 'package:studentup/ui/home/chat_screen/conversation.dart';
 import 'package:studentup/ui/ui.dart';
 import 'package:studentup/util/enums/login_types.dart';
 import 'package:flutter/cupertino.dart';
@@ -57,7 +56,7 @@ class GlobalRouter {
         );
       case conversation:
         return PageTransition(
-          child: Conversation(id: settings.arguments as int),
+          child: Scaffold(),
           type: PageTransitionType.rightToLeftWithFade,
         );
       default:

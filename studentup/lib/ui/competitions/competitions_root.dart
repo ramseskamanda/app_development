@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:ui_dev/custom_sliver_delegate.dart';
-import 'package:ui_dev/stadium_button.dart';
-import 'package:ui_dev/test_data.dart';
+
+import '../widgets/custom_sliver_delegate.dart';
+import '../widgets/stadium_button.dart';
 
 class CompetitionPage extends StatelessWidget {
   final bool isOwner;
@@ -13,6 +13,8 @@ class CompetitionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool _isSignedUp = true;
+
     return Scaffold(
       body: SafeArea(
         top: false,
@@ -51,7 +53,7 @@ class CompetitionPage extends StatelessWidget {
                 <Widget>[
                   Column(
                     children: <Widget>[
-                      if (TestData.isSignedUp) ...[
+                      if (_isSignedUp) ...[
                         Text(
                           'Signed Up!',
                           style: Theme.of(context)
@@ -110,7 +112,7 @@ class CompetitionPage extends StatelessWidget {
                         style: Theme.of(context).textTheme.title,
                       ),
                       const SizedBox(height: 16.0),
-                      if (TestData.isSignedUp) ...[
+                      if (_isSignedUp) ...[
                         FlatButton.icon(
                           textColor: Theme.of(context).accentColor,
                           icon: Icon(Icons.file_download),
@@ -142,9 +144,7 @@ class CompetitionPage extends StatelessWidget {
                         if (true) const TeamMemberListTile(add: true),
                         const SizedBox(height: 16.0),
                         StadiumButton(
-                          text: TestData.isSignedUp
-                              ? 'Submit Answer'
-                              : 'Participate',
+                          text: _isSignedUp ? 'Submit Answer' : 'Participate',
                           onPressed: () => print('object'),
                         ),
                       ] else ...[

@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/competitions/competition_feedback.dart';
-import 'package:ui_dev/competitions/podium_placement.dart';
-import 'package:ui_dev/competitions/summary.dart';
-import 'package:ui_dev/stadium_button.dart';
+import 'package:studentup/ui/competitions/competition_feedback.dart';
+import 'package:studentup/ui/competitions/podium_placement.dart';
+import 'package:studentup/ui/competitions/summary.dart';
+import 'package:studentup/ui/widgets/stadium_button.dart';
 
 class WinnerSelectionRoot extends StatefulWidget {
   @override

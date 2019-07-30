@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flip_panel/flip_panel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/custom_sliver_delegate.dart';
+import 'package:studentup/ui/widgets/custom_sliver_delegate.dart';
 
 class PrizeScreen extends StatelessWidget {
   @override

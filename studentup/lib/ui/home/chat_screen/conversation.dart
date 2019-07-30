@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/chat_screen/chat_bubble.dart';
-import 'package:ui_dev/chat_screen/messaging_text_field.dart';
-import 'package:ui_dev/models/chat_model.dart';
+import 'package:studentup/ui/home/chat_screen/chat_bubble.dart';
+import 'package:studentup/ui/home/chat_screen/messaging_text_field.dart';
+import 'package:studentup/models/chat_model.dart';
 
 class Conversation extends StatefulWidget {
   final ChatModel chatModel;

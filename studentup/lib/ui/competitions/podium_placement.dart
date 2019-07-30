@@ -2,7 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/theme.dart';
+
+import '../widgets/theme.dart';
 
 class PodiumPlacementScreen extends StatefulWidget {
   @override

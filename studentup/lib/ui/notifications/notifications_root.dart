@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/stadium_button.dart';
+import 'package:studentup/ui/widgets/stadium_button.dart';
 
 class NotificationsRoot extends StatelessWidget {
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/search/search_user_profile_card.dart';
+import 'package:studentup/ui/search/search_user_profile_card.dart';
 
 class SearchScreenDelegate extends SearchDelegate<String> {
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ui_dev/search/search.dart';
+import 'package:studentup/ui/search/search.dart';
 
 class SearchRoot extends StatelessWidget {
   @override

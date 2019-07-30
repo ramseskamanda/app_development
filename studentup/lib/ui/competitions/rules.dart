@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ui_dev/stadium_button.dart';
-import 'package:ui_dev/test_data.dart';
+import 'package:studentup/ui/widgets/stadium_button.dart';
+
+import '../../test_data.dart';
 
 enum RuleSet {
   EndUser,

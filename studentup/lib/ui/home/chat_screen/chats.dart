@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/chat_screen/chat_item.dart';
-import 'package:ui_dev/models/chat_model.dart';
-import 'package:ui_dev/test_data.dart';
+import 'package:studentup/ui/home/chat_screen/chat_item.dart';
+import 'package:studentup/models/chat_model.dart';
 
 class Chats extends StatefulWidget {
   @override
@@ -61,7 +60,7 @@ class _UserChatsState extends State<UserChats> {
   void initState() {
     super.initState();
     _controller.addListener(_loadMore);
-    _data = TestData.chats;
+    _data = <ChatModel>[];
   }
 
   @override

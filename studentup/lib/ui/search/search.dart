@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:ui_dev/search/search_category.dart';
-import 'package:ui_dev/search/search_screen_delegate.dart';
-import 'package:ui_dev/test_data.dart';
-import 'package:ui_dev/search/search_enum.dart';
+import 'package:studentup/ui/search/search_category.dart';
+import 'package:studentup/ui/search/search_screen_delegate.dart';
+import 'package:studentup/test_data.dart';
+import 'package:studentup/ui/search/search_enum.dart';
 
 class SearchTab extends StatefulWidget {
   @override

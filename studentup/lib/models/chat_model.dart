@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:ui_dev/models/message_model.dart';
+import 'package:studentup/models/message_model.dart';
 
 class ChatModel {
   /*

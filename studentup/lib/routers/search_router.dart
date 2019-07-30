@@ -22,7 +22,7 @@ class SearchRouter {
         );
       case category:
         return PageTransition(
-          child: SearchCategoryView(searchCategory: settings.arguments),
+          child: CategoryScreen(category: settings.arguments),
           type: PageTransitionType.rightToLeft,
         );
       default:

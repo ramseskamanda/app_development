@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:ui_dev/chat_screen/conversation.dart';
-import 'package:ui_dev/models/chat_model.dart';
+import 'package:studentup/ui/home/chat_screen/conversation.dart';
+import 'package:studentup/models/chat_model.dart';
 
 class ChatItem extends StatefulWidget {
   final ChatModel chatModel;
