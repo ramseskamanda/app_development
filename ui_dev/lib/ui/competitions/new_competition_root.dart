@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ui_dev/services/competition_creation_service.dart';
-import 'package:ui_dev/ui/competitions/competition_uploader.dart';
+import 'package:ui_dev/ui/competitions/new_competition_uploader.dart';
 import 'package:ui_dev/ui/competitions/new_competition_categories.dart';
 import 'package:ui_dev/ui/competitions/new_competition_deadline.dart';
 import 'package:ui_dev/ui/competitions/new_competition_info.dart';
@@ -135,7 +135,7 @@ class BottomButton extends StatelessWidget {
                         curve: Curves.bounceInOut,
                       );
                     }
-                  : service.formIsValid
+                  : service.formIsValid && !service.isUploading
                       ? () => service.uploadCompetition()
                       : null,
         );

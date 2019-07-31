@@ -1,15 +1,19 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ui_dev/enum/search_enum.dart';
+import 'package:ui_dev/models/competition_model.dart';
 import 'package:ui_dev/services/firebase/firestore.dart';
+import 'package:ui_dev/services/firebase/storage.dart';
+import 'package:rxdart/rxdart.dart';
 
 const int MINIMUM_LENGTH_COMPETITION = 3;
-const int MAXIMUM_LENGTH_COMPETITION = 90;
+const int MAXIMUM_LENGTH_COMPETITION = 75;
 const int MINIMUM_PARTICIPANTS = 10;
 const int MAXIMUM_PARTICIPANTS = 250;
 const int MAXIMUM_CATEGORIES_SELECTED = 3;
@@ -23,9 +27,9 @@ class CompetitionCreationService extends ChangeNotifier {
   DateTime _deadline;
   int _numParticipants;
   List<SearchCategory> _categories;
-  bool _isUploading;
-  bool _isDone;
   FirestoreService _firestoreService;
+  FirebaseStorageService _firebaseStorageService;
+  List<StorageUploadTask> _uploadTasks;
 
   File get image => _image;
   set image(File newImage) => _image = newImage ?? image;
@@ -47,17 +51,27 @@ class CompetitionCreationService extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get isUploading => _isUploading;
-  set isUploading(bool value) {
-    _isUploading = value;
+  bool get isUploading => _uploadTasks.isNotEmpty && !isDone;
+
+  bool get isDone =>
+      _uploadTasks.isNotEmpty &&
+      _uploadTasks.map((t) => t.isComplete).reduce((a, b) => a && b);
+
+  set uploads(List<StorageUploadTask> list) {
+    _uploadTasks = list;
     notifyListeners();
   }
 
-  bool get isDone => _isDone;
-  set isDone(bool value) {
-    _isDone = value;
-    notifyListeners();
-  }
+  Observable<double> get uploadStream =>
+      Observable.zip(_uploadTasks.map((u) => u.events),
+          (List<StorageTaskEvent> events) {
+        return events.isNotEmpty
+            ? events.fold<double>(
+                    0, (total, e) => total + e.snapshot.bytesTransferred) /
+                events.fold<double>(
+                    0, (total, e) => total + e.snapshot.totalByteCount)
+            : 0;
+      });
 
   bool get formIsValid {
     return _nameController.text != null &&
@@ -80,9 +94,9 @@ class CompetitionCreationService extends ChangeNotifier {
         DateTime.now().add(const Duration(days: MINIMUM_LENGTH_COMPETITION));
     _numParticipants = MINIMUM_PARTICIPANTS;
     _categories = <SearchCategory>[];
+    _uploadTasks = <StorageUploadTask>[];
     _firestoreService = FirestoreService();
-    _isUploading = false;
-    _isDone = false;
+    _firebaseStorageService = FirebaseStorageService();
   }
 
   @override
@@ -94,12 +108,28 @@ class CompetitionCreationService extends ChangeNotifier {
 
   /// Upload data
   Future<void> uploadCompetition() async {
-    //Make model here
-    isUploading = true;
-    //_firestoreService.uploadCompetitionInformation(data);
-    await Future.delayed(Duration(seconds: 2));
-    _isUploading = false;
-    isDone = true;
+    List<String> _paths = _firebaseStorageService.createFilePaths(
+      files.length + 1,
+      'competitions_files',
+    );
+    print(_paths.first);
+    CompetitionModel _model = CompetitionModel(
+      creator: 'Studentup',
+      timestamp: DateTime.now(),
+      categories: categories,
+      maxUsersNum: numParticipants,
+      media: _paths.first,
+      description: description.text,
+      title: name.text,
+      files: _paths.skip(1).toList(),
+      deadline: deadline,
+    );
+    uploads = _firebaseStorageService.startUpload([image, ...files], _paths);
+    uploadStream.listen((double percent) {
+      if (1.0 == percent) notifyListeners();
+    });
+    await _firestoreService.uploadCompetitionInformation(_model.toJson());
+    notifyListeners();
   }
 
   /// Cropper plugin
