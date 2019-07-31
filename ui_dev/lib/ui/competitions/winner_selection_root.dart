@@ -1,24 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup/ui/competitions/new_competition_categories.dart';
-import 'package:studentup/ui/competitions/new_competition_deadline.dart';
-import 'package:studentup/ui/competitions/new_competition_info.dart';
-import 'package:studentup/ui/widgets/stadium_button.dart';
+import 'package:ui_dev/ui/competitions/competition_feedback.dart';
+import 'package:ui_dev/ui/competitions/podium_placement.dart';
+import 'package:ui_dev/ui/competitions/summary.dart';
+import 'package:ui_dev/widgets/stadium_button.dart';
 
-class NewCompetitionRoot extends StatefulWidget {
+class WinnerSelectionRoot extends StatefulWidget {
   @override
-  _NewCompetitionRootState createState() => _NewCompetitionRootState();
+  _WinnerSelectionRootState createState() => _WinnerSelectionRootState();
 }
 
-class _NewCompetitionRootState extends State<NewCompetitionRoot> {
+class _WinnerSelectionRootState extends State<WinnerSelectionRoot> {
   final List<Widget> _pages = <Widget>[
-    NewCompetitionInformation(),
-    NewCompetitionDeadline(),
-    NewCompetitionCategories(),
+    PodiumPlacementScreen(),
+    CompetitionFeedback(),
+    SummaryOwner(),
   ];
 
   PageController _controller;
   IconButton _leadingIconButton;
+  IconButton _trailingIconButton;
   bool _lastPage;
 
   void _onPageChanged(int index) {
@@ -44,6 +45,16 @@ class _NewCompetitionRootState extends State<NewCompetitionRoot> {
                   curve: Curves.bounceIn,
                 ),
               );
+        _trailingIconButton = index == _controller.initialPage
+            ? IconButton(
+                key: ValueKey('favorites'),
+                icon: Icon(CupertinoIcons.heart),
+                onPressed: () => print('object'),
+              )
+            : IconButton(
+                icon: Icon(Icons.no_encryption, color: Colors.transparent),
+                onPressed: null,
+              );
       });
     }
   }
@@ -56,6 +67,11 @@ class _NewCompetitionRootState extends State<NewCompetitionRoot> {
     _leadingIconButton = IconButton(
       key: ValueKey(_controller.initialPage),
       icon: Icon(Icons.close),
+      onPressed: () => print('object'),
+    );
+    _trailingIconButton = IconButton(
+      key: ValueKey('favorites'),
+      icon: Icon(CupertinoIcons.heart),
       onPressed: () => print('object'),
     );
   }
@@ -74,12 +90,20 @@ class _NewCompetitionRootState extends State<NewCompetitionRoot> {
         backgroundColor: Colors.transparent,
         leading: AnimatedSwitcher(
           duration: kTabScrollDuration,
+          switchInCurve: Curves.easeInOutCirc,
+          switchOutCurve: Curves.easeInOutCirc,
           transitionBuilder: (child, animation) => RotationTransition(
             child: FadeTransition(opacity: animation, child: child),
             turns: animation,
           ),
           child: _leadingIconButton,
         ),
+        actions: <Widget>[
+          AnimatedSwitcher(
+            duration: kTabScrollDuration,
+            child: _trailingIconButton,
+          )
+        ],
       ),
       body: SafeArea(
         child: Stack(
@@ -93,7 +117,7 @@ class _NewCompetitionRootState extends State<NewCompetitionRoot> {
             Align(
               alignment: Alignment.bottomCenter,
               child: StadiumButton(
-                text: _lastPage ? 'Publish' : 'Next',
+                text: _lastPage ? 'Submit' : 'Next',
                 onPressed: _lastPage
                     ? () => print('object')
                     : () => _controller.nextPage(

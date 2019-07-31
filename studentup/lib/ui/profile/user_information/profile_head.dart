@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup/ui/widgets/badge.dart';
-import 'package:studentup/models/badge_model.dart';
-import 'package:studentup/ui/widgets/theme.dart';
+import 'package:ui_dev/models/badge_model.dart';
+import 'package:ui_dev/theme.dart';
+import 'package:ui_dev/widgets/badge.dart';
 
 class ProfileAboutCard extends StatelessWidget {
   @override

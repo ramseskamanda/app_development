@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ui_dev/ui/competitions/new_competition_root.dart';
 
 void main() => runApp(MyApp());
 
@@ -9,17 +10,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.lightGreen),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('UI Development'),
-        ),
-        body: Center(
-          child: Text(
-            'Welcome',
-            style: Theme.of(context).textTheme.title,
-          ),
-        ),
-      ),
+      home: NewCompetitionRoot(),
     );
   }
 }

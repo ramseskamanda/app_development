@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup/ui/widgets/stadium_button.dart';
-import 'package:studentup/ui/widgets/theme.dart';
+import 'package:ui_dev/theme.dart';
+import 'package:ui_dev/widgets/stadium_button.dart';
 
 class ProfileEducationSection extends StatelessWidget {
   @override

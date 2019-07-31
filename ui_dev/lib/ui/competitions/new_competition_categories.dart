@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:ui_dev/enum/search_enum.dart';
+import 'package:ui_dev/services/competition_creation_service.dart';
 
 class NewCompetitionCategories extends StatelessWidget {
   @override
@@ -30,10 +33,10 @@ class NewCompetitionCategories extends StatelessWidget {
               crossAxisSpacing: 16.0,
               mainAxisSpacing: 16.0,
               children: <Widget>[
-                for (int i = 0; i <= 10; i++)
+                for (int i = 1; i < SearchCategory.values.length; i++)
                   CategoryTile(
                     key: ValueKey(i),
-                    title: 'Category #$i',
+                    category: SearchCategory.values[i],
                   ),
               ],
             ),
@@ -44,48 +47,34 @@ class NewCompetitionCategories extends StatelessWidget {
   }
 }
 
-class CategoryTile extends StatefulWidget {
-  final String title;
+class CategoryTile extends StatelessWidget {
+  final SearchCategory category;
 
-  const CategoryTile({Key key, @required this.title}) : super(key: key);
-
-  @override
-  _CategoryTileState createState() => _CategoryTileState();
-}
-
-class _CategoryTileState extends State<CategoryTile> {
-  bool _selected;
-
-  void _selectCategory() {
-    setState(() {
-      _selected = true;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _selected = false;
-  }
+  const CategoryTile({Key key, @required this.category}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: _selectCategory,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-          color: _selected
-              ? Theme.of(context).accentColor
-              : CupertinoColors.lightBackgroundGray,
-        ),
-        child: Center(
-          child: Text(
-            widget.title,
-            style: Theme.of(context).textTheme.subtitle,
+    return Consumer<CompetitionCreationService>(
+      builder: (context, service, child) {
+        bool selected = service.categories.contains(category);
+        return InkWell(
+          onTap: () => service.toggleCategory(category),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              color: selected
+                  ? Theme.of(context).accentColor
+                  : CupertinoColors.lightBackgroundGray,
+            ),
+            child: Center(
+              child: Text(
+                category.toString().split('.')[1],
+                style: Theme.of(context).textTheme.subtitle,
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -2,9 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
-
-import '../widgets/custom_sliver_delegate.dart';
-import '../widgets/stadium_button.dart';
+import 'package:ui_dev/widgets/custom_sliver_delegate.dart';
+import 'package:ui_dev/widgets/stadium_button.dart';
 
 class CompetitionPage extends StatelessWidget {
   final bool isOwner;
@@ -157,7 +156,7 @@ class CompetitionPage extends StatelessWidget {
                         StadiumButton(
                           text: 'Select Winners',
                           onPressed: () => print('object'),
-                        )
+                        ),
                       ],
                     ],
                   ),

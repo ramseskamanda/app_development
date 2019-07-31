@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:studentup/ui/widgets/stadium_button.dart';
+import 'package:ui_dev/widgets/stadium_button.dart';
 
 class Submitted extends StatelessWidget {
   final bool isCompetition;
