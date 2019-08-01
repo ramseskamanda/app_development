@@ -1,16 +1,16 @@
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/ui/profile/account_switch.dart';
-import 'package:ui_dev/ui/profile/contact_options.dart';
-import 'package:ui_dev/ui/profile/edit_profile.dart';
-import 'package:ui_dev/ui/profile/sections/profile_badges_section.dart';
-import 'package:ui_dev/ui/profile/sections/profile_education_section.dart';
-import 'package:ui_dev/ui/profile/sections/profile_experience_section.dart';
-import 'package:ui_dev/ui/profile/sections/profile_skill_section.dart';
-import 'package:ui_dev/ui/profile/user_information/profile_head.dart';
-import 'package:ui_dev/ui/profile/user_information/profile_picture.dart';
-import 'package:ui_dev/ui/profile/user_information/profile_text.dart';
+import 'package:studentup/ui/profile/account_switch.dart';
+import 'package:studentup/ui/profile/contact_options.dart';
+import 'package:studentup/ui/profile/edit_profile.dart';
+import 'package:studentup/ui/profile/sections/profile_badges_section.dart';
+import 'package:studentup/ui/profile/sections/profile_education_section.dart';
+import 'package:studentup/ui/profile/sections/profile_experience_section.dart';
+import 'package:studentup/ui/profile/sections/profile_skill_section.dart';
+import 'package:studentup/ui/profile/user_information/profile_head.dart';
+import 'package:studentup/ui/profile/user_information/profile_picture.dart';
+import 'package:studentup/ui/profile/user_information/profile_text.dart';
 
 class Profile extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _key =

@@ -37,7 +37,6 @@ class CustomSliverDelegate extends SliverPersistentHeaderDelegate {
           SizedBox(
             height: appBarSize < kToolbarHeight ? kToolbarHeight : appBarSize,
             child: AppBar(
-              backgroundColor: Colors.transparent,
               leading: leading,
               actions: actions,
               elevation: 0.0,

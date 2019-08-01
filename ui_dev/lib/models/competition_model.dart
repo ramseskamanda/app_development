@@ -60,6 +60,7 @@ class CompetitionModel {
   int get signupsNum => _signupsNum;
 
   CompetitionModel.fromJson(Map<String, dynamic> json) {
+    if (json == null) return;
     _creator = json['creator'];
     _title = json['title'];
     _media = json['media'];

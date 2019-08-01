@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -108,8 +107,8 @@ class CompetitionCreationService extends ChangeNotifier {
 
   /// Upload data
   Future<void> uploadCompetition() async {
-    List<String> _paths = _firebaseStorageService.createFilePaths(
-      files.length + 1,
+    List<String> _paths = FirebaseStorageService.createFilePaths(
+      [image, ...files],
       'competitions_files',
     );
     print(_paths.first);
