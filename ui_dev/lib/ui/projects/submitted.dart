@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ui_dev/widgets/stadium_button.dart';
 
 class Submitted extends StatelessWidget {
-  final bool isCompetition;
+  final bool isProject;
 
-  const Submitted({Key key, this.isCompetition = false}) : super(key: key);
+  const Submitted({Key key, this.isProject = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class Submitted extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(
-                isCompetition ? 'Competition Published!' : 'Answer submitted!',
+                isProject ? 'Project Published!' : 'Application submitted!',
                 softWrap: true,
                 style: Theme.of(context).textTheme.display1,
               ),
@@ -30,7 +30,9 @@ class Submitted extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: Text(
-                  'Made a mistake? Don\'t worry! You can edit your competitions from your profile page.',
+                  isProject
+                      ? 'Made a mistake? Don\'t worry! You can edit your Projects from your profile page.'
+                      : 'You will be notified if you were selected for this project.',
                   softWrap: true,
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.title,

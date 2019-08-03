@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 
 class TestData {
   static final bool isSignedUp = false;
+  static final String userId = 'sYP0IBARJtdYj9apnwYD';
+  static final String projectId = '1sBtrLEZXIlNkxD8QOPn';
 
   static final List<String> rulesUser = <String>[
     'Only during the next 24 hours, you can ...',
     'Hand in your masterpiece before the deadline.',
     'Handing in no, an incomplete, or inappropriate work will get you disqualified',
     'If your did your best but didn\'t win, keep a smile on',
-    'Badges, certificates, and XP will be distributed at the end of the competition',
-    'The competition holder can use anything you include in your answer as their own.',
+    'Badges, certificates, and XP will be distributed at the end of the Project',
+    'The Project holder can use anything you include in your answer as their own.',
   ];
 
   static final List<String> rulesCompanies = <String>[

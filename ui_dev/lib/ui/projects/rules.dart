@@ -8,10 +8,10 @@ enum RuleSet {
   Companies,
 }
 
-class CompetitionRules extends StatelessWidget {
+class ProjectRules extends StatelessWidget {
   final RuleSet rulesSet;
 
-  const CompetitionRules({Key key, @required this.rulesSet}) : super(key: key);
+  const ProjectRules({Key key, @required this.rulesSet}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class CompetitionRules extends StatelessWidget {
           children: [
             Center(
               child: Text(
-                'Competition Rules',
+                'Project Rules',
                 style: Theme.of(context).textTheme.display1,
               ),
             ),

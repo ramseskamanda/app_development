@@ -2,18 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_calendar/flutter_clean_calendar.dart';
 import 'package:provider/provider.dart';
-import 'package:ui_dev/services/competition_creation_service.dart';
+import 'package:ui_dev/services/project_creation_service.dart';
 
-class NewCompetitionDeadline extends StatefulWidget {
+class NewProjectDeadline extends StatefulWidget {
   @override
-  _NewCompetitionDeadlineState createState() => _NewCompetitionDeadlineState();
+  _NewProjectDeadlineState createState() => _NewProjectDeadlineState();
 }
 
 //TODO: Change the number of participants to a slider
-class _NewCompetitionDeadlineState extends State<NewCompetitionDeadline> {
+class _NewProjectDeadlineState extends State<NewProjectDeadline> {
   void _setDeadline(DateTime date) {
-    CompetitionCreationService _service =
-        Provider.of<CompetitionCreationService>(context);
+    ProjectCreationService _service =
+        Provider.of<ProjectCreationService>(context);
     if (date.isAfter(_service.minimumDeadline) &&
         date.isBefore(_service.maximumDeadline))
       _service.deadline = date;
@@ -60,7 +60,7 @@ class _NewCompetitionDeadlineState extends State<NewCompetitionDeadline> {
               ),
             ),
             const SizedBox(height: 32.0),
-            Consumer<CompetitionCreationService>(
+            Consumer<ProjectCreationService>(
               builder: (context, service, child) {
                 return Container(
                   child: Calendar(
@@ -82,7 +82,7 @@ class _NewCompetitionDeadlineState extends State<NewCompetitionDeadline> {
               style: Theme.of(context).textTheme.title,
             ),
             const SizedBox(height: 48.0),
-            Consumer<CompetitionCreationService>(
+            Consumer<ProjectCreationService>(
               builder: (context, service, child) {
                 return Column(
                   children: <Widget>[

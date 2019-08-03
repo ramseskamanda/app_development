@@ -1,0 +1,4 @@
+enum QueryOrder {
+  newest,
+  popularity,
+}

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_dev/enum/search_enum.dart';
-import 'package:ui_dev/services/competition_creation_service.dart';
+import 'package:ui_dev/services/project_creation_service.dart';
 
-class NewCompetitionCategories extends StatelessWidget {
+class NewProjectCategories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -54,7 +54,7 @@ class CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CompetitionCreationService>(
+    return Consumer<ProjectCreationService>(
       builder: (context, service, child) {
         bool selected = service.categories.contains(category);
         return InkWell(

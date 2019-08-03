@@ -13,6 +13,10 @@ class FirebaseStorageService {
         FirebaseStorage(storageBucket: 'gs://studentup-nl.appspot.com/');
   }
 
+  Future<String> getImageUrl(String path) async {
+    return await _firebaseStorage.ref().child(path).getDownloadURL();
+  }
+
   static List<String> createFilePaths(List<File> files, String folderName) {
     List<String> _paths = <String>[];
     Uuid _uuid = Uuid();

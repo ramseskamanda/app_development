@@ -1,24 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/services/competition_creation_service.dart';
-import 'package:ui_dev/ui/competitions/new_competition_uploader.dart';
-import 'package:ui_dev/ui/competitions/new_competition_categories.dart';
-import 'package:ui_dev/ui/competitions/new_competition_deadline.dart';
-import 'package:ui_dev/ui/competitions/new_competition_info.dart';
+import 'package:ui_dev/services/project_creation_service.dart';
+import 'package:ui_dev/ui/projects/new_project_uploader.dart';
+import 'package:ui_dev/ui/projects/new_project_categories.dart';
+import 'package:ui_dev/ui/projects/new_project_deadline.dart';
+import 'package:ui_dev/ui/projects/new_project_info.dart';
 import 'package:ui_dev/widgets/stadium_button.dart';
 import 'package:provider/provider.dart';
 
-class NewCompetitionRoot extends StatefulWidget {
+class NewProjectRoot extends StatefulWidget {
   @override
-  _NewCompetitionRootState createState() => _NewCompetitionRootState();
+  _NewProjectRootState createState() => _NewProjectRootState();
 }
 
-class _NewCompetitionRootState extends State<NewCompetitionRoot> {
+class _NewProjectRootState extends State<NewProjectRoot> {
   final List<Widget> _pages = <Widget>[
-    NewCompetitionInformation(),
-    NewCompetitionDeadline(),
-    NewCompetitionCategories(),
-    CompetitionUploader(),
+    NewProjectInformation(),
+    NewProjectDeadline(),
+    NewProjectCategories(),
+    ProjectUploader(),
   ];
 
   PageController _controller;
@@ -70,13 +70,13 @@ class _NewCompetitionRootState extends State<NewCompetitionRoot> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<CompetitionCreationService>(
-      builder: (context) => CompetitionCreationService(),
+    return ChangeNotifierProvider<ProjectCreationService>(
+      builder: (context) => ProjectCreationService(),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.transparent,
-          leading: Consumer<CompetitionCreationService>(
+          leading: Consumer<ProjectCreationService>(
             builder: (context, service, child) {
               if (service.isUploading || service.isDone)
                 return Container();
@@ -122,7 +122,7 @@ class BottomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CompetitionCreationService>(
+    return Consumer<ProjectCreationService>(
       builder: (context, service, child) {
         return StadiumButton(
           text: service.isDone ? 'Done' : last ? 'Publish' : 'Next',
@@ -136,7 +136,7 @@ class BottomButton extends StatelessWidget {
                       );
                     }
                   : service.formIsValid && !service.isUploading
-                      ? () => service.uploadCompetition()
+                      ? () => service.uploadProject()
                       : null,
         );
       },

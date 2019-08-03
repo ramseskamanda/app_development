@@ -1,19 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/ui/competitions/competition_feedback.dart';
-import 'package:ui_dev/ui/competitions/podium_placement.dart';
-import 'package:ui_dev/ui/competitions/summary.dart';
+import 'package:ui_dev/ui/projects/summary.dart';
 import 'package:ui_dev/widgets/stadium_button.dart';
 
-class WinnerSelectionRoot extends StatefulWidget {
+class ApplicantSelectionRoot extends StatefulWidget {
   @override
-  _WinnerSelectionRootState createState() => _WinnerSelectionRootState();
+  _ApplicantSelectionRootState createState() => _ApplicantSelectionRootState();
 }
 
-class _WinnerSelectionRootState extends State<WinnerSelectionRoot> {
+class _ApplicantSelectionRootState extends State<ApplicantSelectionRoot> {
   final List<Widget> _pages = <Widget>[
-    PodiumPlacementScreen(),
-    CompetitionFeedback(),
     SummaryOwner(),
   ];
 

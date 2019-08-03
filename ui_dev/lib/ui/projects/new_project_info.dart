@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ui_dev/services/competition_creation_service.dart';
-import 'package:ui_dev/ui/competitions/file_attachment.dart';
+import 'package:ui_dev/services/project_creation_service.dart';
+import 'package:ui_dev/ui/projects/file_attachment.dart';
 import 'package:provider/provider.dart';
 
-class NewCompetitionInformation extends StatelessWidget {
+class NewProjectInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,7 +18,7 @@ class NewCompetitionInformation extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'New Competition',
+                'New Project',
                 style: Theme.of(context).textTheme.display1.copyWith(
                       color: CupertinoColors.black,
                       fontWeight: FontWeight.w600,
@@ -40,7 +40,7 @@ class NewCompetitionInformation extends StatelessWidget {
 class ImageSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<CompetitionCreationService>(
+    return Consumer<ProjectCreationService>(
       builder: (context, service, child) {
         return Stack(
           children: <Widget>[
@@ -105,7 +105,7 @@ class ImageSelection extends StatelessWidget {
 class InputTextFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<CompetitionCreationService>(
+    return Consumer<ProjectCreationService>(
       builder: (context, service, child) {
         return Form(
           child: Column(
@@ -117,7 +117,7 @@ class InputTextFields extends StatelessWidget {
                   inputFormatters: [LengthLimitingTextInputFormatter(32)],
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintText: 'Name of the competition',
+                    hintText: 'Name of the Project',
                     hintStyle: TextStyle(color: Colors.blueGrey.shade300),
                     prefix: SizedBox(width: 16.0),
                   ),
@@ -148,7 +148,7 @@ class InputTextFields extends StatelessWidget {
 class Attachments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<CompetitionCreationService>(
+    return Consumer<ProjectCreationService>(
       builder: (context, service, child) {
         int _length = service.files.length + 1;
         return Column(

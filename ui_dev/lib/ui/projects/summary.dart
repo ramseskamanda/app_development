@@ -61,7 +61,7 @@ class _SummaryOwnerState extends State<SummaryOwner>
             ),
             const SizedBox(height: 16.0),
             Text(
-              'This competition is dog shit... I\m still happy I did it because we were fucked lol.',
+              'This Project is dog shit... I\m still happy I did it because we were fucked lol.',
             ),
           ],
         ),

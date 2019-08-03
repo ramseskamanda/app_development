@@ -1,0 +1,8 @@
+Architecture:
+UI
+talks to
+ViewNotifier
+talks to
+Service
+talks to
+Firebase
