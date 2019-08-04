@@ -66,7 +66,7 @@ class UserInfoModel {
     _bio = json['bio'];
     _mediaRef = json['media_ref'];
     _banned = json['banned'];
-    _experienceMonthly = json['experience_monthly'];
+    _experienceMonthly = json['experience_month'];
     _experienceOverall = json['experience_overall'];
   }
 
@@ -82,7 +82,7 @@ class UserInfoModel {
     data['bio'] = _bio;
     data['media_ref'] = _mediaRef;
     data['banned'] = _banned;
-    data['experience_monthly'] = _experienceMonthly;
+    data['experience_month'] = _experienceMonthly;
     data['experience_overall'] = _experienceOverall;
     return data;
   }

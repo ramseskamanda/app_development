@@ -1,9 +1,24 @@
+import 'package:flutter/material.dart';
+import 'package:ui_dev/models/user_info_model.dart';
 import 'package:ui_dev/notifiers/view_notifiers/view_notifier.dart';
 
-class SearchNotifier extends ViewNotifier {
-  @override
-  Future fetchData([dynamic data]) async {}
+abstract class SearchNotifier extends ViewNotifier {
+  // ! TODO: Add some actual cache here
+  Map<String, dynamic> cache = {};
+
+  Future<List<UserInfoModel>> searchFor(String query);
+
+  @protected
+  Future<bool> searchInCache(String query) async {
+    if (cache.keys.contains(query))
+      return true;
+    else
+      return false;
+  }
 
   @override
-  Future onRefresh() async {}
+  void dispose() {
+    cache.clear();
+    super.dispose();
+  }
 }

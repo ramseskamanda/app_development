@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TestData {
   static final bool isSignedUp = false;
@@ -36,4 +38,15 @@ class TestData {
   ];
 
   static final String randomPicture = 'https://picsum.photos/200';
+
+  static String geoPointToLocation(GeoPoint geoPoint) {
+    // ! TODO: write a function that transforms a geopoint into a string location
+    return 'Maastricht, Netherlands';
+  }
+
+  static String format(Timestamp date, {bool allowNow = false}) {
+    if (date == null) return allowNow ? 'now' : '404 Error';
+    var format = new DateFormat.yMMM();
+    return format.format(date.toDate());
+  }
 }

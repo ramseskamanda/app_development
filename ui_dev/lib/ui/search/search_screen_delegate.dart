@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ui_dev/models/user_info_model.dart';
-import 'package:ui_dev/notifiers/view_notifiers/view_notifier.dart';
+import 'package:ui_dev/notifiers/view_notifiers/search_notifier.dart';
 import 'package:ui_dev/ui/search/search_user_profile_card.dart';
 
 class SearchScreenDelegate extends SearchDelegate<String> {
-  final ViewNotifier notifier;
+  final SearchNotifier notifier;
 
   SearchScreenDelegate(this.notifier);
 
@@ -40,26 +40,26 @@ class SearchScreenDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    // ? Make a separate SearchNotifier abstract class
-    // ! This is top priority
-    return FutureBuilder<void>(
-      future: notifier.fetchData(query),
+    return FutureBuilder<List<UserInfoModel>>(
+      future: notifier.searchFor(query),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Center(child: CircularProgressIndicator());
         if (snapshot.hasError)
           return Center(child: Text(snapshot.error.toString()));
+        if (snapshot.data.isEmpty)
+          return Center(child: Text('No results found for: $query'));
         return Padding(
           padding: const EdgeInsets.all(4.0),
           child: GridView.builder(
-            itemCount: 10,
+            itemCount: snapshot.data.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 4.0,
               mainAxisSpacing: 4.0,
             ),
             itemBuilder: (context, index) =>
-                Container(), //UserProfileCard(model: results[index]),
+                UserProfileCard(model: snapshot.data[index]),
           ),
         );
       },
@@ -83,8 +83,6 @@ class SearchScreenDelegate extends SearchDelegate<String> {
       ),
     );
   }
-
-  List<UserInfoModel> _getResults() {}
 
   List _getSuggestions({initial = false}) {
     if (initial) {

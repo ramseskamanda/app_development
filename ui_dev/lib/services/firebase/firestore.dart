@@ -1,26 +1,75 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ui_dev/enum/query_order.dart';
 import 'package:ui_dev/enum/search_enum.dart';
+import 'package:ui_dev/models/education_model.dart';
+import 'package:ui_dev/models/labor_experience_model.dart';
 import 'package:ui_dev/models/prize_model.dart';
 import 'package:ui_dev/models/project_model.dart';
 import 'package:ui_dev/models/startup_info_model.dart';
 import 'package:ui_dev/models/think_tank_model.dart';
 import 'package:ui_dev/models/user_info_model.dart';
 import 'package:ui_dev/notifiers/error_handling/network_error.dart';
+import 'package:ui_dev/notifiers/error_handling/user_error.dart';
 import 'package:ui_dev/test_data.dart';
 
 const NUM_ITEM_PREVIEW = 8;
 const NUM_ITEM_LIST = 20;
 
-class FirestoreReaderService {
-  static final String studentsCollection = 'students';
-  static final String startupCollection = 'startups';
-  static final String prizesCollection = 'prizes';
-  static final String projectCollection = 'projects';
-  static final String projectSignupsCollection = 'project_signups';
-  static final String thinkTanksCollection = 'think_tanks';
+final String studentsCollection = 'students';
+final String educationCollection = 'education_history';
+final String experienceCollection = 'laboral_experiences';
+final String startupCollection = 'startups';
+final String prizesCollection = 'prizes';
+final String projectCollection = 'projects';
+final String projectSignupsCollection = 'project_signups';
+final String thinkTanksCollection = 'think_tanks';
+final String skillsCollection = 'skills';
 
+//!!!TODO: Change all of the queries to transactions
+class FirestoreReaderService {
   Firestore _firestore = Firestore.instance;
+
+  Future<UserInfoModel> fetchUserInformation(String uid) async {
+    try {
+      DocumentSnapshot snapshot =
+          await _firestore.collection(studentsCollection).document(uid).get();
+      if (snapshot == null)
+        throw NetworkError('Something went wrong during your connection...');
+      if (snapshot.data == null)
+        throw UserDataError('You are not supposed to be here:)');
+      return UserInfoModel.fromJson(snapshot.data);
+    } catch (e) {
+      print('(TRACE) ==== \n fetchStartups');
+      print(e);
+      return null;
+    }
+  }
+
+  Future<List<EducationModel>> fetchEducation(String uid) async {
+    final QuerySnapshot snapshot = await _firestore
+        .collection(educationCollection)
+        .where('user_id', isEqualTo: uid)
+        .orderBy('period_start', descending: true)
+        .getDocuments();
+    if (snapshot == null || snapshot.documents == null)
+      throw NetworkError('Server returned a malformed response');
+    return snapshot.documents
+        .map((doc) => EducationModel.fromJson(doc.data))
+        .toList();
+  }
+
+  Future<List<LaborExeprienceModel>> fetchExperience(String uid) async {
+    final QuerySnapshot snapshot = await _firestore
+        .collection(experienceCollection)
+        .orderBy('period_start', descending: true)
+        .where('user_id', isEqualTo: uid)
+        .getDocuments();
+    if (snapshot == null || snapshot.documents == null)
+      throw NetworkError('Server returned a malformed response');
+    return snapshot.documents
+        .map((doc) => LaborExeprienceModel.fromJson(doc.data))
+        .toList();
+  }
 
   Future<List<StartupInfoModel>> fetchStartups(QueryOrder order) async {
     try {
@@ -137,5 +186,78 @@ class FirestoreReaderService {
       print(e);
       return <UserInfoModel>[];
     }
+  }
+
+  Future<List<UserInfoModel>> fetchUsersByQueryAndCategory(
+      String query, SearchCategory category) async {
+    try {
+      QuerySnapshot skills = await _firestore
+          .collection(skillsCollection)
+          .where('category', isEqualTo: category)
+          .orderBy('user_id')
+          .startAt([query])
+          .endAt([query + '\uf8ff'])
+          .limit(NUM_ITEM_LIST)
+          .getDocuments();
+      if (skills == null || skills.documents == null) throw NetworkError('');
+      List<String> usersIds = [];
+      skills.documents.forEach((doc) {
+        if (doc.data == null || doc.data['user_id'] == null) return;
+        if (!usersIds.contains(doc.data['user_id']))
+          usersIds.add(doc.data['user_id']);
+      });
+      List<DocumentSnapshot> students = await Future.forEach(
+        usersIds,
+        (id) async {
+          return await _firestore
+              .collection(studentsCollection)
+              .document(id)
+              .get();
+        },
+      );
+      if (students == null) throw NetworkError('');
+      return students.map((doc) => UserInfoModel.fromJson(doc.data)).toList();
+    } catch (e) {
+      print('(TRACE) ==== \n fetchUsersByQueryAndCategory');
+      print(e);
+      return <UserInfoModel>[];
+    }
+  }
+
+  Future<List<UserInfoModel>> fetchUsersByQuery(String query) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection(studentsCollection)
+          .orderBy('user_id')
+          .startAt([query])
+          .endAt([query + '\uf8ff'])
+          .limit(NUM_ITEM_LIST)
+          .getDocuments();
+      if (snapshot == null || snapshot.documents == null)
+        throw NetworkError('');
+      return snapshot.documents
+          .map((doc) => UserInfoModel.fromJson(doc.data))
+          .toList();
+    } catch (e) {
+      print('(TRACE) ==== \n fetchUsersByQueryAndCategory');
+      print(e);
+      return <UserInfoModel>[];
+    }
+  }
+}
+
+class FirestoreUploadService {
+  Firestore _firestore = Firestore.instance;
+
+  Future updateProfileInfo(String uid, Map<String, dynamic> data) async {
+    DocumentReference doc =
+        _firestore.collection(studentsCollection).document(uid);
+
+    Map result = await _firestore.runTransaction(
+      (transaction) async {
+        await transaction.update(doc, data);
+      },
+    );
+    print(result);
   }
 }

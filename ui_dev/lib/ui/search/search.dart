@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_dev/enum/search_enum.dart';
-import 'package:ui_dev/notifiers/view_notifiers/search_notifier.dart';
+import 'package:ui_dev/notifiers/view_notifiers/general_search_notifier.dart';
 import 'package:ui_dev/ui/search/search_category.dart';
 import 'package:ui_dev/ui/search/search_screen_delegate.dart';
 import 'package:ui_dev/test_data.dart';
@@ -23,7 +23,7 @@ class _SearchTabState extends State<SearchTab> {
     String result = await showSearch(
       context: context,
       delegate: SearchScreenDelegate(
-        Provider.of<SearchNotifier>(context),
+        Provider.of<GeneralSearchNotifier>(context),
       ),
     );
     print(result);
@@ -31,8 +31,8 @@ class _SearchTabState extends State<SearchTab> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<SearchNotifier>(
-      builder: (_) => SearchNotifier(),
+    return ChangeNotifierProvider<GeneralSearchNotifier>(
+      builder: (_) => GeneralSearchNotifier(),
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Search Engine'),
@@ -44,11 +44,13 @@ class _SearchTabState extends State<SearchTab> {
             onPressed: () {},
           ),
           actions: <Widget>[
-            IconButton(
-              icon: const Icon(CupertinoIcons.search),
-              iconSize: 28.0,
-              onPressed: () => _onSearch(context),
-            ),
+            Builder(builder: (context) {
+              return IconButton(
+                icon: const Icon(CupertinoIcons.search),
+                iconSize: 28.0,
+                onPressed: () => _onSearch(context),
+              );
+            }),
             IconButton(
               icon: Icon(CupertinoIcons.heart),
               onPressed: () => print('Go To Saved Profiles'),

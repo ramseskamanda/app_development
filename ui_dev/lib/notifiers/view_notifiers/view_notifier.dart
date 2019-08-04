@@ -5,7 +5,8 @@ abstract class ViewNotifier extends ChangeNotifier {
   bool _isLoading = false;
   ViewError _error;
 
-  Future fetchData([dynamic data]);
+  @protected
+  Future fetchData();
   Future onRefresh();
 
   bool get isLoading => _isLoading ?? false;
@@ -19,6 +20,7 @@ abstract class ViewNotifier extends ChangeNotifier {
 
   set error(ViewError value) {
     _error = value;
+    print(value.message);
     notifyListeners();
   }
 }

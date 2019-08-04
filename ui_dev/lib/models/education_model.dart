@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ui_dev/test_data.dart';
+
 class EducationModel {
   String _userId;
   String _university;
   String _faculty;
   String _degree;
-  String _gradDate;
-  String _periodStart;
-  String _periodEnd;
+  Timestamp _gradDate;
+  Timestamp _periodStart;
+  Timestamp _periodEnd;
   String _studyDescription;
 
   EducationModel({
@@ -13,18 +16,18 @@ class EducationModel {
     String university,
     String faculty,
     String degree,
-    String gradDate,
-    String periodStart,
-    String periodEnd,
+    DateTime gradDate,
+    DateTime periodStart,
+    DateTime periodEnd,
     String studyDescription,
   }) {
     _userId = userId;
     _university = university;
     _faculty = faculty;
     _degree = degree;
-    _gradDate = gradDate;
-    _periodStart = periodStart;
-    _periodEnd = periodEnd;
+    _gradDate = Timestamp.fromDate(gradDate);
+    _periodStart = Timestamp.fromDate(periodStart);
+    _periodEnd = Timestamp.fromDate(periodEnd);
     _studyDescription = studyDescription;
   }
 
@@ -32,9 +35,9 @@ class EducationModel {
   String get university => _university ?? '404 Error';
   String get faculty => _faculty ?? '404 Error';
   String get degree => _degree ?? '404 Error';
-  String get gradDate => _gradDate ?? '404 Error';
-  String get periodStart => _periodStart ?? '404 Error';
-  String get periodEnd => _periodEnd ?? '404 Error';
+  String get gradDate => TestData.format(_gradDate);
+  String get periodStart => TestData.format(_periodStart);
+  String get periodEnd => TestData.format(_periodEnd, allowNow: true);
   String get studyDescription => _studyDescription ?? '404 Error';
 
   EducationModel.fromJson(Map<String, dynamic> json) {
