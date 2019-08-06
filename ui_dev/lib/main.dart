@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_dev/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:ui_dev/test_data.dart';
-import 'package:ui_dev/ui/profile/profile.dart';
+import 'package:ui_dev/ui/chat_screen/chats.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(primarySwatch: Colors.lightGreen),
-        home: Profile(),
+        home: Chats(),
       ),
     );
   }

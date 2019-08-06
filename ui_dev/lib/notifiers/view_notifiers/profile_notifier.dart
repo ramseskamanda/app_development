@@ -36,7 +36,6 @@ class ProfileNotifier extends ViewNotifier {
     _universityEditor = TextEditingController();
     _locationEditor = TextEditingController();
     _bioEditor = TextEditingController();
-    //fetchInfoData();
     fetchData();
   }
 
@@ -57,7 +56,7 @@ class ProfileNotifier extends ViewNotifier {
       isLoading || hasError ? [] : _experience;
 
   @override
-  Future onRefresh() async => fetchInfoData();
+  Future onRefresh() async => fetchData();
 
   @override
   Future fetchData([dynamic data]) async {
