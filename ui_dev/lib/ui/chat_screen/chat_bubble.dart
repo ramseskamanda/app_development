@@ -1,29 +1,28 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:timeago/timeago.dart' as timeago;
+import 'package:timeago/timeago.dart';
+import 'package:ui_dev/models/message_model.dart';
+import 'package:ui_dev/test_data.dart';
 
-class ChatBubble extends StatefulWidget {
-  final String timeAgo;
-  final bool isMe, isLast;
-  final bool seen = true;
+class ChatBubble extends StatelessWidget {
+  final MessageModel model;
+  final String timeSeenAgo, timeSent;
+  final bool isUser, isLast;
 
   ChatBubble({
     Key key,
-    @required bool isLast,
-  })  : timeAgo = timeago.format(DateTime.now().subtract(Duration(days: 1))),
-        isMe = false,
-        isLast = isLast;
+    @required this.model,
+    @required this.isLast,
+    @required this.isUser,
+  })  : timeSeenAgo = model.seenAt != null ? format(model.seenAt) : null,
+        timeSent = TestData.formatHour(model.sentAt),
+        super(key: key);
 
-  @override
-  _ChatBubbleState createState() => _ChatBubbleState();
-}
-
-class _ChatBubbleState extends State<ChatBubble> {
   @override
   Widget build(BuildContext context) {
-    final bg = widget.isMe ? Theme.of(context).accentColor : Colors.grey[200];
-    final align =
-        widget.isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start;
-    final radius = widget.isMe
+    final bg = isUser ? Theme.of(context).accentColor : Colors.grey[200];
+    final align = isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start;
+    final radius = isUser
         ? BorderRadius.only(
             topLeft: Radius.circular(5.0),
             bottomLeft: Radius.circular(5.0),
@@ -52,22 +51,33 @@ class _ChatBubbleState extends State<ChatBubble> {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              SizedBox(width: 2),
+              const SizedBox(width: 2),
               Padding(
-                padding: EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Text(
-                  'Hello, world!',
+                  model.text,
                   style: TextStyle(
-                    color: widget.isMe ? Colors.white : Colors.black,
+                    color: isUser ? Colors.white : Colors.black,
+                  ),
+                ),
+              ),
+              //TODO: align this to the right
+              FittedBox(
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    timeSent,
+                    textAlign: TextAlign.end,
+                    style: Theme.of(context).textTheme.caption,
                   ),
                 ),
               ),
             ],
           ),
         ),
-        if (widget.isLast)
+        if (isLast && isUser)
           Padding(
-            padding: widget.isMe
+            padding: isUser
                 ? EdgeInsets.only(
                     right: 10,
                     bottom: 10.0,
@@ -77,7 +87,7 @@ class _ChatBubbleState extends State<ChatBubble> {
                     bottom: 10.0,
                   ),
             child: Text(
-              '${widget.seen ? 'Seen' : 'Sent'} ${widget.timeAgo}',
+              model.seenAt != null ? 'Seen at $timeSeenAgo' : 'Sent',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 10.0,

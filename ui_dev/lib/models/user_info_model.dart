@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ui_dev/models/base_model.dart';
 
-class UserInfoModel {
+class UserInfoModel extends BaseModel {
   String _givenName;
   int _age;
   String _university;
@@ -55,7 +56,8 @@ class UserInfoModel {
   int get experienceMonthly => _experienceMonthly ?? 0;
   int get experienceOverall => _experienceOverall ?? 0;
 
-  UserInfoModel.fromJson(Map<String, dynamic> json) {
+  UserInfoModel.fromJson(DocumentSnapshot doc) : super.fromJson(doc) {
+    final Map<String, dynamic> json = doc.data;
     _givenName = json['given_name'];
     _age = json['age'];
     _university = json['university'];

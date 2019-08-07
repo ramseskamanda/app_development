@@ -46,7 +46,13 @@ class TestData {
 
   static String format(Timestamp date, {bool allowNow = false}) {
     if (date == null) return allowNow ? 'now' : '404 Error';
-    var format = new DateFormat.yMMM();
+    var format = DateFormat.yMMM();
     return format.format(date.toDate());
+  }
+
+  static String formatHour(DateTime time) {
+    if (time == null) return 'Error';
+    var format = DateFormat.Hm();
+    return format.format(time);
   }
 }

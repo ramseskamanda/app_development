@@ -2,21 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:ui_dev/models/chat_model.dart';
 import 'package:ui_dev/ui/chat_screen/conversation.dart';
 
-class ChatItem extends StatefulWidget {
-  final String imageUrl;
+class ChatListItem extends StatelessWidget {
+  final ChatModel model;
 
-  ChatItem({
-    Key key,
-  })  : imageUrl = 'https://via.placeholder.com/150',
-        super(key: key);
+  ChatListItem({Key key, @required this.model}) : super(key: key);
 
-  @override
-  _ChatItemState createState() => _ChatItemState();
-}
-
-class _ChatItemState extends State<ChatItem> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -27,12 +20,23 @@ class _ChatItemState extends State<ChatItem> {
           children: <Widget>[
             Hero(
               tag: 'chat_model',
-              child: CircleAvatar(
-                backgroundImage: CachedNetworkImageProvider(
-                  widget.imageUrl,
-                  errorListener: () => print('Network Image error'),
+              child: CachedNetworkImage(
+                imageUrl: model.other.mediaRef,
+                placeholder: (_, url) => CircleAvatar(
+                  radius: 25,
+                  backgroundColor: CupertinoColors.lightBackgroundGray,
                 ),
-                radius: 25,
+                errorWidget: (_, url, error) => CircleAvatar(
+                  radius: 25,
+                  backgroundColor: CupertinoColors.lightBackgroundGray,
+                  child: Icon(Icons.error),
+                ),
+                imageBuilder: (context, image) {
+                  return CircleAvatar(
+                    radius: 25,
+                    backgroundImage: image,
+                  );
+                },
               ),
             ),
             Positioned(
@@ -48,7 +52,10 @@ class _ChatItemState extends State<ChatItem> {
                 child: Center(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: 1 == 1 ? Colors.greenAccent : Colors.grey,
+                      color: model.lastMessage.sentAt.isBefore(DateTime.now()
+                              .subtract(const Duration(minutes: 5)))
+                          ? Colors.greenAccent
+                          : Colors.grey,
                       borderRadius: BorderRadius.circular(6),
                     ),
                     height: 7,
@@ -60,18 +67,18 @@ class _ChatItemState extends State<ChatItem> {
           ],
         ),
         title: Text(
-          'John Stamos',
+          model.other.givenName,
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: Text('Hello John'),
+        subtitle: Text(model.lastMessage.text),
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
             SizedBox(height: 10),
             Text(
-              timeago.format(DateTime.now().subtract(Duration(days: 1))),
+              timeago.format(model.lastMessage.sentAt),
               style: TextStyle(
                 fontWeight: FontWeight.w300,
                 fontSize: 11,
@@ -93,7 +100,7 @@ class _ChatItemState extends State<ChatItem> {
                     child: Padding(
                       padding: EdgeInsets.only(top: 1, left: 5, right: 5),
                       child: Text(
-                        '2',
+                        model.userUnread.toString(),
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 10,
@@ -107,7 +114,7 @@ class _ChatItemState extends State<ChatItem> {
         onTap: () {
           Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute(
-              builder: (context) => Conversation(),
+              builder: (context) => Conversation(chat: model),
             ),
           );
         },

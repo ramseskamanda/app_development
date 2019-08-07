@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:ui_dev/enum/query_order.dart';
 import 'package:ui_dev/enum/search_enum.dart';
+import 'package:ui_dev/models/chat_model.dart';
 import 'package:ui_dev/models/education_model.dart';
 import 'package:ui_dev/models/labor_experience_model.dart';
+import 'package:ui_dev/models/message_model.dart';
 import 'package:ui_dev/models/prize_model.dart';
 import 'package:ui_dev/models/project_model.dart';
 import 'package:ui_dev/models/startup_info_model.dart';
@@ -24,6 +28,8 @@ final String projectCollection = 'projects';
 final String projectSignupsCollection = 'project_signups';
 final String thinkTanksCollection = 'think_tanks';
 final String skillsCollection = 'skills';
+final String chatsCollection = 'chats';
+final String messagesCollection = 'messages';
 
 //!!!TODO: Change all of the queries to transactions
 class FirestoreReaderService {
@@ -37,7 +43,7 @@ class FirestoreReaderService {
         throw NetworkError('Something went wrong during your connection...');
       if (snapshot.data == null)
         throw UserDataError('You are not supposed to be here:)');
-      return UserInfoModel.fromJson(snapshot.data);
+      return UserInfoModel.fromJson(snapshot);
     } catch (e) {
       print('(TRACE) ==== \n fetchStartups');
       print(e);
@@ -179,7 +185,7 @@ class FirestoreReaderService {
       if (snapshot == null || snapshot.documents == null)
         throw NetworkError('');
       return snapshot.documents
-          .map((doc) => UserInfoModel.fromJson(doc.data))
+          .map((doc) => UserInfoModel.fromJson(doc))
           .toList();
     } catch (e) {
       print('(TRACE) ==== \n fetchUsersByCategory');
@@ -216,7 +222,7 @@ class FirestoreReaderService {
         },
       );
       if (students == null) throw NetworkError('');
-      return students.map((doc) => UserInfoModel.fromJson(doc.data)).toList();
+      return students.map((doc) => UserInfoModel.fromJson(doc)).toList();
     } catch (e) {
       print('(TRACE) ==== \n fetchUsersByQueryAndCategory');
       print(e);
@@ -236,12 +242,48 @@ class FirestoreReaderService {
       if (snapshot == null || snapshot.documents == null)
         throw NetworkError('');
       return snapshot.documents
-          .map((doc) => UserInfoModel.fromJson(doc.data))
+          .map((doc) => UserInfoModel.fromJson(doc))
           .toList();
     } catch (e) {
       print('(TRACE) ==== \n fetchUsersByQueryAndCategory');
       print(e);
       return <UserInfoModel>[];
+    }
+  }
+
+  Stream<List<MessageModel>> fetchMessages(CollectionReference collection) {
+    return collection.orderBy('sentAt', descending: true).snapshots().map(
+          (snapshot) => snapshot.documents
+              .map((doc) => MessageModel.fromJson(doc))
+              .toList(),
+        );
+  }
+
+  Future<List<ChatModel>> fetchConversations(String uid) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection('chats')
+          .where('participants', arrayContains: uid)
+          .getDocuments();
+      if (snapshot == null || snapshot.documents == null)
+        throw NetworkError('Something went wrong...');
+      List<ChatModel> conversations = snapshot.documents
+          .map((doc) => ChatModel.fromJson(doc, uid))
+          .toList();
+      for (ChatModel convo in conversations) {
+        print(convo.docId);
+        String otherId =
+            convo.participants.firstWhere((id) => id != uid, orElse: () => uid);
+        convo.other = await fetchUserInformation(otherId);
+        QuerySnapshot snap = await convo.messagesCollection
+            .orderBy('sentAt', descending: true)
+            .limit(1)
+            .getDocuments();
+        convo.lastMessage = MessageModel.fromJson(snap.documents.first);
+      }
+      return conversations;
+    } on PlatformException {
+      throw NetworkError('Couldn\'t find the resources requested');
     }
   }
 }
@@ -259,5 +301,15 @@ class FirestoreUploadService {
       },
     );
     print(result);
+  }
+
+  Future uploadMessage({
+    @required MessageModel messageModel,
+    @required CollectionReference to,
+  }) async =>
+      await to.add(messageModel.toJson());
+
+  Future removeConversation(CollectionReference collection) async {
+    await collection.parent().delete();
   }
 }

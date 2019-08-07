@@ -1,8 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ui_dev/ui/chat_screen/chat_item.dart';
+import 'package:provider/provider.dart';
+import 'package:ui_dev/notifiers/view_notifiers/chats_notifier.dart';
+import 'package:ui_dev/test_data.dart';
+import 'package:ui_dev/ui/chat_screen/chat_list_item.dart';
 
 class Chats extends StatefulWidget {
+  //! TODO: create new chats, search for chats, pagination (messages and chats), message seen write
   @override
   _ChatsState createState() => _ChatsState();
 }
@@ -12,26 +16,29 @@ class _ChatsState extends State<Chats>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        title: const Text('Direct Messaging'),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        leading: IconButton(
-          icon: Icon(CupertinoIcons.back),
-          onPressed: () async {},
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(CupertinoIcons.search),
-            onPressed: () {},
+    return ChangeNotifierProvider<ChatsNotifier>(
+      builder: (_) => ChatsNotifier(TestData.userId),
+      child: Scaffold(
+        appBar: AppBar(
+          elevation: 0.0,
+          title: const Text('Direct Messaging'),
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          leading: IconButton(
+            icon: Icon(CupertinoIcons.back),
+            onPressed: () async {},
           ),
-        ],
-      ),
-      body: UserChats(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {},
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(CupertinoIcons.search),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        body: UserChats(),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.add),
+          onPressed: () {},
+        ),
       ),
     );
   }
@@ -46,7 +53,6 @@ class UserChats extends StatefulWidget {
 }
 
 class _UserChatsState extends State<UserChats> {
-  List<String> _data;
   final ScrollController _controller = ScrollController();
 
   Future<void> _loadMore() async {
@@ -59,7 +65,6 @@ class _UserChatsState extends State<UserChats> {
   void initState() {
     super.initState();
     _controller.addListener(_loadMore);
-    _data = <String>[''];
   }
 
   @override
@@ -70,24 +75,34 @@ class _UserChatsState extends State<UserChats> {
 
   @override
   Widget build(BuildContext context) {
-    if (_data.isEmpty) return Center(child: const Text('No Data Here Yet'));
-    return ListView.separated(
-      controller: _controller,
-      padding: EdgeInsets.all(10),
-      itemCount: _data.length,
-      separatorBuilder: (BuildContext context, int index) {
-        return Align(
-          alignment: Alignment.centerRight,
-          child: Container(
-            height: 0.5,
-            width: MediaQuery.of(context).size.width / 1.3,
-            child: Divider(),
-          ),
+    return Consumer<ChatsNotifier>(
+      builder: (context, notifier, child) {
+        if (notifier.isLoading)
+          return Center(child: CircularProgressIndicator());
+        if (notifier.hasError)
+          return Center(child: Text(notifier.error.message));
+        if (notifier.conversations.isEmpty)
+          return Center(child: const Text('No Data Here Yet'));
+        //TODO: change this into streambuilder
+        return ListView.separated(
+          controller: _controller,
+          padding: EdgeInsets.all(10),
+          itemCount: notifier.conversations.length,
+          separatorBuilder: (BuildContext context, int index) {
+            return Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                height: 0.5,
+                width: MediaQuery.of(context).size.width / 1.3,
+                child: Divider(),
+              ),
+            );
+          },
+          itemBuilder: (BuildContext context, int index) {
+            //if (index == _data.length) return CupertinoActivityIndicator();
+            return ChatListItem(model: notifier.conversations[index]);
+          },
         );
-      },
-      itemBuilder: (BuildContext context, int index) {
-        //if (index == _data.length) return CupertinoActivityIndicator();
-        return ChatItem();
       },
     );
   }

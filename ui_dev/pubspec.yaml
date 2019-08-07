@@ -34,7 +34,6 @@ dependencies:
   permission_handler: ^3.2.1+1
   open_file: ^2.0.3
   intl: ^0.15.8
-  dash_chat: ^1.0.1
 
 dev_dependencies:
   flutter_test:
