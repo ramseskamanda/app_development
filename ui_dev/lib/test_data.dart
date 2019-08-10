@@ -37,15 +37,13 @@ class TestData {
     Icons.import_contacts,
   ];
 
-  static final String randomPicture = 'https://picsum.photos/200';
-
   static String geoPointToLocation(GeoPoint geoPoint) {
     // ! TODO: write a function that transforms a geopoint into a string location
     return 'Maastricht, Netherlands';
   }
 
   static String format(Timestamp date, {bool allowNow = false}) {
-    if (date == null) return allowNow ? 'now' : '404 Error';
+    if (date == null) return allowNow ? 'now' : '500 Error';
     var format = DateFormat.yMMM();
     return format.format(date.toDate());
   }
@@ -54,5 +52,16 @@ class TestData {
     if (time == null) return 'Error';
     var format = DateFormat.Hm();
     return format.format(time);
+  }
+
+  static Duration getDuration() {
+    DateTime now = DateTime.now();
+
+    // Find the last day of the month.
+    DateTime lastDayDateTime = (now.month < 12)
+        ? DateTime(now.year, now.month + 1, 0)
+        : DateTime(now.year + 1, 1, 0);
+
+    return lastDayDateTime.difference(now);
   }
 }

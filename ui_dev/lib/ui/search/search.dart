@@ -7,7 +7,6 @@ import 'package:ui_dev/enum/search_enum.dart';
 import 'package:ui_dev/notifiers/view_notifiers/general_search_notifier.dart';
 import 'package:ui_dev/ui/search/search_category.dart';
 import 'package:ui_dev/ui/search/search_screen_delegate.dart';
-import 'package:ui_dev/test_data.dart';
 
 class SearchTab extends StatefulWidget {
   @override
@@ -97,17 +96,26 @@ class SearchCard extends StatelessWidget {
       },
       child: Stack(
         children: <Widget>[
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: CachedNetworkImageProvider(
-                  TestData.randomPicture,
-                  errorListener: () => print('Error Network Image Provider'),
-                ),
-              ),
+          CachedNetworkImage(
+            imageUrl: 'https://via.placeholder.com/150',
+            placeholder: (_, url) => Container(
+              color: CupertinoColors.lightBackgroundGray,
             ),
+            errorWidget: (_, __, error) => Container(
+              color: CupertinoColors.lightBackgroundGray,
+              child: Center(child: const Icon(Icons.error)),
+            ),
+            imageBuilder: (_, image) {
+              return Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8.0),
+                  image: DecorationImage(
+                    fit: BoxFit.cover,
+                    image: image,
+                  ),
+                ),
+              );
+            },
           ),
           Container(
             decoration: BoxDecoration(

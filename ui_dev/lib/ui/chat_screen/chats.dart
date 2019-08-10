@@ -18,26 +18,42 @@ class _ChatsState extends State<Chats>
     super.build(context);
     return ChangeNotifierProvider<ChatsNotifier>(
       builder: (_) => ChatsNotifier(TestData.userId),
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0.0,
-          title: const Text('Direct Messaging'),
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          leading: IconButton(
-            icon: Icon(CupertinoIcons.back),
-            onPressed: () async {},
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(CupertinoIcons.search),
-              onPressed: () {},
+      child: WillPopScope(
+        onWillPop: () async {
+          Provider.of<PageController>(context).animateToPage(
+            0,
+            duration: kTabScrollDuration,
+            curve: Curves.easeInOutQuad,
+          );
+          return false;
+        },
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0.0,
+            title: const Text('Direct Messaging'),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            leading: IconButton(
+              icon: Icon(CupertinoIcons.back),
+              onPressed: () {
+                Provider.of<PageController>(context).animateToPage(
+                  0,
+                  duration: kTabScrollDuration,
+                  curve: Curves.easeInOutQuad,
+                );
+              },
             ),
-          ],
-        ),
-        body: UserChats(),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
-          onPressed: () {},
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(CupertinoIcons.search),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          body: UserChats(),
+          floatingActionButton: FloatingActionButton(
+            child: Icon(Icons.add),
+            onPressed: () {},
+          ),
         ),
       ),
     );

@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ui_dev/models/base_model.dart';
 
-class StartupInfoModel {
+class StartupInfoModel extends BaseModel {
   String _description;
   GeoPoint _location;
+  //TODO: make sure this only gets fetched if the user is the owner of this document
   List<String> _savedProfiles;
   String _name;
   String _website;
   String _imageUrl;
+  List<String> _team;
 
   StartupInfoModel({
     String description,
@@ -15,6 +18,7 @@ class StartupInfoModel {
     String name,
     String website,
     String imageUrl,
+    List<String> team,
   }) {
     _description = description;
     _location = location;
@@ -22,22 +26,26 @@ class StartupInfoModel {
     _name = name;
     _website = website;
     _imageUrl = imageUrl;
+    _team = team;
   }
 
-  String get description => _description ?? '404 Error';
+  String get description => _description ?? '500 Error';
   GeoPoint get location => _location ?? GeoPoint(0, 0);
   List<String> get savedProfiles => _savedProfiles ?? <String>[];
-  String get name => _name ?? '404 Error';
-  String get website => _website ?? '404 Error';
-  String get imageUrl => _imageUrl ?? '404 Error';
+  String get name => _name ?? '500 Error';
+  String get website => _website ?? '500 Error';
+  String get imageUrl => _imageUrl ?? '500 Error';
+  List<String> get team => _team ?? <String>[];
 
-  StartupInfoModel.fromJson(Map<String, dynamic> json) {
+  StartupInfoModel.fromJson(DocumentSnapshot doc) : super.fromJson(doc) {
+    final Map<String, dynamic> json = doc.data;
     _description = json['description'];
     _location = json['location'];
     _savedProfiles = json['saved_profiles'].cast<String>();
     _name = json['name'];
     _website = json['website'];
     _imageUrl = json['image_url'];
+    _team = json['team'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
@@ -48,6 +56,7 @@ class StartupInfoModel {
     data['name'] = _name;
     data['website'] = _website;
     data['image_url'] = _imageUrl;
+    data['team'] = _team;
     return data;
   }
 }

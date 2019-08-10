@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:ui_dev/notifiers/view_notifiers/project_page_notifier.dart';
 import 'package:ui_dev/services/project_creation_service.dart';
 
 class FileAttachment extends StatelessWidget {
@@ -47,7 +48,7 @@ class FileAttachment extends StatelessWidget {
 class SingleFileAttachment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<Object>(
+    return Consumer<ProjectPageNotifier>(
       builder: (context, notifier, child) {
         bool isAddButton = true; //notifier.file == null;
         return ListTile(

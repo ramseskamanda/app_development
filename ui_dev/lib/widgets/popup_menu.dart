@@ -22,14 +22,15 @@ class PopupMenuWithActions extends StatelessWidget {
       onSelected: _runCommand,
       itemBuilder: (context) {
         return [
-          PopupMenuItem(
-            value: PopupAction.DELETE,
-            enabled: true,
-            child: ListTile(
-              title: const Text('Delete'),
-              trailing: Icon(Icons.delete),
+          if (onDelete != null)
+            PopupMenuItem(
+              value: PopupAction.DELETE,
+              enabled: true,
+              child: ListTile(
+                title: const Text('Delete'),
+                trailing: Icon(Icons.delete),
+              ),
             ),
-          ),
         ];
       },
     );

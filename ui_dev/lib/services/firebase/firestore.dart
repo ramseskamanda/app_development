@@ -9,6 +9,7 @@ import 'package:ui_dev/models/labor_experience_model.dart';
 import 'package:ui_dev/models/message_model.dart';
 import 'package:ui_dev/models/prize_model.dart';
 import 'package:ui_dev/models/project_model.dart';
+import 'package:ui_dev/models/project_signup_model.dart';
 import 'package:ui_dev/models/startup_info_model.dart';
 import 'package:ui_dev/models/think_tank_model.dart';
 import 'package:ui_dev/models/user_info_model.dart';
@@ -88,7 +89,7 @@ class FirestoreReaderService {
       if (snapshot == null || snapshot.documents == null)
         throw NetworkError('');
       return snapshot.documents
-          .map((doc) => StartupInfoModel.fromJson(doc.data))
+          .map((doc) => StartupInfoModel.fromJson(doc))
           .toList();
     } catch (e) {
       print('(TRACE) ==== \n fetchStartups');
@@ -107,14 +108,48 @@ class FirestoreReaderService {
           .getDocuments();
       if (snapshot == null || snapshot.documents == null)
         throw NetworkError('');
-      return snapshot.documents
-          .map((doc) => PrizeModel.fromJson(doc.data))
-          .toList();
+      return snapshot.documents.map((doc) => PrizeModel.fromJson(doc)).toList();
     } catch (e) {
       // ? How do I return a network error to be shown
       print('(TRACE) ==== \n fetchPrizes');
       print(e);
       return <PrizeModel>[];
+    }
+  }
+
+  Future<List<PrizeModel>> fetchPrizesRanking() async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection(prizesCollection)
+          .orderBy('ranking')
+          .limit(NUM_ITEM_LIST)
+          .getDocuments();
+      if (snapshot == null || snapshot.documents == null)
+        throw NetworkError('Something went badly wrong');
+      return snapshot.documents.map((doc) => PrizeModel.fromJson(doc)).toList();
+    } on PlatformException {
+      throw NetworkError('Couldn\'t find the resources you\'re looking for...');
+    }
+  }
+
+  Future fetchProjectSignupById(
+    String userId,
+    ProjectModel project,
+  ) async {
+    try {
+      QuerySnapshot userSignup = await _firestore
+          .collection(projectSignupsCollection)
+          .where('user_id', isEqualTo: userId)
+          .where('project_id', isEqualTo: userId)
+          .getDocuments();
+      if (userSignup.documents.length == 1)
+        project.userSignUpFile =
+            ProjectSignupModel.fromJson(userSignup.documents.first);
+      project.userSignUpFile = null;
+      print(userSignup.documents.length);
+    } catch (e) {
+      print(e);
+      throw NetworkError('Your resource could not be found.');
     }
   }
 
@@ -140,8 +175,12 @@ class FirestoreReaderService {
           joinData.documents.length == 0 || joinData.documents.length == 1,
           'Too many signup documents were found. Only 1 can exist.',
         );
+        for (DocumentSnapshot doc in joinData.documents) print(doc.data);
+        final data = joinData.documents.length == 1
+            ? ProjectSignupModel.fromJson(joinData.documents.first)
+            : null;
         _projects.add(
-          ProjectModel.fromJson(doc.data, joinData.documents.length == 1),
+          ProjectModel.fromJson(doc, data),
         );
       }
       return _projects;
@@ -150,6 +189,41 @@ class FirestoreReaderService {
       print('(TRACE) ==== \n fetchProjects');
       print(e);
       return <ProjectModel>[];
+    }
+  }
+
+  Future<List<ProjectModel>> fetchProjectsByOwner(String ownerId) async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection(projectCollection)
+          .where('creator_id', isEqualTo: ownerId)
+          .orderBy('timestamp', descending: true)
+          .limit(NUM_ITEM_LIST)
+          .getDocuments();
+      if (snapshot == null || snapshot.documents == null)
+        throw NetworkError('Something went badly wrong');
+      List<ProjectModel> _projects = [];
+      for (DocumentSnapshot doc in snapshot.documents) {
+        QuerySnapshot joinData = await _firestore
+            .collection(projectSignupsCollection)
+            .where('project_id', isEqualTo: doc.documentID)
+            .where('user_id', isEqualTo: TestData.userId)
+            .getDocuments();
+        assert(
+          joinData.documents.length == 0 || joinData.documents.length == 1,
+          'Too many signup documents were found. Only 1 can exist.',
+        );
+        final data = joinData.documents.length == 1
+            ? ProjectSignupModel.fromJson(joinData.documents.first)
+            : null;
+        _projects.add(
+          ProjectModel.fromJson(doc, data),
+        );
+      }
+      return _projects;
+    } on PlatformException catch (e) {
+      print(e);
+      throw NetworkError('Couldn\'t find the resources you\'re looking for...');
     }
   }
 
@@ -170,6 +244,21 @@ class FirestoreReaderService {
       print('(TRACE) ==== \n fetchThinkTanks');
       print(e);
       return <ThinkTanksModel>[];
+    }
+  }
+
+  Future<List<UserInfoModel>> fetchAllUsersIn(List<String> ids) async {
+    try {
+      List<UserInfoModel> _users = [];
+      for (String id in ids) {
+        DocumentSnapshot doc =
+            await _firestore.collection(studentsCollection).document(id).get();
+        _users.add(UserInfoModel.fromJson(doc));
+      }
+      return _users;
+    } on PlatformException catch (e) {
+      print(e);
+      throw NetworkError('Couldn\'t find the resources requested');
     }
   }
 
@@ -286,6 +375,30 @@ class FirestoreReaderService {
       throw NetworkError('Couldn\'t find the resources requested');
     }
   }
+
+  Future<List<UserInfoModel>> fetchRankings({bool monthly = true}) async {
+    try {
+      QuerySnapshot snapshot;
+      if (monthly) {
+        snapshot = await _firestore
+            .collection(studentsCollection)
+            .orderBy('experience_month')
+            .limit(20)
+            .getDocuments();
+      } else {
+        snapshot = await _firestore
+            .collection(studentsCollection)
+            .orderBy('experience_overall')
+            .limit(20)
+            .getDocuments();
+      }
+      return snapshot.documents
+          .map((doc) => UserInfoModel.fromJson(doc))
+          .toList();
+    } on PlatformException {
+      throw NetworkError('Couldn\'t find the resources requested');
+    }
+  }
 }
 
 class FirestoreUploadService {
@@ -309,7 +422,14 @@ class FirestoreUploadService {
   }) async =>
       await to.add(messageModel.toJson());
 
-  Future removeConversation(CollectionReference collection) async {
-    await collection.parent().delete();
-  }
+  Future uploadSignUpDocument(ProjectSignupModel model) async =>
+      await _firestore.collection(projectSignupsCollection).add(model.toJson());
+
+  Future removeConversation(CollectionReference collection) async =>
+      await collection.parent().delete();
+
+  Future removeApplicant({@required docId}) async => await _firestore
+      .collection(projectSignupsCollection)
+      .document(docId)
+      .delete();
 }

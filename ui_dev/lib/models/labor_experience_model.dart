@@ -23,11 +23,11 @@ class LaborExeprienceModel {
     _position = position;
   }
 
-  String get userId => _userId ?? '404 Error';
-  String get companyName => _companyName ?? '404 Error';
+  String get userId => _userId ?? '500 Error';
+  String get companyName => _companyName ?? '500 Error';
   String get periodStart => TestData.format(_periodStart);
   String get periodEnd => TestData.format(_periodEnd, allowNow: true);
-  String get position => _position ?? '404 Error';
+  String get position => _position ?? '500 Error';
 
   LaborExeprienceModel.fromJson(Map<String, dynamic> json) {
     _userId = json['user_id'];

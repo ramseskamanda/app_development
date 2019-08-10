@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ui_dev/models/base_model.dart';
 
-class ProjectSignupModel {
+class ProjectSignupModel extends BaseModel {
   String _userId;
   String _message;
   String _projectId;
@@ -21,13 +22,14 @@ class ProjectSignupModel {
     _file = file;
   }
 
-  String get userId => _userId ?? 'Error 404';
-  String get message => _message ?? 'Error 404';
-  String get projectId => _projectId ?? 'Error 404';
+  String get userId => _userId ?? 'Error 500';
+  String get message => _message ?? 'Error 500';
+  String get projectId => _projectId ?? 'Error 500';
   DateTime get timestamps => _timestamps?.toDate() ?? DateTime.now();
-  String get file => _file ?? 'Error 404';
+  String get file => _file ?? 'Error 500';
 
-  ProjectSignupModel.fromJson(Map<String, dynamic> json) {
+  ProjectSignupModel.fromJson(DocumentSnapshot doc) : super.fromJson(doc) {
+    final Map<String, dynamic> json = doc.data;
     _userId = json['user_id'];
     _message = json['message'];
     _projectId = json['project_id'];

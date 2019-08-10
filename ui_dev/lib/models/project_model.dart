@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ui_dev/enum/search_enum.dart';
+import 'package:ui_dev/models/base_model.dart';
+import 'package:ui_dev/models/project_signup_model.dart';
+import 'package:ui_dev/test_data.dart';
 
-class ProjectModel {
+class ProjectModel extends BaseModel {
   String _creator;
   String _creatorMedia;
   String _creatorId;
@@ -11,14 +14,14 @@ class ProjectModel {
   String _description;
   Timestamp _timestamp;
   Timestamp _deadline;
-  List<String> _files;
+  String _attachement;
   String _category1;
   String _category2;
   String _category3;
   List<String> _favSolutions;
   int _maxUsersNum;
   int _signupsNum;
-  bool _userSignedUp;
+  ProjectSignupModel _userSignUp;
 
   ProjectModel({
     @required String creator,
@@ -26,7 +29,7 @@ class ProjectModel {
     @required String creatorId,
     @required String title,
     @required String media,
-    @required List<String> files,
+    @required String attachment,
     @required String description,
     @required DateTime timestamp,
     @required DateTime deadline,
@@ -41,7 +44,7 @@ class ProjectModel {
     _description = description;
     _timestamp = Timestamp.fromDate(timestamp);
     _deadline = Timestamp.fromDate(deadline);
-    _files = files;
+    _attachement = attachment;
     _category1 = categories[0].toString().split('.')[1];
     _category2 =
         categories.length > 1 ? categories[1].toString().split('.')[1] : null;
@@ -50,28 +53,34 @@ class ProjectModel {
     _favSolutions = <String>[];
     _maxUsersNum = maxUsersNum;
     _signupsNum = 0;
-    _userSignedUp = false;
+    _userSignUp = null;
   }
 
-  String get creator => _creator ?? '404 Error';
-  String get creatorMedia => _creatorMedia ?? '404 Error';
+  String get creator => _creator ?? '500 Error';
+  String get creatorMedia => _creatorMedia ?? '500 Error';
   String get creatorId => _creatorId ?? '';
-  String get title => _title ?? '404 Error';
-  String get media => _media ?? '404 Error';
-  String get description => _description ?? '404 Error';
+  String get title => _title ?? '500 Error';
+  String get media => _media ?? '500 Error';
+  String get description => _description ?? '500 Error';
   DateTime get timestamp => _timestamp?.toDate() ?? DateTime.now();
   DateTime get deadline => _deadline?.toDate() ?? DateTime.now();
-  List<String> get files => _files ?? <String>[];
-  String get category1 => _category1 ?? '404 Error';
-  String get category2 => _category2 ?? '404 Error';
-  String get category3 => _category3 ?? '404 Error';
+  String get formattedDeadline => TestData.format(_deadline ?? Timestamp.now());
+  String get attachment => _attachement ?? '500 Error';
+  String get category1 => _category1 ?? '500 Error';
+  String get category2 => _category2 ?? '500 Error';
+  String get category3 => _category3 ?? '500 Error';
   List<String> get favSolutions => _favSolutions ?? <String>[];
   int get maxUsersNum => _maxUsersNum ?? 0;
   int get signupsNum => _signupsNum ?? 0;
-  bool get userSignedUp => _userSignedUp ?? false;
+  bool get userSignedUp => _userSignUp != null;
+  ProjectSignupModel get userSignUpFile => _userSignUp;
+  set userSignUpFile(ProjectSignupModel value) => _userSignUp = value ?? null;
+  double get percentSignedUp => signupsNum / maxUsersNum;
+  bool get userIsOwner => creator == TestData.userId ?? false;
 
-  ProjectModel.fromJson(Map<String, dynamic> json, bool userSignedUp) {
-    if (json == null) return;
+  ProjectModel.fromJson(DocumentSnapshot doc, ProjectSignupModel userSignUp)
+      : super.fromJson(doc) {
+    final Map<String, dynamic> json = doc.data;
     _creator = json['creator'];
     _creatorMedia = json['creator_media'];
     _creatorId = json['creator_id'];
@@ -80,14 +89,14 @@ class ProjectModel {
     _description = json['description'];
     _timestamp = json['timestamp'];
     _deadline = json['deadline'];
-    _files = json['files']?.cast<String>() ?? <String>[];
+    _attachement = json['attachment'];
     _category1 = json['category1'];
     _category2 = json['category2'];
     _category3 = json['category3'];
     _favSolutions = json['fav_solutions']?.cast<String>() ?? <String>[];
     _maxUsersNum = json['max_users_num'];
     _signupsNum = json['signups_num'];
-    _userSignedUp = userSignedUp;
+    _userSignUp = userSignUp;
   }
 
   Map<String, dynamic> toJson() {
@@ -100,7 +109,7 @@ class ProjectModel {
     data['description'] = _description;
     data['timestamp'] = _timestamp;
     data['deadline'] = _deadline;
-    data['files'] = _files;
+    data['attachment'] = _attachement;
     data['category1'] = _category1;
     data['category2'] = _category2;
     data['category3'] = _category3;

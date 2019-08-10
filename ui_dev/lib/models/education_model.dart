@@ -31,14 +31,14 @@ class EducationModel {
     _studyDescription = studyDescription;
   }
 
-  String get userId => _userId ?? '404 Error';
-  String get university => _university ?? '404 Error';
-  String get faculty => _faculty ?? '404 Error';
-  String get degree => _degree ?? '404 Error';
+  String get userId => _userId ?? '500 Error';
+  String get university => _university ?? '500 Error';
+  String get faculty => _faculty ?? '500 Error';
+  String get degree => _degree ?? '500 Error';
   String get gradDate => TestData.format(_gradDate);
   String get periodStart => TestData.format(_periodStart);
   String get periodEnd => TestData.format(_periodEnd, allowNow: true);
-  String get studyDescription => _studyDescription ?? '404 Error';
+  String get studyDescription => _studyDescription ?? '500 Error';
 
   EducationModel.fromJson(Map<String, dynamic> json) {
     _userId = json['user_id'];

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class CustomSliverDelegate extends SliverPersistentHeaderDelegate {
@@ -10,6 +9,7 @@ class CustomSliverDelegate extends SliverPersistentHeaderDelegate {
   final List<Widget> actions;
   final Widget title;
   final Widget flexibleSpace;
+  final Widget child;
 
   CustomSliverDelegate({
     @required this.expandedHeight,
@@ -20,6 +20,7 @@ class CustomSliverDelegate extends SliverPersistentHeaderDelegate {
     this.title,
     this.flexibleSpace,
     this.stackChildHeight,
+    this.child,
   });
 
   @override
@@ -58,12 +59,12 @@ class CustomSliverDelegate extends SliverPersistentHeaderDelegate {
                 child: Material(
                   elevation: 6.0,
                   shape: CircleBorder(),
-                  child: CircleAvatar(
-                    radius: stackChildHeight / 2,
-                    backgroundImage: CachedNetworkImageProvider(
-                      'https://via.placeholder.com/150',
-                      errorListener: () => print('object'),
+                  child: SizedBox.fromSize(
+                    size: Size(
+                      stackChildHeight,
+                      stackChildHeight,
                     ),
+                    child: child,
                   ),
                 ),
               ),

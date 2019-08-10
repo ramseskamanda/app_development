@@ -5,6 +5,8 @@ import 'package:uuid/uuid.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
 
+final String projectsFolder = 'projects_files';
+
 class FirebaseStorageService {
   FirebaseStorage _firebaseStorage;
 
@@ -37,6 +39,7 @@ class FirebaseStorageService {
     final File file = File('${tempDir.path}/$filePath');
     final StorageReference ref = FirebaseStorage.instance.ref().child(filePath);
     final StorageFileDownloadTask downloadTask = ref.writeToFile(file);
+    print('URL Is $url');
     downloadTask.future.whenComplete(() async {
       callback();
       //check that file exists
@@ -61,5 +64,14 @@ class FirebaseStorageService {
       print(e);
     }
     return _tasks;
+  }
+
+  Future<String> uploadProjectFile(File file, {void Function() onError}) async {
+    final String _fileName = file.path.split('/').last;
+    String path = '$projectsFolder/$_fileName';
+    final StorageUploadTask task =
+        _firebaseStorage.ref().child(path).putFile(file);
+    task.onComplete.catchError(onError);
+    return path;
   }
 }

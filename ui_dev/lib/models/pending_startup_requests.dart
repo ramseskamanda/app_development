@@ -10,8 +10,8 @@ class PendingStartupRequestModel {
   }
 
   bool get accepted => _accepted ?? false;
-  String get userId => _userId ?? '404 Error';
-  String get startupId => _startupId ?? '404 Error';
+  String get userId => _userId ?? '500 Error';
+  String get startupId => _startupId ?? '500 Error';
 
   PendingStartupRequestModel.fromJson(Map<String, dynamic> json) {
     _accepted = json['accepted'];

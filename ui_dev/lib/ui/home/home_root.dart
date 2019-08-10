@@ -6,11 +6,21 @@ import 'package:ui_dev/models/prize_model.dart';
 import 'package:ui_dev/models/project_model.dart';
 import 'package:ui_dev/models/startup_info_model.dart';
 import 'package:ui_dev/notifiers/view_notifiers/feed_notifier.dart';
+import 'package:ui_dev/ui/leaderboard/prize_screen.dart';
+import 'package:ui_dev/ui/projects/project_root.dart';
+import 'package:ui_dev/ui/startup_page/startup_page.dart';
 import 'package:ui_dev/widgets/stadium_button.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ChangeNotifierProvider(
       builder: (_) => FeedNotifier(),
       child: Scaffold(
@@ -23,8 +33,14 @@ class HomeScreen extends StatelessWidget {
           ),
           actions: <Widget>[
             IconButton(
-              icon: Icon(Icons.chat_bubble_outline),
-              onPressed: () {},
+              icon: Icon(CupertinoIcons.conversation_bubble),
+              onPressed: () {
+                Provider.of<PageController>(context).animateToPage(
+                  1,
+                  duration: kTabScrollDuration,
+                  curve: Curves.easeInOutQuad,
+                );
+              },
             ),
           ],
         ),
@@ -113,13 +129,13 @@ class HomeScreen extends StatelessWidget {
                   },
                 ),
               ),
-              // * Competitions
+              // * Projects
 
               const SizedBox(height: 16.0),
               Padding(
                 padding: const EdgeInsets.only(left: 16.0),
                 child: Text(
-                  'Competitions',
+                  'Projects',
                   style: Theme.of(context)
                       .textTheme
                       .headline
@@ -133,7 +149,6 @@ class HomeScreen extends StatelessWidget {
                     return Center(child: CircularProgressIndicator());
                   if (notifier.hasError)
                     return Center(child: Icon(Icons.error));
-                  print(notifier.projects.length);
                   return Column(
                     children: notifier.projects
                         .map((project) => ProjectPost(model: project))
@@ -147,6 +162,9 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class StartupCard extends StatelessWidget {
@@ -157,7 +175,9 @@ class StartupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => print(model.website),
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => StartUpPageRoot(model: model)),
+      ),
       child: Card(
         child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.6,
@@ -215,66 +235,72 @@ class PrizeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.6,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Expanded(
-            child: Stack(
-              children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: 'https://via.placeholder.com/150',
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) {
-                    return CircularProgressIndicator();
-                  },
-                  errorWidget: (context, url, error) {
-                    return Icon(Icons.error);
-                  },
-                  imageBuilder: (context, imageProvider) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8.0),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: imageProvider,
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(
+        MaterialPageRoute(builder: (_) => PrizeScreen(model: model)),
+      ),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.6,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+              child: Stack(
+                children: <Widget>[
+                  CachedNetworkImage(
+                    imageUrl: model.media,
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) {
+                      return CircularProgressIndicator();
+                    },
+                    errorWidget: (context, url, error) {
+                      return Icon(Icons.error);
+                    },
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8.0),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: imageProvider,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8.0),
-                    color: CupertinoColors.darkBackgroundGray.withOpacity(0.42),
+                      );
+                    },
                   ),
-                ),
-                Center(
-                  child: Text(
-                    model.name,
-                    textAlign: TextAlign.center,
-                    softWrap: true,
-                    style: Theme.of(context)
-                        .textTheme
-                        .title
-                        .copyWith(color: Colors.white),
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8.0),
+                      color:
+                          CupertinoColors.darkBackgroundGray.withOpacity(0.42),
+                    ),
                   ),
-                ),
-              ],
+                  Center(
+                    child: Text(
+                      model.name,
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                      style: Theme.of(context)
+                          .textTheme
+                          .title
+                          .copyWith(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          if (model.sponsored) ...[
-            const SizedBox(height: 6.0),
-            Text(
-              'Sponsored',
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle
-                  .copyWith(color: Theme.of(context).accentColor),
-            ),
+            if (model.sponsored) ...[
+              const SizedBox(height: 6.0),
+              Text(
+                'Sponsored',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle
+                    .copyWith(color: Theme.of(context).accentColor),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
@@ -298,7 +324,7 @@ class ProjectPost extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   CachedNetworkImage(
-                    imageUrl: 'https://via.placeholder.com/150',
+                    imageUrl: model.media,
                     fit: BoxFit.cover,
                     placeholder: (context, url) {
                       return CircularProgressIndicator();
@@ -331,9 +357,11 @@ class ProjectPost extends StatelessWidget {
                     ],
                   ),
                   Align(
+                    //TODO: replace this with picture of the logo
+                    //?HOW: only keep creator_id and fetch the startup info
                     alignment: Alignment.center,
                     child: CachedNetworkImage(
-                      imageUrl: 'https://via.placeholder.com/150',
+                      imageUrl: model.creatorMedia,
                       fit: BoxFit.cover,
                       placeholder: (context, url) {
                         return CircularProgressIndicator();
@@ -358,13 +386,14 @@ class ProjectPost extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Icon(
-                      Icons.check_circle,
-                      color: Theme.of(context).accentColor,
+                  if (model.userSignedUp)
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Icon(
+                        Icons.check_circle,
+                        color: Theme.of(context).accentColor,
+                      ),
                     ),
-                  ),
                   Text(
                     model.creator,
                     style: Theme.of(context).textTheme.subtitle,
@@ -375,7 +404,10 @@ class ProjectPost extends StatelessWidget {
                   ),
                   StadiumButton(
                     text: 'Read More',
-                    onPressed: () => print(model.description),
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (_) => ProjectPage(model: model)),
+                    ),
                   ),
                 ],
               ),
