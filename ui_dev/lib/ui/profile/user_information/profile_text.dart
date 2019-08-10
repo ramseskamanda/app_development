@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_dev/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:ui_dev/test_data.dart';
 
 class ProfileText extends StatelessWidget {
   @override
@@ -86,7 +85,7 @@ class ProfileText extends StatelessWidget {
                 color: CupertinoColors.extraLightBackgroundGray,
               );
             return Text(
-              TestData.geoPointToLocation(notifier.info.location),
+              notifier.info.locationString,
               style: Theme.of(context)
                   .textTheme
                   .title

@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_dev/notifiers/view_notifiers/chats_notifier.dart';
 import 'package:ui_dev/test_data.dart';
 import 'package:ui_dev/ui/chat_screen/chat_list_item.dart';
 
 class Chats extends StatefulWidget {
-  //! TODO: create new chats, search for chats, pagination (messages and chats), message seen write
+  //! TODO: create new chats, search for chats, pagination (messages and chats)
   @override
   _ChatsState createState() => _ChatsState();
 }
@@ -100,24 +101,27 @@ class _UserChatsState extends State<UserChats> {
         if (notifier.conversations.isEmpty)
           return Center(child: const Text('No Data Here Yet'));
         //TODO: change this into streambuilder
-        return ListView.separated(
-          controller: _controller,
-          padding: EdgeInsets.all(10),
-          itemCount: notifier.conversations.length,
-          separatorBuilder: (BuildContext context, int index) {
-            return Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                height: 0.5,
-                width: MediaQuery.of(context).size.width / 1.3,
-                child: Divider(),
-              ),
-            );
-          },
-          itemBuilder: (BuildContext context, int index) {
-            //if (index == _data.length) return CupertinoActivityIndicator();
-            return ChatListItem(model: notifier.conversations[index]);
-          },
+        return LiquidPullToRefresh(
+          onRefresh: () => notifier.onRefresh(),
+          child: ListView.separated(
+            controller: _controller,
+            padding: EdgeInsets.all(10),
+            itemCount: notifier.conversations.length,
+            separatorBuilder: (BuildContext context, int index) {
+              return Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  height: 0.5,
+                  width: MediaQuery.of(context).size.width / 1.3,
+                  child: Divider(),
+                ),
+              );
+            },
+            itemBuilder: (BuildContext context, int index) {
+              //if (index == _data.length) return CupertinoActivityIndicator();
+              return ChatListItem(model: notifier.conversations[index]);
+            },
+          ),
         );
       },
     );

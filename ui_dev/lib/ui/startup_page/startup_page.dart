@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:ui_dev/models/project_model.dart';
 import 'package:ui_dev/models/startup_info_model.dart';
 import 'package:ui_dev/notifiers/view_notifiers/startup_page_notifier.dart';
-import 'package:ui_dev/test_data.dart';
 import 'package:ui_dev/ui/projects/project_root.dart';
 import 'package:ui_dev/widgets/popup_menu.dart';
 import 'package:ui_dev/widgets/stadium_button.dart';
@@ -66,7 +65,7 @@ class StartUpPageRoot extends StatelessWidget {
                   ),
                   const SizedBox(height: 12.0),
                   Text(
-                    TestData.geoPointToLocation(model.location),
+                    model.locationString,
                     style: Theme.of(context)
                         .textTheme
                         .subhead

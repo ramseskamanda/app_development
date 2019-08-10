@@ -7,6 +7,10 @@ import 'package:ui_dev/theme.dart';
 import 'package:ui_dev/widgets/stadium_button.dart';
 
 class ProfileExperienceSection extends StatelessWidget {
+  final bool isUser;
+
+  const ProfileExperienceSection({Key key, @required this.isUser})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -37,11 +41,12 @@ class ProfileExperienceSection extends StatelessWidget {
           const SizedBox(height: 8.0),
           EducationCard(index: 1),
           const SizedBox(height: 12.0),
-          StadiumButton.icon(
-            text: 'Add Experience',
-            icon: Icons.add,
-            onPressed: () {},
-          ),
+          if (isUser)
+            StadiumButton.icon(
+              text: 'Add Experience',
+              icon: Icons.add,
+              onPressed: () {},
+            ),
         ],
       ),
     );

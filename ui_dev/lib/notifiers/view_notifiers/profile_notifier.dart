@@ -9,6 +9,7 @@ import 'package:ui_dev/notifiers/error_handling/unknown_view_error.dart';
 import 'package:ui_dev/notifiers/error_handling/view_error.dart';
 import 'package:ui_dev/notifiers/view_notifiers/view_notifier.dart';
 import 'package:ui_dev/services/firebase/firestore.dart';
+import 'package:ui_dev/test_data.dart';
 
 // ? TODO: auth/linkedin
 // * TODO: skills
@@ -64,6 +65,8 @@ class ProfileNotifier extends ViewNotifier {
     try {
       if (_infoModel == null)
         _infoModel = await _firestoreService.fetchUserInformation(_uid);
+      _infoModel.locationString =
+          await TestData.geoPointToLocation(_infoModel.location);
       _education = await _firestoreService.fetchEducation(_uid);
       _experience = await _firestoreService.fetchExperience(_uid);
     } on PlatformException catch (pe) {

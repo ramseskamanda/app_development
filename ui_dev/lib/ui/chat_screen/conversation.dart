@@ -7,6 +7,7 @@ import 'package:ui_dev/models/message_model.dart';
 import 'package:ui_dev/services/messaging_service.dart';
 import 'package:ui_dev/ui/chat_screen/chat_bubble.dart';
 import 'package:ui_dev/ui/chat_screen/messaging_text_field.dart';
+import 'package:ui_dev/ui/profile/other_profile.dart';
 import 'package:ui_dev/widgets/popup_menu.dart';
 
 class Conversation extends StatelessWidget {
@@ -84,7 +85,14 @@ class Conversation extends StatelessWidget {
                 ),
               ],
             ),
-            onTap: () => print('GO TO USER PROFILE'),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => OtherProfile(
+                  infoModel: chat.other,
+                  fromMessaging: true,
+                ),
+              ),
+            ),
           ),
           actions: <Widget>[
             Consumer<MessagingService>(

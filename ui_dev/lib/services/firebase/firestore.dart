@@ -132,25 +132,22 @@ class FirestoreReaderService {
     }
   }
 
-  Future fetchProjectSignupById(
+  Stream<ProjectSignupModel> fetchProjectSignupById(
     String userId,
     ProjectModel project,
-  ) async {
-    try {
-      QuerySnapshot userSignup = await _firestore
-          .collection(projectSignupsCollection)
-          .where('user_id', isEqualTo: userId)
-          .where('project_id', isEqualTo: userId)
-          .getDocuments();
-      if (userSignup.documents.length == 1)
-        project.userSignUpFile =
-            ProjectSignupModel.fromJson(userSignup.documents.first);
-      project.userSignUpFile = null;
-      print(userSignup.documents.length);
-    } catch (e) {
-      print(e);
-      throw NetworkError('Your resource could not be found.');
-    }
+  ) {
+    return _firestore
+        .collection(projectSignupsCollection)
+        .where('user_id', isEqualTo: userId)
+        .where('project_id', isEqualTo: project.docId)
+        .snapshots()
+        .map(
+      (snapshot) {
+        if (snapshot.documents.length == 1)
+          return ProjectSignupModel.fromJson(snapshot.documents.first);
+        return null;
+      },
+    );
   }
 
   Future<List<ProjectModel>> fetchProjects(QueryOrder order) async {
@@ -421,6 +418,30 @@ class FirestoreUploadService {
     @required CollectionReference to,
   }) async =>
       await to.add(messageModel.toJson());
+
+  Future updateMessagesRead({
+    @required docId,
+    @required CollectionReference messages,
+    @required String otherId,
+  }) async {
+    Map result = await _firestore.runTransaction(
+      (transaction) async {
+        DocumentReference ref =
+            _firestore.collection(chatsCollection).document(docId);
+        transaction.update(ref, {
+          'unread.$otherId': 0,
+        });
+        QuerySnapshot docs = await messages
+            .where('sender_id', isEqualTo: otherId)
+            .where('seenAt', isNull: true)
+            .getDocuments();
+        docs.documents.forEach((doc) => transaction.update(doc.reference, {
+              'seenAt': Timestamp.now(),
+            }));
+      },
+    );
+    print(result);
+  }
 
   Future uploadSignUpDocument(ProjectSignupModel model) async =>
       await _firestore.collection(projectSignupsCollection).add(model.toJson());

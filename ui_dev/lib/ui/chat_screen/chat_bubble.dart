@@ -87,7 +87,7 @@ class ChatBubble extends StatelessWidget {
                     bottom: 10.0,
                   ),
             child: Text(
-              model.seenAt != null ? 'Seen at $timeSeenAgo' : 'Sent',
+              model.seenAt != null ? 'Seen $timeSeenAgo' : 'Sent',
               style: TextStyle(
                 color: Colors.black,
                 fontSize: 10.0,

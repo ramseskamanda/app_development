@@ -5,6 +5,7 @@ import 'package:ui_dev/models/startup_info_model.dart';
 import 'package:ui_dev/models/think_tank_model.dart';
 import 'package:ui_dev/notifiers/view_notifiers/view_notifier.dart';
 import 'package:ui_dev/services/firebase/firestore.dart';
+import 'package:ui_dev/test_data.dart';
 
 class FeedNotifier extends ViewNotifier {
   List<StartupInfoModel> _startups;
@@ -36,6 +37,9 @@ class FeedNotifier extends ViewNotifier {
     isLoading = true;
     //fetch startup data
     _startups = await _firestoreService.fetchStartups(QueryOrder.newest);
+    _startups.forEach((model) async {
+      model.locationString = await TestData.geoPointToLocation(model.location);
+    });
     //fetch prize data
     _prizes = await _firestoreService.fetchPrizes(QueryOrder.popularity);
     //fetch project data

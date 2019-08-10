@@ -12,4 +12,5 @@ enum SearchCategory {
   MOBILE,
   MUSIC,
   WEB,
+  OTHER,
 }

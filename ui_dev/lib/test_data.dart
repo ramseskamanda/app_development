@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 
 class TestData {
@@ -37,9 +38,13 @@ class TestData {
     Icons.import_contacts,
   ];
 
-  static String geoPointToLocation(GeoPoint geoPoint) {
-    // ! TODO: write a function that transforms a geopoint into a string location
-    return 'Maastricht, Netherlands';
+  static Future<String> geoPointToLocation(GeoPoint geoPoint) async {
+    if (geoPoint == null) return null;
+    List<Placemark> placemark = await Geolocator()
+        .placemarkFromCoordinates(geoPoint.latitude, geoPoint.longitude);
+    if (placemark.length > 0)
+      return '${placemark.first.locality}, ${placemark.first.country}';
+    return null;
   }
 
   static String format(Timestamp date, {bool allowNow = false}) {

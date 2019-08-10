@@ -10,11 +10,13 @@ class ChatsNotifier extends ViewNotifier {
   List<ChatModel> _conversations;
   //firestore reader
   FirestoreReaderService _firestoreReaderService;
+  FirestoreUploadService _firestoreUploadService;
 
   ChatsNotifier(String uid) {
     _uid = uid;
     _conversations = [];
     _firestoreReaderService = FirestoreReaderService();
+    _firestoreUploadService = FirestoreUploadService();
     fetchData();
   }
 
@@ -42,5 +44,14 @@ class ChatsNotifier extends ViewNotifier {
     for (ChatModel convo in _conversations)
       if (convo.other == null) return false;
     return true;
+  }
+
+  Future updateRead(String docId) async {
+    ChatModel model = conversations.firstWhere((chat) => chat.docId == docId);
+    await _firestoreUploadService.updateMessagesRead(
+      docId: docId,
+      otherId: model.other.docId,
+      messages: model.messagesCollection,
+    );
   }
 }

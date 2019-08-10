@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+// import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_dev/enum/search_enum.dart';
 import 'package:ui_dev/notifiers/view_notifiers/general_search_notifier.dart';
@@ -14,9 +14,9 @@ class SearchTab extends StatefulWidget {
 }
 
 class _SearchTabState extends State<SearchTab> {
-  double _getSize(int index) => index == 0
-      ? 150.0
-      : (index == SearchCategory.values.length - 2 ? 250 : 200);
+  // double _getSize(int index) => index == 0
+  //     ? 150.0
+  //     : (index == SearchCategory.values.length - 2 ? 250 : 200);
 
   Future<void> _onSearch(BuildContext context) async {
     String result = await showSearch(
@@ -58,21 +58,31 @@ class _SearchTabState extends State<SearchTab> {
         ),
         body: Padding(
           padding: const EdgeInsets.all(4.0),
-          child: StaggeredGridView.countBuilder(
-            crossAxisCount: 4,
-            itemCount: SearchCategory.values.length,
-            itemBuilder: (BuildContext context, int index) =>
-                SearchCard(index: index),
-            staggeredTileBuilder: (int index) =>
-                StaggeredTile.extent(2, _getSize(index)),
+          child: GridView.count(
+            crossAxisCount: 2,
             mainAxisSpacing: 4.0,
             crossAxisSpacing: 4.0,
+            children: <Widget>[
+              for (int i = 0; i < SearchCategory.values.length; i++)
+                SearchCard(index: i),
+            ],
           ),
         ),
       ),
     );
   }
 }
+
+// StaggeredGridView.countBuilder(
+//             crossAxisCount: 4,
+//             itemCount: SearchCategory.values.length,
+//             itemBuilder: (BuildContext context, int index) =>
+//                 SearchCard(index: index),
+//             staggeredTileBuilder: (int index) =>
+//                 StaggeredTile.extent(2, _getSize(index)),
+//             mainAxisSpacing: 4.0,
+//             crossAxisSpacing: 4.0,
+//           ),
 
 class SearchCard extends StatelessWidget {
   final int index;
@@ -96,27 +106,27 @@ class SearchCard extends StatelessWidget {
       },
       child: Stack(
         children: <Widget>[
-          CachedNetworkImage(
-            imageUrl: 'https://via.placeholder.com/150',
-            placeholder: (_, url) => Container(
-              color: CupertinoColors.lightBackgroundGray,
-            ),
-            errorWidget: (_, __, error) => Container(
-              color: CupertinoColors.lightBackgroundGray,
-              child: Center(child: const Icon(Icons.error)),
-            ),
-            imageBuilder: (_, image) {
-              return Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.0),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: image,
-                  ),
-                ),
-              );
-            },
-          ),
+          // CachedNetworkImage(
+          //   imageUrl: 'https://via.placeholder.com/150',
+          //   placeholder: (_, url) => Container(
+          //     color: CupertinoColors.lightBackgroundGray,
+          //   ),
+          //   errorWidget: (_, __, error) => Container(
+          //     color: CupertinoColors.lightBackgroundGray,
+          //     child: Center(child: const Icon(Icons.error)),
+          //   ),
+          //   imageBuilder: (_, image) {
+          //     return Container(
+          //       decoration: BoxDecoration(
+          //         borderRadius: BorderRadius.circular(8.0),
+          //         image: DecorationImage(
+          //           fit: BoxFit.cover,
+          //           image: image,
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // ),
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),

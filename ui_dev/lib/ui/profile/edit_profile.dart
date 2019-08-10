@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_dev/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:ui_dev/test_data.dart';
 
 class ProfileEditor extends StatelessWidget {
   @override
@@ -139,8 +138,7 @@ class ProfileEditor extends StatelessWidget {
                         maxLines: 1,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: TestData.geoPointToLocation(
-                              notifier.info.location),
+                          hintText: notifier.info.locationString,
                         ),
                       );
                     },

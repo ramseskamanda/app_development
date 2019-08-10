@@ -14,6 +14,7 @@ class UserInfoModel extends BaseModel {
   bool _banned;
   int _experienceMonthly;
   int _experienceOverall;
+  String locationString;
 
   UserInfoModel({
     String givenName,

@@ -12,6 +12,8 @@ import 'package:ui_dev/test_data.dart';
 class ProjectPageNotifier extends ViewNotifier {
   //Model for project page
   ProjectModel model;
+  //user sign up docs
+  Stream<ProjectSignupModel> _userSignups;
   //potential actions
   TextEditingController _messageController;
   File _file;
@@ -25,19 +27,21 @@ class ProjectPageNotifier extends ViewNotifier {
     _firestoreUploadService = FirestoreUploadService();
     _firebaseStorageService = FirebaseStorageService();
     _messageController = TextEditingController();
+    fetchData();
   }
 
   TextEditingController get message => _messageController;
   String get fileName => _file.path.split('/').last ?? 'No name';
+  Stream<ProjectSignupModel> get userSignUpStream => _userSignups;
+  bool get canApply =>
+      _messageController.text?.isNotEmpty ?? false || _file != null;
 
   @override
   Future fetchData() async {
-    isLoading = true;
-    await _firestoreReaderService.fetchProjectSignupById(
+    _userSignups = _firestoreReaderService.fetchProjectSignupById(
       TestData.userId,
       model,
     );
-    isLoading = false;
   }
 
   @override
@@ -54,7 +58,7 @@ class ProjectPageNotifier extends ViewNotifier {
   }
 
   Future signUp() async {
-    isLoading = true;
+    if (!canApply) return;
     try {
       String _filePath;
       if (_file != null)
@@ -71,20 +75,16 @@ class ProjectPageNotifier extends ViewNotifier {
       );
       await _firestoreUploadService.uploadSignUpDocument(_signupModel);
       _messageController.clear();
-      fetchData();
+      await Future.delayed(const Duration(milliseconds: 500));
     } catch (e) {
       print(e);
       error = NetworkError('(TRACE)   ::    ${e.runtimeType}');
     }
   }
 
-  Future removeApplicant() async {
-    isLoading = true;
+  Future removeApplicant(String docId) async {
     try {
-      final String docId = model.userSignUpFile?.docId ?? null;
-      if (docId != null)
-        await _firestoreUploadService.removeApplicant(docId: docId);
-      fetchData();
+      await _firestoreUploadService.removeApplicant(docId: docId);
     } catch (e) {
       error = NetworkError('(TRACE)   ::    ${e.runtimeType}');
     }

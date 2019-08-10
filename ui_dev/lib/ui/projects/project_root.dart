@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ui_dev/models/project_model.dart';
+import 'package:ui_dev/models/project_signup_model.dart';
 import 'package:ui_dev/notifiers/view_notifiers/project_page_notifier.dart';
 import 'package:ui_dev/ui/projects/file_attachment.dart';
 import 'package:ui_dev/widgets/custom_sliver_delegate.dart';
@@ -25,26 +26,35 @@ class ProjectPage extends StatelessWidget {
               CustomScrollView(
                 slivers: <Widget>[
                   ImageScrollbaleAppBar(model: model),
-                  ProjectInformation(model: model),
+                  ProjectInformation(),
                 ],
               ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Consumer<ProjectPageNotifier>(
                   builder: (context, notifier, child) {
-                    if (notifier.isLoading) return CircularProgressIndicator();
                     if (notifier.model.userIsOwner)
                       return StadiumButton(
                         text: 'Select Candidate',
                         onPressed: () => print('object'),
                       );
-                    return StadiumButton(
-                      text: notifier.model.userSignedUp
-                          ? 'Withdraw Application'
-                          : 'Apply',
-                      onPressed: notifier.model.userSignedUp
-                          ? () => notifier.removeApplicant()
-                          : () => notifier.signUp(),
+                    return StreamBuilder<ProjectSignupModel>(
+                      stream: notifier.userSignUpStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting)
+                          return Center(
+                              child: const CircularProgressIndicator());
+                        return StadiumButton(
+                          text: snapshot.hasData
+                              ? 'Withdraw Application'
+                              : 'Apply',
+                          //TODO: Add visual cue that user can't signup
+                          onPressed: snapshot.hasData
+                              ? () =>
+                                  notifier.removeApplicant(snapshot.data.docId)
+                              : () => notifier.signUp(),
+                        );
+                      },
                     );
                   },
                 ),
@@ -126,63 +136,67 @@ class ImageScrollbaleAppBar extends StatelessWidget {
 }
 
 class ProjectInformation extends StatelessWidget {
-  final ProjectModel model;
-
-  const ProjectInformation({Key key, @required this.model}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    ProjectPageNotifier notifier = Provider.of<ProjectPageNotifier>(context);
+
     return SliverList(
       delegate: SliverChildListDelegate(
         <Widget>[
-          Column(
-            children: <Widget>[
-              Consumer<ProjectPageNotifier>(
-                builder: (context, notifier, child) {
-                  if (!notifier.model.userSignedUp) return Container();
-                  return Text(
-                    'Signed Up!',
+          StreamBuilder<ProjectSignupModel>(
+            stream: notifier.userSignUpStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Center(child: const CircularProgressIndicator());
+              if (snapshot.hasError)
+                return Center(child: const Text('Something went wrong...'));
+
+              return Column(
+                children: <Widget>[
+                  if (snapshot.hasData)
+                    Text(
+                      'Signed Up!',
+                      style: Theme.of(context)
+                          .textTheme
+                          .title
+                          .copyWith(color: Theme.of(context).accentColor),
+                    ),
+                  const SizedBox(height: 16.0),
+                  Text(
+                    notifier.model.creator,
                     style: Theme.of(context)
                         .textTheme
-                        .title
-                        .copyWith(color: Theme.of(context).accentColor),
-                  );
-                },
-              ),
-              const SizedBox(height: 16.0),
-              Text(
-                model.creator,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline
-                    .copyWith(fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 16.0),
-              Text(
-                model.title,
-                softWrap: true,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.display1.copyWith(
-                    color: CupertinoColors.black, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: <Widget>[
-                  Text(
-                    model.signupsNum.toString() + ' signed up!',
-                    style: Theme.of(context).textTheme.subtitle,
+                        .headline
+                        .copyWith(fontWeight: FontWeight.w600),
                   ),
+                  const SizedBox(height: 16.0),
                   Text(
-                    '200 XP to earn',
-                    style: Theme.of(context).textTheme.subtitle,
+                    notifier.model.title,
+                    softWrap: true,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.display1.copyWith(
+                        color: CupertinoColors.black,
+                        fontWeight: FontWeight.bold),
                   ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-              Consumer<ProjectPageNotifier>(
-                builder: (context, notifier, child) {
-                  return FlatButton.icon(
+                  const SizedBox(height: 16.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text(
+                        snapshot.hasData
+                            ? (notifier.model.signupsNum + 1).toString()
+                            : notifier.model.signupsNum.toString() +
+                                ' signed up!',
+                        style: Theme.of(context).textTheme.subtitle,
+                      ),
+                      Text(
+                        '200 XP to earn',
+                        style: Theme.of(context).textTheme.subtitle,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16.0),
+                  FlatButton.icon(
                     textColor: Theme.of(context).accentColor,
                     icon: notifier.isLoading
                         ? CircularProgressIndicator()
@@ -194,51 +208,45 @@ class ProjectInformation extends StatelessWidget {
                     onPressed: notifier.isLoading
                         ? null
                         : () => notifier.downloadAttachmentsAndPreview(),
-                  );
-                },
-              ),
-              const SizedBox(height: 16.0),
-              Text(
-                model.description,
-                textAlign: TextAlign.center,
-                softWrap: true,
-              ),
-              const SizedBox(height: 16.0),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.9,
-                child: Column(
-                  children: <Widget>[
-                    Card(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 8.0),
-                        child: Consumer<ProjectPageNotifier>(
-                          builder: (context, notifier, child) {
-                            return TextField(
+                  ),
+                  const SizedBox(height: 16.0),
+                  Text(
+                    notifier.model.description,
+                    textAlign: TextAlign.center,
+                    softWrap: true,
+                  ),
+                  const SizedBox(height: 16.0),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Column(
+                      children: <Widget>[
+                        Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 8.0),
+                            child: TextField(
                               controller: notifier.message,
                               maxLines: null,
                               minLines: 5,
-                              readOnly: notifier.isLoading ||
-                                  notifier.hasError ||
-                                  notifier.model.userSignedUp,
+                              readOnly: snapshot.hasData,
                               decoration: InputDecoration(
                                 border: InputBorder.none,
-                                hintText: !notifier.model.userSignedUp
+                                hintText: !snapshot.hasData
                                     ? 'Write about your motivation...'
-                                    : notifier.model.userSignUpFile.message,
+                                    : snapshot.data.message,
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
-                      ),
+                        const SizedBox(height: 24.0),
+                        Center(child: SingleFileAttachment()),
+                      ],
                     ),
-                    const SizedBox(height: 24.0),
-                    Center(child: SingleFileAttachment()),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 48.0),
-            ],
+                  ),
+                  const SizedBox(height: 48.0),
+                ],
+              );
+            },
           ),
         ],
       ),

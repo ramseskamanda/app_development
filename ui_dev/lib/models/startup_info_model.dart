@@ -10,6 +10,7 @@ class StartupInfoModel extends BaseModel {
   String _website;
   String _imageUrl;
   List<String> _team;
+  String locationString;
 
   StartupInfoModel({
     String description,

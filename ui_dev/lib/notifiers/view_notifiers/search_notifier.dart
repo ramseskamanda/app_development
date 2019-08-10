@@ -3,7 +3,7 @@ import 'package:ui_dev/models/user_info_model.dart';
 import 'package:ui_dev/notifiers/view_notifiers/view_notifier.dart';
 
 abstract class SearchNotifier extends ViewNotifier {
-  // ! TODO: Add some actual cache here
+  // ! TODO: Add Algolia
   Map<String, dynamic> cache = {};
 
   Future<List<UserInfoModel>> searchFor(String query);
