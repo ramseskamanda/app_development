@@ -1,4 +1,4 @@
-package com.example.ui_dev
+package com.studentup.mobile
 
 import android.os.Bundle
 
