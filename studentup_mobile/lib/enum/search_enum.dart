@@ -1,0 +1,16 @@
+enum SearchCategory {
+  ALL,
+  AI,
+  ART,
+  BLOCKCHAIN,
+  DESIGN,
+  ENGINEERING,
+  FINANCE,
+  LAW,
+  MANAGEMENT,
+  MARKETING,
+  MOBILE,
+  MUSIC,
+  WEB,
+  OTHER,
+}

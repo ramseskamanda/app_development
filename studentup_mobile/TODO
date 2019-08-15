@@ -1,0 +1,18 @@
+
+Todo:
+  ✔ Theme @done(19-08-14 18:35)
+  ✔ SystemUIOverlay and other system parameters @started(19-08-14 18:35) @done(19-08-14 18:45) @lasted(10m5s)
+  ✔ Android Studio specific parameters @started(19-08-14 18:45) @done(19-08-14 19:30) @lasted(45m49s)
+  ✔ XCode specific parameters @done(19-08-14 19:33)
+  ✔ Splash Screen @started(19-08-14 22:06) @done(19-08-14 22:28) @lasted(22m58s)
+  ✔ Icons @started(19-08-14 22:29) @done(19-08-14 22:52) @lasted(23m57s)
+  ✔ Release-ready Android @done(19-08-14 23:53)
+  ☐ Release-ready iOS
+  ☐ Update proguard-rules.pro to protect packages
+  ✔ Authentication logic @done(19-08-15 01:58)
+  ✔ Base navigation @done(19-08-15 01:58)
+  ✔ Screen import from studentup (login + signup) @done(19-08-15 03:25)
+  ☐ Onboarding screens
+  ☐ Robust, multi-level navigation (maybe from studentup)
+  ☐ Feature import from ui_dev
+  ☐ Add notifications to the app

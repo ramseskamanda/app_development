@@ -70,7 +70,7 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - "geolocator (5.1.1+1)":
+  - geolocator (5.1.2):
     - Flutter
   - google_api_availability (2.0.1):
     - Flutter
@@ -132,7 +132,7 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - "permission_handler (3.2.1+1)":
+  - permission_handler (3.2.2):
     - Flutter
   - Protobuf (3.9.0)
   - sqflite (0.0.1):
@@ -216,7 +216,7 @@ SPEC CHECKSUMS:
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
   Firebase: dedc9e48ea3f3649ad5f6b982f8a0c73508a14b5
   firebase_core: b3b02d0b5e9d01aab5e50ba7cbcf84c73cb6883c
-  firebase_storage: 52033ea2e6ad58bfa852de92002598850d325c36
+  firebase_storage: 2251e73d2d6239f72243ef422969d8baa76d3012
   FirebaseAnalytics: 3fb375bc9d13779add4039716f868d233a473fad
   FirebaseAuthInterop: 0ffa57668be100582bb7643d4fcb7615496c41fc
   FirebaseCore: aecf02fb2274ec361b9bebeac112f5daa18273bd
@@ -226,7 +226,7 @@ SPEC CHECKSUMS:
   Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
   flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  geolocator: 9041fddc3646e5144b49c9843632365ef78d6ac2
+  geolocator: edbb3d70409f2e70a7684dafe1fb4055588efb79
   google_api_availability: 163b30f802e6148c67f092aa4501c90ddd8eec8d
   GoogleAppMeasurement: 183bd916af7f80deb67c01888368f1108d641832
   GoogleUtilities: d2b0e277a95962e09bb27f5cd42f5f0b6a506c7d
@@ -240,7 +240,7 @@ SPEC CHECKSUMS:
   nanopb: 2901f78ea1b7b4015c860c2fdd1ea2fee1a18d48
   open_file: 02eb5cb6b21264bd3a696876f5afbfb7ca4f4b7d
   path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
-  permission_handler: 6a1b2f94f866da8bd19fa67f3c8f4b9f38580efb
+  permission_handler: d59f41439f5bc6c4d1005f3355e98f05ddc68ece
   Protobuf: 1097ca58584c8d9be81bfbf2c5ff5975648dd87a
   sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a
   TOCropViewController: 00dc36c4e4a0f4a45efa91adbf22df8a4fae01d3

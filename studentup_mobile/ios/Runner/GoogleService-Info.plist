@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>335522247224-8dn5ebakok1f54lnd0v9vrlp9itrjapr.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.335522247224-8dn5ebakok1f54lnd0v9vrlp9itrjapr</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDhgMx9W1J262OrX04qBxHkChZKOmGbLH0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>335522247224</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.studentup.mobile</string>
+	<key>PROJECT_ID</key>
+	<string>studentup-nl</string>
+	<key>STORAGE_BUCKET</key>
+	<string>studentup-nl.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:335522247224:ios:d4f071257cfca022</string>
+	<key>DATABASE_URL</key>
+	<string>https://studentup-nl.firebaseio.com</string>
+</dict>
+</plist>
