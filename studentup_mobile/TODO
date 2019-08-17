@@ -12,7 +12,14 @@ Todo:
   ✔ Authentication logic @done(19-08-15 01:58)
   ✔ Base navigation @done(19-08-15 01:58)
   ✔ Screen import from studentup (login + signup) @done(19-08-15 03:25)
-  ☐ Onboarding screens
-  ☐ Robust, multi-level navigation (maybe from studentup)
-  ☐ Feature import from ui_dev
+  ✔ Onboarding screens @done(19-08-15 15:56)
+  ✔ Sign up process @done(19-08-17 14:59)
+  ✔ Robust, multi-level navigation (maybe from studentup) @started(19-08-17 15:27) @done(19-08-17 19:16) @lasted(3h49m38s)
+  ☐ Feature import from studentup_mobile
+  ✔ Add search feature @started(19-08-17 19:16) @done(19-08-17 19:53) @lasted(37m54s)
+  ☐ Finish search-related cloud functions (and add TODO list to functions including refining of the writing to algolia)
   ☐ Add notifications to the app
+  ☐ Analytics
+  ☐ Finalize onboarding screens + university selection page
+  ☐ Fix all TODOs from studentup, studentup_mobile, and studentup_mobile
+  ☐ Add debouncing for Suggestion queries

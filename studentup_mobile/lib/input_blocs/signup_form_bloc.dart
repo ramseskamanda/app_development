@@ -27,6 +27,13 @@ class SignUpFormBloc {
             (a.isNotEmpty && b.isNotEmpty && c.isNotEmpty && d.isNotEmpty),
       );
 
+  Stream<bool> get signin => Observable.combineLatest2(
+        _email,
+        _password,
+        (String a, String b) =>
+            (a != null && b != null) && (a.isNotEmpty && b.isNotEmpty),
+      );
+
   String passwordValidator(String data) {
     if (_password.value != _passwordConfirm.value)
       return 'Passwords are not identical';

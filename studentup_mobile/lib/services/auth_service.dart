@@ -10,14 +10,17 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FirebaseUser _currentUser;
+  bool _isNewUser = false;
 
   FirebaseUser get currentUser => _currentUser;
+  Stream<bool> get isUserLoggedOut =>
+      _auth.onAuthStateChanged.map((user) => user == null);
+  bool get currentUserisNew => _isNewUser;
 
   Future<void> attemptAutoLogin() async =>
       _currentUser = await _auth.currentUser();
 
   Future<FirebaseUser> signUpWithEmail({
-    @required String name,
     @required String email,
     @required String password,
   }) async {
@@ -26,7 +29,27 @@ class AuthService {
         email: email,
         password: password,
       );
-      if (result.user != null)
+      if (result.user != null) {
+        Locator.of<LocalStorageService>().saveToDisk(SIGNUP_STORAGE_KEY, true);
+        _isNewUser = true;
+      }
+      return result.user;
+    } on PlatformException catch (e) {
+      throw e;
+    }
+  }
+
+  Future<FirebaseUser> loginWithEmail({
+    @required String email,
+    @required String password,
+    bool isSignedUp = false,
+  }) async {
+    try {
+      AuthResult result = await _auth.signInWithEmailAndPassword(
+        email: '',
+        password: '',
+      );
+      if (result?.additionalUserInfo?.isNewUser ?? false || !isSignedUp)
         Locator.of<LocalStorageService>().saveToDisk(SIGNUP_STORAGE_KEY, true);
       return result.user;
     } on PlatformException catch (e) {
@@ -34,7 +57,7 @@ class AuthService {
     }
   }
 
-  Future<FirebaseUser> loginWithGoogle() async {
+  Future<FirebaseUser> loginWithGoogle({bool isSignedUp = false}) async {
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleAuth =
@@ -46,7 +69,8 @@ class AuthService {
       );
 
       AuthResult result = await _auth.signInWithCredential(credential);
-      if (result.additionalUserInfo.isNewUser)
+      if (result?.additionalUserInfo?.isNewUser ?? false) _isNewUser = true;
+      if (!isSignedUp)
         Locator.of<LocalStorageService>().saveToDisk(SIGNUP_STORAGE_KEY, true);
       return result.user;
     } on PlatformException catch (e) {

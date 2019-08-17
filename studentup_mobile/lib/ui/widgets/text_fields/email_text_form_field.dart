@@ -41,7 +41,7 @@ class _EmailTextFormFieldState extends State<EmailTextFormField> {
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         hintText: 'Email',
-        errorText: _auth.hasError ? _auth.error : null,
+        errorText: _auth.hasError ? _auth.error.toString() : null,
         prefixIcon: Icon(CupertinoIcons.mail),
       ),
     );

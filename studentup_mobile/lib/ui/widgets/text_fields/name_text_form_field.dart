@@ -40,7 +40,7 @@ class _NameTextFormFieldState extends State<NameTextFormField> {
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         hintText: 'Full Name',
-        errorText: _auth.hasError ? _auth.error : null,
+        errorText: _auth.hasError ? _auth.error.toString() : null,
         prefixIcon: Icon(
           Theme.of(context).platform == TargetPlatform.iOS
               ? CupertinoIcons.profile_circled

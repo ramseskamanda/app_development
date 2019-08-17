@@ -1,125 +1,116 @@
-import 'package:studentup_mobile/input_blocs/signup_form_bloc.dart';
-import 'package:studentup_mobile/ui/signup/signup_button.dart';
-import 'package:studentup_mobile/ui/widgets/buttons/google_button.dart';
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup_mobile/ui/widgets/text_fields/email_text_form_field.dart';
-import 'package:studentup_mobile/ui/widgets/text_fields/name_text_form_field.dart';
-import 'package:studentup_mobile/ui/widgets/text_fields/password_text_form_field.dart';
-import 'package:studentup_mobile/util/config.dart';
+import 'package:studentup_mobile/ui/signup/signin.dart';
+import 'package:studentup_mobile/ui/signup/signup_form.dart';
+import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 export './disclaimer.dart';
 
 class SignupRoot extends StatefulWidget {
+  final bool login;
+  const SignupRoot({Key key, this.login = false}) : super(key: key);
   @override
   _SignUpState createState() => _SignUpState();
 }
 
 class _SignUpState extends State<SignupRoot> {
-  SignUpFormBloc _bloc;
+  List<Widget> _pages;
+  PageController _controller;
+  bool _authPage;
 
-  GlobalKey<FormState> _key;
+  final List<Widget> _onboardingPages = <Widget>[
+    Container(color: Colors.blue),
+    Container(color: Colors.red),
+    Container(color: Colors.green),
+  ];
 
-  FocusNode _emailNode;
-  FocusNode _passwordNode;
-  FocusNode _passwordConfirmNode;
+  void _goToSignUp() {
+    _controller.animateToPage(
+      _pages.length - 1,
+      duration:
+          kTabScrollDuration ~/ (_pages.length - _controller.page.toInt()),
+      curve: Curves.easeInOutCirc,
+    );
+  }
+
+  void _goToLogin() {
+    _controller.animateToPage(
+      _pages.length - 2,
+      duration: kTabScrollDuration,
+      curve: Curves.easeInOutCirc,
+    );
+  }
+
+  void _onPageChanged(int index) {
+    if (index >= _pages.length - 2)
+      _authPage = true;
+    else
+      _authPage = false;
+    setState(() {});
+  }
 
   @override
   void initState() {
     super.initState();
-    _key = GlobalKey<FormState>();
-    _bloc = SignUpFormBloc();
-    _emailNode = FocusNode();
-    _passwordNode = FocusNode();
-    _passwordConfirmNode = FocusNode();
+    _controller = PageController(
+      initialPage: widget.login ? _onboardingPages.length : 0,
+    );
+    _authPage = widget.login;
+    _pages = <Widget>[
+      ..._onboardingPages,
+      SignIn(signupCallback: _goToSignUp),
+      SignUpForm(loginCallback: _goToLogin),
+    ];
   }
 
   @override
   void dispose() {
-    _emailNode.dispose();
-    _passwordNode.dispose();
-    _passwordConfirmNode.dispose();
-    _bloc.dispose();
+    _controller.dispose();
     super.dispose();
-  }
-
-  Widget _buildAccountReminder(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const Text('Already have an account? '),
-        GestureDetector(
-          onTap: () {},
-          child: Text(
-            'Sign in!',
-            style: TextStyle(decoration: TextDecoration.underline),
-          ),
-        ),
-      ],
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * 0.9,
-            width: MediaQuery.of(context).size.width * 0.86,
-            child: Form(
-              autovalidate: true,
-              key: _key,
-              child: Column(
-                children: <Widget>[
-                  Spacer(flex: 3),
-                  Hero(
-                    tag: HEADER_LOGO_HERO_TAG,
-                    child: Image.asset(
-                      'assets/logo.png',
-                      width: MediaQuery.of(context).size.width * 0.7,
-                    ),
-                  ),
-                  Spacer(flex: 2),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      const Text(
-                        'Register',
-                        style: TextStyle(fontSize: 28.0),
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  NameTextFormField(
-                    sink: _bloc.name,
-                    nextNode: _emailNode,
-                  ),
-                  SizedBox(height: 16.0),
-                  EmailTextFormField(
-                    sink: _bloc.email,
-                    nextNode: _passwordNode,
-                  ),
-                  SizedBox(height: 16.0),
-                  PasswordTextFormField(
-                    sink: _bloc.password,
-                    nextNode: _passwordConfirmNode,
-                  ),
-                  SizedBox(height: 16.0),
-                  PasswordTextFormField(
-                    confirm: true,
-                    sink: _bloc.confirm,
-                    validator: _bloc.passwordValidator,
-                  ),
-                  Spacer(),
-                  GoogleButton(),
-                  SignUpButton(formKey: _key, bloc: _bloc),
-                  _buildAccountReminder(context),
-                  Spacer(flex: 4),
-                ],
-              ),
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+        actions: <Widget>[
+          if (!_authPage)
+            FlatButton(
+              child: const Text('Skip'),
+              textColor: Platform.isIOS
+                  ? CupertinoColors.activeBlue
+                  : Theme.of(context).accentColor,
+              onPressed: _goToLogin,
             ),
-          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Stack(
+          children: <Widget>[
+            PageView(
+              physics: NeverScrollableScrollPhysics(),
+              controller: _controller,
+              onPageChanged: _onPageChanged,
+              children: _pages,
+            ),
+            if (!_authPage)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: StadiumButton(
+                  text: 'Next',
+                  onPressed: () {
+                    _controller.nextPage(
+                      duration: kTabScrollDuration,
+                      curve: Curves.easeInOutCirc,
+                    );
+                  },
+                ),
+              ),
+          ],
         ),
       ),
     );
