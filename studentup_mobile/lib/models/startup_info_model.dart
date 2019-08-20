@@ -11,6 +11,7 @@ class StartupInfoModel extends BaseModel {
   String _imageUrl;
   List<String> _team;
   String locationString;
+  Timestamp _creationDate;
 
   StartupInfoModel({
     String description,
@@ -20,6 +21,7 @@ class StartupInfoModel extends BaseModel {
     String website,
     String imageUrl,
     List<String> team,
+    DateTime creation,
   }) {
     _description = description;
     _location = location;
@@ -28,6 +30,7 @@ class StartupInfoModel extends BaseModel {
     _website = website;
     _imageUrl = imageUrl;
     _team = team;
+    _creationDate = Timestamp.fromDate(creation);
   }
 
   String get description => _description ?? '500 Error';
@@ -37,6 +40,7 @@ class StartupInfoModel extends BaseModel {
   String get website => _website ?? '500 Error';
   String get imageUrl => _imageUrl ?? '500 Error';
   List<String> get team => _team ?? <String>[];
+  DateTime get creationDate => _creationDate?.toDate() ?? DateTime.now();
 
   StartupInfoModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;
@@ -47,6 +51,7 @@ class StartupInfoModel extends BaseModel {
     _website = json['website'];
     _imageUrl = json['image_url'];
     _team = json['team'].cast<String>();
+    _creationDate = json['creation_date'];
   }
 
   Map<String, dynamic> toJson() {
@@ -58,6 +63,7 @@ class StartupInfoModel extends BaseModel {
     data['website'] = _website;
     data['image_url'] = _imageUrl;
     data['team'] = _team;
+    data['creation_date'] = _creationDate;
     return data;
   }
 }

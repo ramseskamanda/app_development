@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:studentup_mobile/services/analytics_service.dart';
 import 'package:studentup_mobile/services/local_storage_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/config.dart';
@@ -31,6 +32,7 @@ class AuthService {
       );
       if (result.user != null) {
         Locator.of<LocalStorageService>().saveToDisk(SIGNUP_STORAGE_KEY, true);
+        Locator.of<AnalyticsService>().logger.logSignUp(signUpMethod: 'Email');
         _isNewUser = true;
       }
       return result.user;
@@ -51,6 +53,7 @@ class AuthService {
       );
       if (result?.additionalUserInfo?.isNewUser ?? false || !isSignedUp)
         Locator.of<LocalStorageService>().saveToDisk(SIGNUP_STORAGE_KEY, true);
+      Locator.of<AnalyticsService>().logger.logLogin(loginMethod: 'Email');
       return result.user;
     } on PlatformException catch (e) {
       throw e;
@@ -72,6 +75,10 @@ class AuthService {
       if (result?.additionalUserInfo?.isNewUser ?? false) _isNewUser = true;
       if (!isSignedUp)
         Locator.of<LocalStorageService>().saveToDisk(SIGNUP_STORAGE_KEY, true);
+
+      if (_isNewUser)
+        Locator.of<AnalyticsService>().logger.logSignUp(signUpMethod: 'Google');
+      Locator.of<AnalyticsService>().logger.logLogin(loginMethod: 'Google');
       return result.user;
     } on PlatformException catch (e) {
       throw e;

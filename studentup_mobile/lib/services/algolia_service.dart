@@ -17,13 +17,13 @@ class AlgoliaService {
   Future<List<String>> suggestUsers(String queryString) async {
     //TODO: make this more "sophisticated" by getting the number of people that searched for a certain query etc.
     try {
-      AlgoliaQuery query =
-          algolia.instance.index(studentSuggestionsIndex).setLength(10);
-      query = query.search(queryString);
+      // AlgoliaQuery query =
+      //     algolia.instance.index(studentSuggestionsIndex).setLength(10);
+      // query = query.search(queryString);
 
-      List _results = (await query.getObjects()).hits;
+      // List _results = (await query.getObjects()).hits;
 
-      _results.forEach((result) => print(result));
+      // _results.forEach((result) => print(result));
       // return _results.map((snapshot) => snapshot.data['given_name']).toList();
       return [];
     } catch (e) {

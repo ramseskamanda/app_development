@@ -6,6 +6,8 @@ import 'package:studentup_mobile/ui/signup/signin.dart';
 import 'package:studentup_mobile/ui/signup/signup_form.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
+import 'onboarding/onboarding.dart';
+
 export './disclaimer.dart';
 
 class SignupRoot extends StatefulWidget {
@@ -19,12 +21,7 @@ class _SignUpState extends State<SignupRoot> {
   List<Widget> _pages;
   PageController _controller;
   bool _authPage;
-
-  final List<Widget> _onboardingPages = <Widget>[
-    Container(color: Colors.blue),
-    Container(color: Colors.red),
-    Container(color: Colors.green),
-  ];
+  bool _goBack;
 
   void _goToSignUp() {
     _controller.animateToPage(
@@ -48,18 +45,25 @@ class _SignUpState extends State<SignupRoot> {
       _authPage = true;
     else
       _authPage = false;
+    if (index > 0)
+      _goBack = true;
+    else
+      _goBack = false;
+
     setState(() {});
   }
 
+  //TODO: Add tutorialBegin and tutorialComplete analytics
   @override
   void initState() {
     super.initState();
     _controller = PageController(
-      initialPage: widget.login ? _onboardingPages.length : 0,
+      initialPage: widget.login ? onboarding.length : 0,
     );
     _authPage = widget.login;
+    _goBack = widget.login;
     _pages = <Widget>[
-      ..._onboardingPages,
+      ...onboarding,
       SignIn(signupCallback: _goToSignUp),
       SignUpForm(loginCallback: _goToLogin),
     ];
@@ -77,6 +81,17 @@ class _SignUpState extends State<SignupRoot> {
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.transparent,
+        leading: !_goBack
+            ? null
+            : IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: () {
+                  _controller.previousPage(
+                    duration: kTabScrollDuration,
+                    curve: Curves.easeInOutCirc,
+                  );
+                },
+              ),
         actions: <Widget>[
           if (!_authPage)
             FlatButton(

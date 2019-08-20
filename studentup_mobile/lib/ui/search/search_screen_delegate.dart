@@ -26,10 +26,7 @@ class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
   Widget buildLeading(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.arrow_back),
-      onPressed: () {
-        _searchBloc.dispose();
-        close(context, null);
-      },
+      onPressed: () => close(context, null),
     );
   }
 

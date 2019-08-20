@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 const SIGNUP_STORAGE_KEY = '_signupKey';
 const HEADER_LOGO_HERO_TAG = '_heroLogo';
+const NUM_ITEM_PREVIEW = 8;
+const NUM_ITEM_LIST = 20;
 
 const List<String> rulesUser = <String>[
   'Only during the next 24 hours, you can ...',

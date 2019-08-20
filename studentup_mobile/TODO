@@ -15,11 +15,24 @@ Todo:
   ✔ Onboarding screens @done(19-08-15 15:56)
   ✔ Sign up process @done(19-08-17 14:59)
   ✔ Robust, multi-level navigation (maybe from studentup) @started(19-08-17 15:27) @done(19-08-17 19:16) @lasted(3h49m38s)
-  ☐ Feature import from studentup_mobile
+  ☐ Feature import from ui_dev
   ✔ Add search feature @started(19-08-17 19:16) @done(19-08-17 19:53) @lasted(37m54s)
-  ☐ Finish search-related cloud functions (and add TODO list to functions including refining of the writing to algolia)
-  ☐ Add notifications to the app
-  ☐ Analytics
-  ☐ Finalize onboarding screens + university selection page
-  ☐ Fix all TODOs from studentup, studentup_mobile, and studentup_mobile
+  ✔ Finish search-related cloud functions (and add TODO list to functions including refining of the writing to algolia) @done(19-08-17 23:40)
+  ✔ Add notifications to the app @done(19-08-18 15:29)
+  ✔ Analytics @done(19-08-18 17:05)
+  ✔ Finalize onboarding screens + university selection page @done(19-08-18 18:51)
+  ☐ Fix all TODOs from studentup, ui_dev, and studentup_mobile
   ☐ Add debouncing for Suggestion queries
+
+Remember:
+  ☐ Take out the -FIRAnalyticsDebugEnabled tag by running the opposite tag
+
+Feature Import:
+  ☐ Home Feed with think-tanks
+  ☐ Messaging system with creating new chats
+  ☐ Search Screen with Category-Search
+  ☐ Leaderboards
+  ☐ Notifications with notifications collection
+  ☐ Profile with creating new skills, education, jobs
+  ☐ Saved Profiles
+  ☐ Side Bar Menu
