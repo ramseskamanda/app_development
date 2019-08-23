@@ -1,9 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:ui_dev/test_data.dart';
-import 'package:ui_dev/ui/app_navigation.dart';
-
-import 'notifiers/view_notifiers/profile_notifier.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,17 +7,17 @@ class MyApp extends StatelessWidget {
   //!TODO: add global cache
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          builder: (_) => ProfileNotifier(uid: TestData.userId),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(primarySwatch: Colors.lightGreen),
-        home: Application(),
-      ),
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(primarySwatch: Colors.lightGreen),
+      home: ThinkTank(),
     );
+  }
+}
+
+class ThinkTank extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }

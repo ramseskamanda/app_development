@@ -11,7 +11,7 @@ final Firestore _firestore = Firestore.instance;
 
 const String studentsCollection = 'students';
 const String educationCollection = 'education_history';
-const String experienceCollection = 'laboral_experiences';
+const String experienceCollection = 'work_history';
 const String startupCollection = 'startups';
 const String prizesCollection = 'prizes';
 const String projectCollection = 'projects';
