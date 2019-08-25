@@ -1,6 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:studentup_mobile/enum/query_order.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
+import 'package:studentup_mobile/models/education_model.dart';
+import 'package:studentup_mobile/models/labor_experience_model.dart';
+import 'package:studentup_mobile/models/message_model.dart';
+import 'package:studentup_mobile/models/prize_model.dart';
+import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
@@ -22,6 +28,63 @@ const String chatsCollection = 'chats';
 const String messagesCollection = 'messages';
 
 class FirestoreReader {
+  Future<UserInfoModel> fetchUser(String uid) async {
+    try {
+      DocumentSnapshot snapshot =
+          await _firestore.collection(studentsCollection).document(uid).get();
+      return UserInfoModel.fromDoc(snapshot);
+    } on PlatformException catch (e) {
+      print(e);
+      throw NetworkError(message: 'Resources requested unavailable');
+    }
+  }
+
+  Future<List<UserInfoModel>> fetchAllUsers(List<String> users) async {
+    try {
+      final List<UserInfoModel> models = [];
+      for (String uid in users) {
+        DocumentSnapshot snapshot =
+            await _firestore.collection(studentsCollection).document(uid).get();
+        models.add(UserInfoModel.fromDoc(snapshot));
+      }
+      return models;
+    } catch (e) {
+      print(e);
+      return [];
+    }
+  }
+
+  Future<List<SkillsModel>> fetchSkills(String uid) async {
+    final QuerySnapshot snapshot = await _firestore
+        .collection(skillsCollection)
+        .where('user_id', isEqualTo: uid)
+        .orderBy('avg_rating', descending: true)
+        .getDocuments();
+    return snapshot.documents.map((doc) => SkillsModel.fromDoc(doc)).toList();
+  }
+
+  Future<List<EducationModel>> fetchEducation(String uid) async {
+    final QuerySnapshot snapshot = await _firestore
+        .collection(educationCollection)
+        .where('user_id', isEqualTo: uid)
+        .orderBy('period_start', descending: true)
+        .getDocuments();
+    return snapshot.documents
+        .map((doc) => EducationModel.fromDoc(doc.data))
+        .toList();
+  }
+
+  Future<List<LaborExeprienceModel>> fetchExperience(String uid) async {
+    final QuerySnapshot snapshot = await _firestore
+        .collection(experienceCollection)
+        .orderBy('period_start', descending: true)
+        .where('user_id', isEqualTo: uid)
+        .getDocuments();
+    return snapshot.documents
+        .map((doc) => LaborExeprienceModel.fromDoc(doc.data))
+        .toList();
+  }
+
   Future<List<StartupInfoModel>> fetchStartups(QueryOrder order) async {
     try {
       String field =
@@ -42,8 +105,7 @@ class FirestoreReader {
 
   Future<List<ThinkTanksModel>> fetchThinkTanks(QueryOrder order) async {
     try {
-      String field =
-          QueryOrder.newest == order ? 'timestamps' : 'interactionCount';
+      String field = QueryOrder.newest == order ? 'timestamps' : 'commentCount';
       QuerySnapshot snapshot = await _firestore
           .collection(thinkTanksCollection)
           .orderBy(field)
@@ -57,6 +119,61 @@ class FirestoreReader {
       throw NetworkError(message: 'Resources requested unavailable');
     }
   }
+
+  Stream<List<Comments>> fetchComments(CollectionReference reference) {
+    return reference
+        .orderBy('upvotes', descending: true)
+        .limit(10)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.documents.map((doc) => Comments.fromDoc(doc)).toList());
+  }
+
+  Stream<QuerySnapshot> fetchChatPreviews(String uid) {
+    return _firestore
+        .collectionGroup(chatsCollection)
+        .where('participants.$uid', isNull: false)
+        .orderBy('latest_message.sentAt', descending: true)
+        .snapshots();
+  }
+
+  Future<List<UserInfoModel>> fetchRankings({bool monthly = true}) async {
+    try {
+      QuerySnapshot snapshot;
+      if (monthly) {
+        snapshot = await _firestore
+            .collection(studentsCollection)
+            .orderBy('experience_month')
+            .limit(20)
+            .getDocuments();
+      } else {
+        snapshot = await _firestore
+            .collection(studentsCollection)
+            .orderBy('experience_overall')
+            .limit(20)
+            .getDocuments();
+      }
+      return snapshot.documents
+          .map((doc) => UserInfoModel.fromDoc(doc))
+          .toList();
+    } on PlatformException {
+      throw NetworkError(message: 'Couldn\'t find the resources requested');
+    }
+  }
+
+  Future<List<PrizeModel>> fetchPrizesRanking() async {
+    try {
+      QuerySnapshot snapshot = await _firestore
+          .collection(prizesCollection)
+          .orderBy('ranking')
+          .limit(NUM_ITEM_LIST)
+          .getDocuments();
+      return snapshot.documents.map((doc) => PrizeModel.fromDoc(doc)).toList();
+    } on PlatformException {
+      throw NetworkError(
+          message: 'Couldn\'t find the resources you\'re looking for...');
+    }
+  }
 }
 
 class FirestoreWriter {
@@ -68,6 +185,83 @@ class FirestoreWriter {
           .setData(user.toJson());
     } catch (e) {
       throw e;
+    }
+  }
+
+  Future updateProfileInfo(String uid, Map<String, dynamic> data) async {
+    DocumentReference doc =
+        _firestore.collection(studentsCollection).document(uid);
+
+    Map result = await _firestore.runTransaction(
+      (transaction) async {
+        await transaction.update(doc, data);
+      },
+    );
+    print(result);
+  }
+
+  Future postComment({Comments model, CollectionReference collection}) async {
+    try {
+      await collection.add(model.toJson());
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future removeVoter(
+      {CollectionReference collection,
+      String docId,
+      String uid,
+      bool upvote}) async {
+    try {
+      await collection.document(docId).updateData(upvote
+          ? {
+              'upvotes': FieldValue.arrayRemove([uid])
+            }
+          : {
+              'downvotes': FieldValue.arrayRemove([uid])
+            });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future addVoter(
+      {CollectionReference collection,
+      String docId,
+      String uid,
+      bool upvote}) async {
+    try {
+      await collection.document(docId).updateData(upvote
+          ? {
+              'upvotes': FieldValue.arrayUnion([uid])
+            }
+          : {
+              'downvotes': FieldValue.arrayUnion([uid])
+            });
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  Future createChatRoom({
+    ChatModel chat,
+    MessageModel initialMessage,
+  }) async {
+    try {
+      //!!!TODO: prevent people from making unlimited conversations with themselves
+      DocumentReference newDoc =
+          await _firestore.collection(chatsCollection).add({
+        'participants': chat.participants,
+        'latest_message': initialMessage.toJson(),
+      });
+      final CollectionReference subcollectionRef =
+          newDoc.collection('messages');
+      await subcollectionRef.add(initialMessage.toJson());
+      return ChatModel.fromDoc(await newDoc.get());
+    } catch (e) {
+      print(e);
+      throw e.toString();
     }
   }
 }

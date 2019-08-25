@@ -28,6 +28,13 @@ class MessageModel extends BaseModel {
     _senderId = json['sender_id'];
   }
 
+  MessageModel.fromJson(Map<String, dynamic> json) {
+    _seenAt = json['seenAt'];
+    _sentAt = json['sentAt'];
+    _text = json['text'];
+    _senderId = json['sender_id'];
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['seenAt'] = _seenAt;

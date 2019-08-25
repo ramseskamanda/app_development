@@ -1,3 +1,4 @@
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
 
@@ -46,6 +47,18 @@ class StartupInfoModel extends BaseModel {
     final Map<String, dynamic> json = doc.data;
     _description = json['description'];
     _location = json['location'];
+    _savedProfiles = json['saved_profiles'].cast<String>();
+    _name = json['name'];
+    _website = json['website'];
+    _imageUrl = json['image_url'];
+    _team = json['team'].cast<String>();
+    _creationDate = json['creation_date'];
+  }
+
+  StartupInfoModel.fromIndex(AlgoliaObjectSnapshot snapshot)
+      : super.fromIndex(snapshot) {
+    final Map<String, dynamic> json = snapshot.data;
+    _description = json['description'];
     _savedProfiles = json['saved_profiles'].cast<String>();
     _name = json['name'];
     _website = json['website'];

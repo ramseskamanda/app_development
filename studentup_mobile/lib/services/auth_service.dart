@@ -34,6 +34,7 @@ class AuthService {
         Locator.of<LocalStorageService>().saveToDisk(SIGNUP_STORAGE_KEY, true);
         Locator.of<AnalyticsService>().logger.logSignUp(signUpMethod: 'Email');
         _isNewUser = true;
+        _currentUser = result.user;
       }
       return result.user;
     } on PlatformException catch (e) {
@@ -48,12 +49,13 @@ class AuthService {
   }) async {
     try {
       AuthResult result = await _auth.signInWithEmailAndPassword(
-        email: '',
-        password: '',
+        email: email,
+        password: password,
       );
       if (result?.additionalUserInfo?.isNewUser ?? false || !isSignedUp)
         Locator.of<LocalStorageService>().saveToDisk(SIGNUP_STORAGE_KEY, true);
       Locator.of<AnalyticsService>().logger.logLogin(loginMethod: 'Email');
+      _currentUser = result.user;
       return result.user;
     } on PlatformException catch (e) {
       throw e;
@@ -79,6 +81,7 @@ class AuthService {
       if (_isNewUser)
         Locator.of<AnalyticsService>().logger.logSignUp(signUpMethod: 'Google');
       Locator.of<AnalyticsService>().logger.logLogin(loginMethod: 'Google');
+      _currentUser = result.user;
       return result.user;
     } on PlatformException catch (e) {
       throw e;
@@ -88,6 +91,7 @@ class AuthService {
   Future logout() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
+    _currentUser = null;
     return null;
   }
 }

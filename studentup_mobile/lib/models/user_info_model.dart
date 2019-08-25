@@ -1,3 +1,4 @@
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
 
@@ -57,14 +58,15 @@ class UserInfoModel extends BaseModel {
   int get experienceMonthly => _experienceMonthly ?? 0;
   int get experienceOverall => _experienceOverall ?? 0;
 
-  UserInfoModel.fromJson(Map<String, dynamic> json) {
+  UserInfoModel.fromIndex(AlgoliaObjectSnapshot snapshot)
+      : super.fromIndex(snapshot) {
+    final Map<String, dynamic> json = snapshot.data;
     _givenName = json['given_name'];
     _age = json['age'];
     _university = json['university'];
     _faculty = json['faculty'];
     _degree = json['degree'];
     _gradDate = json['grad_date'];
-    _location = json['location'];
     _bio = json['bio'];
     _mediaRef = json['media_ref'];
     _banned = json['banned'];

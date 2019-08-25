@@ -82,9 +82,7 @@ class ThinkTankPreview extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Spacer(),
-                Text('${model.interactionCount} interactions'),
-                Spacer(),
-                Text('${model.commentCount} solutions'),
+                Text('${model.commentCount} solutions posted'),
                 Spacer(),
               ],
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/auth_notifier.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/services/analytics_service.dart';
 import 'package:studentup_mobile/services/auth_service.dart';
 import 'package:studentup_mobile/services/local_storage_service.dart';
@@ -24,6 +25,9 @@ class Locator {
     _locator.registerSingleton<NotificationService>(NotificationService());
     _locator.registerSingleton<AnalyticsService>(AnalyticsService());
   }
+
+  static void registerUniqueProfile(ProfileNotifier instance) =>
+      _locator.registerSingleton<ProfileNotifier>(instance);
 
   static T of<T>() => _locator.get<T>();
 }

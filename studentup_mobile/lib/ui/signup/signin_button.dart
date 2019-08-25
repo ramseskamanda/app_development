@@ -28,6 +28,8 @@ class _SignInButtonState extends State<SignInButton> {
                     onPressed: ((snapshot.data ?? false) && !auth.isLoading)
                         ? () async {
                             if (!widget.formKey.currentState.validate()) return;
+                            print(widget.bloc.emailValue);
+                            print(widget.bloc.passwordValue);
                             await auth.loginWithEmail(
                               email: widget.bloc.emailValue,
                               password: widget.bloc.passwordValue,

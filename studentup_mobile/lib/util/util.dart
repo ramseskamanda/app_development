@@ -3,6 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 
 class Util {
+  static String formatCount(int count) {
+    return count.toString();
+  }
+
   static Future<String> geoPointToLocation(GeoPoint geoPoint) async {
     // if (geoPoint == null) return null;
     // List<Placemark> placemark = await Geolocator()
