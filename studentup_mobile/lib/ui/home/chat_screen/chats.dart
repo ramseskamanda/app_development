@@ -8,7 +8,8 @@ import 'package:studentup_mobile/ui/home/chat_screen/chat_list_item.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/new_message.dart';
 
 class Chats extends StatefulWidget {
-  //! TODO: create new chats,  pagination (messages and chats)
+  //! TODO: pagination (messages and chats)
+  //! TODO: fix database issues with listing message threads
   @override
   _ChatsState createState() => _ChatsState();
 }

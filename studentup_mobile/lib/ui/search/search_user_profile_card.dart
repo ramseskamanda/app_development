@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
+import 'package:studentup_mobile/ui/profile/other_profile.dart';
 
 class UserProfileCard extends StatefulWidget {
   final UserInfoModel model;
@@ -24,7 +25,13 @@ class _UserProfileCardState extends State<UserProfileCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => print('object'),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => OtherProfile(infoModel: widget.model),
+          ),
+        );
+      },
       child: Card(
         child: Stack(
           alignment: Alignment.center,
@@ -34,7 +41,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 CachedNetworkImage(
-                  imageUrl: 'https://via.placeholder.com/150',
+                  imageUrl: widget.model.mediaRef,
                   fit: BoxFit.cover,
                   placeholder: (context, url) {
                     return CircularProgressIndicator();
@@ -61,6 +68,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
                   style: Theme.of(context).textTheme.caption,
                   textAlign: TextAlign.center,
                 ),
+                //! TODO: Add onPressed that leads to writing a new message to the person
                 RaisedButton(
                   child: const Text('Contact'),
                   color: Theme.of(context).accentColor,

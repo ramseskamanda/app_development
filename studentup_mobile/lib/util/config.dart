@@ -5,6 +5,9 @@ const HEADER_LOGO_HERO_TAG = '_heroLogo';
 const NUM_ITEM_PREVIEW = 8;
 const NUM_ITEM_LIST = 20;
 
+const defaultImageUrl =
+    'https://firebasestorage.googleapis.com/v0/b/studentup-nl.appspot.com/o/default_files%2Fblack-and-white-black-and-white-rough-978503.jpg?alt=media&token=8cba65e5-d0c1-4828-9c25-ad66836ee658';
+
 const List<String> rulesUser = <String>[
   'Only during the next 24 hours, you can ...',
   'Hand in your masterpiece before the deadline.',

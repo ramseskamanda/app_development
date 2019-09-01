@@ -5,6 +5,7 @@ class SkillsModel {
   String _description;
   String _name;
   String _userId;
+  String _category;
   CollectionReference _ratings;
 
   SkillsModel(
@@ -12,18 +13,21 @@ class SkillsModel {
       String description,
       String name,
       String userId,
+      String category,
       CollectionReference ratings}) {
     _avgRating = avgRating;
     _description = description;
     _name = name;
     _userId = userId;
     _ratings = ratings;
+    _category = category;
   }
 
   double get avgRating => _avgRating;
   String get description => _description;
   String get name => _name;
   String get userId => _userId;
+  String get category => _category;
   CollectionReference get ratings => _ratings;
 
   SkillsModel.fromDoc(DocumentSnapshot doc) {
@@ -33,6 +37,7 @@ class SkillsModel {
     _description = json['description'];
     _name = json['name'];
     _userId = json['user_id'];
+    _category = json['category'];
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +46,7 @@ class SkillsModel {
     data['description'] = _description;
     data['name'] = _name;
     data['user_id'] = _userId;
+    data['category'] = _category;
     return data;
   }
 }

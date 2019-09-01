@@ -2,14 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
-import 'package:studentup_mobile/enum/analytics_types.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/services/analytics_service.dart';
 import 'package:studentup_mobile/services/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/home/home.dart';
-import 'package:studentup_mobile/ui/leaderboard/leaderboard_root.dart';
 import 'package:studentup_mobile/ui/profile/profile.dart';
+import 'package:studentup_mobile/ui/projects/projects_root.dart';
 import 'package:studentup_mobile/ui/search/search_root.dart';
 import 'package:studentup_mobile/ui/widgets/toasts/complete_profile_toast.dart';
 
@@ -24,19 +22,7 @@ class _ApplicationState extends State<Application> {
   List<Widget> _tabs = <Widget>[
     Home(),
     SearchRoot(),
-    LeaderBoardRoot(),
-    Scaffold(
-      body: Center(
-        child: RaisedButton.icon(
-          icon: Icon(
-            Icons.power_settings_new,
-            color: CupertinoColors.destructiveRed,
-          ),
-          label: const Text('Log out'),
-          onPressed: () => Locator.of<AuthService>().logout(),
-        ),
-      ),
-    ),
+    ProjectFeedRoot(),
     Profile(),
   ];
 
@@ -50,13 +36,13 @@ class _ApplicationState extends State<Application> {
       title: const Text('Search'),
     ),
     BottomNavigationBarItem(
-      icon: Icon(CupertinoIcons.game_controller),
-      title: const Text('Leaderboards'),
+      icon: Icon(CupertinoIcons.lab_flask),
+      title: const Text('Projects'),
     ),
-    BottomNavigationBarItem(
-      icon: Icon(CupertinoIcons.mail),
-      title: const Text('Mail'),
-    ),
+    // BottomNavigationBarItem(
+    //   icon: Icon(CupertinoIcons.mail),
+    //   title: const Text('Mail'),
+    // ),
     BottomNavigationBarItem(
       icon: Icon(CupertinoIcons.profile_circled),
       title: const Text('Profile'),

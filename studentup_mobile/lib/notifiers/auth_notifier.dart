@@ -12,12 +12,9 @@ import 'package:studentup_mobile/util/config.dart';
 
 class AuthNotifier extends NetworkNotifier {
   FirebaseUser _user;
-  FirestoreWriter _firestoreWriter;
   StreamSubscription _stream;
 
-  AuthNotifier()
-      : _user = Locator.of<AuthService>().currentUser,
-        _firestoreWriter = FirestoreWriter() {
+  AuthNotifier() : _user = Locator.of<AuthService>().currentUser {
     _stream = Locator.of<AuthService>().isUserLoggedOut.listen(logout);
   }
 
@@ -56,7 +53,7 @@ class AuthNotifier extends NetworkNotifier {
         experienceMonthly: 0,
         experienceOverall: 0,
       );
-      await _firestoreWriter.createUser(user.uid, model);
+      await Locator.of<FirestoreWriter>().createUser(user.uid, model);
       isLoadingWithoutNotifiers = false;
     } catch (e) {
       print(e);
@@ -89,6 +86,15 @@ class AuthNotifier extends NetworkNotifier {
     try {
       user = await Locator.of<AuthService>()
           .loginWithGoogle(isSignedUp: isRegistered);
+      if (user == null) return;
+      if (Locator.of<AuthService>().currentUserisNew) {
+        UserInfoModel model = UserInfoModel(
+          givenName: user.displayName,
+          experienceMonthly: 0,
+          experienceOverall: 0,
+        );
+        await Locator.of<FirestoreWriter>().createUser(user.uid, model);
+      }
       isLoadingWithoutNotifiers = false;
     } catch (e) {
       print(e);

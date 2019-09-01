@@ -1,6 +1,7 @@
 import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
+import 'package:studentup_mobile/util/config.dart';
 
 class UserInfoModel extends BaseModel {
   String _givenName;
@@ -47,13 +48,13 @@ class UserInfoModel extends BaseModel {
 
   String get givenName => _givenName ?? '500 Error';
   int get age => _age ?? 0;
-  String get university => _university ?? '500 Error';
-  String get faculty => _faculty ?? '500 Error';
-  String get degree => _degree ?? '500 Error';
-  String get gradDate => _gradDate ?? '500 Error';
+  String get university => _university ?? 'No university';
+  String get faculty => _faculty ?? 'No faculty';
+  String get degree => _degree ?? 'No degree';
+  String get gradDate => _gradDate ?? 'No graduation date';
   GeoPoint get location => _location ?? GeoPoint(0, 0);
-  String get bio => _bio ?? '500 Error';
-  String get mediaRef => _mediaRef ?? '500 Error';
+  String get bio => _bio ?? 'No Bio';
+  String get mediaRef => _mediaRef ?? defaultImageUrl;
   bool get banned => _banned ?? true;
   int get experienceMonthly => _experienceMonthly ?? 0;
   int get experienceOverall => _experienceOverall ?? 0;

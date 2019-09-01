@@ -1,10 +1,10 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
-import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/ui/internal_router.dart';
 import 'package:studentup_mobile/ui/search/search_category.dart';
 import 'package:studentup_mobile/ui/search/search_screen_delegate.dart';
@@ -54,14 +54,6 @@ class SearchRoot extends Router {
 }
 
 class SearchTab extends StatelessWidget {
-  Future<void> _onSearch(BuildContext context) async {
-    UserInfoModel result = await showSearch<UserInfoModel>(
-      context: context,
-      delegate: SearchScreenDelegate(),
-    );
-    print(result?.givenName ?? 'None chosen');
-  }
-
   double _getSize(int index) => index == 0
       ? 150.0
       : (index == SearchCategory.values.length - 2 ? 250 : 200);
@@ -69,7 +61,26 @@ class SearchTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        // leading: IconButton(
+        //   icon: const Icon(Icons.menu),
+        //   onPressed: () {},
+        // ),
+        title: const Text('Search'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(CupertinoIcons.search),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: SearchScreenDelegate(null),
+              );
+            },
+          ),
+        ],
+      ),
       body: StaggeredGridView.countBuilder(
         crossAxisCount: 4,
         itemCount: SearchCategory.values.length,
@@ -106,7 +117,30 @@ class SearchCard extends StatelessWidget {
       },
       child: Stack(
         children: <Widget>[
-          CachedNetworkImage(
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              color: Color(Random().nextInt(0xffffffff)).withOpacity(0.44),
+            ),
+          ),
+          Center(
+            child: Text(
+              categoryName.toString(),
+              style: Theme.of(context)
+                  .textTheme
+                  .title
+                  .copyWith(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/*
+
+CachedNetworkImage(
             imageUrl: 'https://via.placeholder.com/50',
             placeholder: (_, url) => Container(
               color: CupertinoColors.lightBackgroundGray,
@@ -127,23 +161,5 @@ class SearchCard extends StatelessWidget {
               );
             },
           ),
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              color: CupertinoColors.darkBackgroundGray.withOpacity(0.44),
-            ),
-          ),
-          Center(
-            child: Text(
-              categoryName.toString(),
-              style: Theme.of(context)
-                  .textTheme
-                  .title
-                  .copyWith(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
+
+*/

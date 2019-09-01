@@ -50,10 +50,10 @@ class LeaderBoardRoot extends StatelessWidget {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           title: const Text('Leaderboards'),
           centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {},
-          ),
+          // leading: IconButton(
+          //   icon: Icon(Icons.menu),
+          //   onPressed: () {},
+          // ),
           actions: <Widget>[
             IconButton(
               icon: Icon(

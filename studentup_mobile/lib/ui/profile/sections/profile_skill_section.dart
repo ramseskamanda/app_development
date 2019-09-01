@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/theme.dart';
+import 'package:studentup_mobile/ui/profile/sections/new_skill_route.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 class ProfileSkillSection extends StatelessWidget {
@@ -44,7 +45,13 @@ class ProfileSkillSection extends StatelessWidget {
             StadiumButton.icon(
               text: 'Add Skill',
               icon: Icons.add,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => NewSkillRoute(),
+                  ),
+                );
+              },
             ),
         ],
       ),

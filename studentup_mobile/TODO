@@ -30,9 +30,16 @@ Remember:
 Feature Import and TODO checks:
   ✔ Home Feed with think-tanks @done(19-08-25 03:51)
   ✔ Messaging system with creating new chats @done(19-08-25 03:53)
-  ☐ Search Screen with Category-Search
+  ✔ Search Screen with Category-Search @done(19-08-25 20:36)
   ✔ Leaderboards @done(19-08-25 19:19)
-  ☐ Notifications with notifications collection
+  ✔ Notifications with notifications collection @done(19-08-25 21:15)
   ☐ Profile with creating new skills, education, jobs
-  ☐ Saved Profiles
-  ☐ Side Bar Menu
+  ✔ Saved Profiles @done(19-08-25 21:15)
+  ✔ Side Bar Menu @done(19-08-25 21:15)
+
+First Release:
+  ✔ Fix registration process (too complicated and too convoluted) @done(19-08-26 13:15)
+  ✔ Create new Think tank @done(19-08-26 16:37)
+  ✔ Swap Leaderboard with Projects @done(19-08-26 15:35)
+  ☐ Allow for creation of startup pages
+  ☐ Fix last minute bugs

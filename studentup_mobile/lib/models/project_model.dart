@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/models/base_model.dart';
-import 'package:studentup_mobile/models/project_signup_model.dart';
+// import 'package:studentup_mobile/models/project_signup_model.dart';
+import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/util.dart';
 
 class ProjectModel extends BaseModel {
@@ -21,7 +23,7 @@ class ProjectModel extends BaseModel {
   List<String> _favSolutions;
   int _maxUsersNum;
   int _signupsNum;
-  ProjectSignupModel _userSignUp;
+  // ProjectSignupModel _userSignUp;
 
   ProjectModel({
     @required String creator,
@@ -53,7 +55,7 @@ class ProjectModel extends BaseModel {
     _favSolutions = <String>[];
     _maxUsersNum = maxUsersNum;
     _signupsNum = 0;
-    _userSignUp = null;
+    // _userSignUp = null;
   }
 
   String get creator => _creator ?? '500 Error';
@@ -71,15 +73,16 @@ class ProjectModel extends BaseModel {
   String get category3 => _category3 ?? '500 Error';
   List<String> get favSolutions => _favSolutions ?? <String>[];
   int get maxUsersNum => _maxUsersNum ?? 0;
-  int get signupsNum => _signupsNum ?? 0;
-  bool get userSignedUp => _userSignUp != null;
-  ProjectSignupModel get userSignUpFile => _userSignUp;
-  set userSignUpFile(ProjectSignupModel value) => _userSignUp = value ?? null;
+  int get signupsNum =>
+      _signupsNum != null && _signupsNum > 0 ? _signupsNum : 0;
+  // bool get userSignedUp => _userSignUp != null;
+  // ProjectSignupModel get userSignUpFile => _userSignUp;
+  // set userSignUpFile(ProjectSignupModel value) => _userSignUp = value ?? null;
   double get percentSignedUp => signupsNum / maxUsersNum;
-  // bool get userIsOwner => creator == TestData.userId ?? false;
+  bool get userIsOwner =>
+      creator == Locator.of<AuthService>().currentUser.uid ?? false;
 
-  ProjectModel.fromDoc(DocumentSnapshot doc, ProjectSignupModel userSignUp)
-      : super.fromDoc(doc) {
+  ProjectModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;
     _creator = json['creator'];
     _creatorMedia = json['creator_media'];
@@ -96,7 +99,7 @@ class ProjectModel extends BaseModel {
     _favSolutions = json['fav_solutions']?.cast<String>() ?? <String>[];
     _maxUsersNum = json['max_users_num'];
     _signupsNum = json['signups_num'];
-    _userSignUp = userSignUp;
+    // _userSignUp = userSignUp;
   }
 
   Map<String, dynamic> toJson() {

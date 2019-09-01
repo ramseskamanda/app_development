@@ -1,0 +1,4 @@
+enum RuleSet {
+  EndUser,
+  Companies,
+}

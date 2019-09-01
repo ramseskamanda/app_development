@@ -1,14 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studentup_mobile/models/message_model.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
 
 class MessagingService extends ChangeNotifier {
-  CollectionReference _collection;
   Stream<List<MessageModel>> _messages;
-  FirestoreReader _firestoreReaderService;
-  FirestoreWriter _firestoreWriter;
-  String _userId;
+  // String _userId;
 
   TextEditingController _controller;
   FocusNode _focusNode;
@@ -17,13 +13,11 @@ class MessagingService extends ChangeNotifier {
   MessagingService({
     @required CollectionReference collection,
     @required String uid,
-  }) : _collection = collection {
-    _firestoreReaderService = FirestoreReader();
-    _firestoreWriter = FirestoreWriter();
+  }) {
     _controller = TextEditingController();
     _focusNode = FocusNode();
     _canSend = false;
-    _userId = uid;
+    // _userId = uid;
     initialize();
   }
 
@@ -37,13 +31,12 @@ class MessagingService extends ChangeNotifier {
   }
 
   void initialize() {
-    // _messages = _firestoreReaderService.fetchMessages(_collection);
+    // _messages = _FirestoreReader.fetchMessages(_collection);
   }
 
   @override
   void dispose() {
     _messages = null;
-    _collection = null;
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
@@ -52,12 +45,12 @@ class MessagingService extends ChangeNotifier {
   Future<void> sendMessage() async {
     if (_canSend) {
       try {
-        MessageModel message = MessageModel(
-          seenAt: null,
-          senderId: _userId,
-          text: _controller.text,
-          sentAt: DateTime.now(),
-        );
+        // MessageModel message = MessageModel(
+        //   seenAt: null,
+        //   senderId: _userId,
+        //   text: _controller.text,
+        //   sentAt: DateTime.now(),
+        // );
         _controller.clear();
         canSend = false;
         // await _firestoreWriter.uploadMessage(

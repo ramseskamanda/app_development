@@ -3,12 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/profile/edit_profile.dart';
 import 'package:studentup_mobile/ui/profile/sections/profile_education_section.dart';
 import 'package:studentup_mobile/ui/profile/sections/profile_experience_section.dart';
 import 'package:studentup_mobile/ui/profile/sections/profile_skill_section.dart';
 import 'package:studentup_mobile/ui/profile/user_information/profile_picture.dart';
 import 'package:studentup_mobile/ui/profile/user_information/profile_text.dart';
+import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 
 class Profile extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _key;
@@ -29,6 +32,7 @@ class Profile extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
         //title: AccountSwitch(), TODO: Implement this
+        title: const Text('Profile'),
         leading: FittedBox(
           child: IconButton(
             icon: Text(
@@ -51,12 +55,8 @@ class Profile extends StatelessWidget {
           ),
         ),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              CupertinoIcons.settings,
-              size: 32.0,
-            ),
-            onPressed: () => print('notifications settings'),
+          PopupMenuWithActions(
+            onLogout: () async => await Locator.of<AuthService>().logout(),
           ),
         ],
       ),

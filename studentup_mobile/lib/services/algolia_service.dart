@@ -3,39 +3,22 @@ import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 
 const String studentIndex = 'students';
 const String startupIndex = 'startups';
+const String skillsIndex = 'skills';
 const String studentSuggestionsIndex = 'Student Suggestions';
 
-//TODO: switch this to a locator service to save resources
 //TODO: add Timer.periodic() cache cleaner that checks if cache entry has been there for a long time
 class AlgoliaService {
-  FirestoreReader _reader = FirestoreReader();
+  FirestoreReader _reader = Locator.of<FirestoreReader>();
   static final Algolia algolia = Algolia.init(
     applicationId: 'MEXHNSSQ8F',
     apiKey: '3dd31bc0e8065789b946689b8f4eff61',
   );
 
   static final Map<String, dynamic> cache = <String, dynamic>{};
-
-  Future<List<String>> suggestUsers(String queryString) async {
-    //TODO: make this more "sophisticated" by getting the number of people that searched for a certain query etc.
-    try {
-      // AlgoliaQuery query =
-      //     algolia.instance.index(studentSuggestionsIndex).setLength(10);
-      // query = query.search(queryString);
-
-      // List _results = (await query.getObjects()).hits;
-
-      // _results.forEach((result) => print(result));
-      // return _results.map((snapshot) => snapshot.data['given_name']).toList();
-      return [];
-    } catch (e) {
-      print(e);
-      return [];
-    }
-  }
 
   Future<List<UserInfoModel>> searchUsersWithFacets({
     SearchCategory category = SearchCategory.ALL,
@@ -50,17 +33,19 @@ class AlgoliaService {
 
       String facet = category.toString().split('.')[1].toLowerCase();
       AlgoliaQuery query = algolia.instance
-          .index(studentIndex)
+          .index(skillsIndex)
           .setLength(10)
-          .setFilters('category = $facet');
+          .setFilters('category:$facet');
       query = query.search(queryString);
 
       AlgoliaQuerySnapshot _objects = await query.getObjects();
 
       List<AlgoliaObjectSnapshot> _results = _objects.hits;
 
-      List<UserInfoModel> _mappedResults = await _reader
-          .fetchAllUsers(_results.map((r) => r.data['user_id']).toList());
+      print(_results.length);
+
+      List<UserInfoModel> _mappedResults = await _reader.fetchAllUsers(
+          _results.map((r) => r.data['user_id'] as String).toList());
 
       cache[queryString] = _mappedResults;
 

@@ -32,7 +32,7 @@ class CategoryScreen extends StatelessWidget {
                   onPressed: () async {
                     await showSearch(
                       context: context,
-                      delegate: SearchScreenDelegate(),
+                      delegate: SearchScreenDelegate(category),
                     );
                   },
                 );
@@ -55,6 +55,10 @@ class CategoryScreen extends StatelessWidget {
               if (notifier.hasError)
                 return Center(
                   child: Text(notifier.error.message),
+                );
+              if (notifier.users.isEmpty)
+                return Center(
+                  child: Text('Couldn\'t find a match for $s'),
                 );
               return GridView.builder(
                 itemCount: notifier.users.length,

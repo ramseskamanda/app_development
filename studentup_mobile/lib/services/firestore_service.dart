@@ -6,11 +6,15 @@ import 'package:studentup_mobile/models/education_model.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
 import 'package:studentup_mobile/models/message_model.dart';
 import 'package:studentup_mobile/models/prize_model.dart';
+import 'package:studentup_mobile/models/project_model.dart';
+import 'package:studentup_mobile/models/project_signup_model.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
+import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/config.dart';
 
 final Firestore _firestore = Firestore.instance;
@@ -43,9 +47,13 @@ class FirestoreReader {
     try {
       final List<UserInfoModel> models = [];
       for (String uid in users) {
-        DocumentSnapshot snapshot =
-            await _firestore.collection(studentsCollection).document(uid).get();
-        models.add(UserInfoModel.fromDoc(snapshot));
+        try {
+          DocumentSnapshot snapshot = await _firestore
+              .collection(studentsCollection)
+              .document(uid)
+              .get();
+          models.add(UserInfoModel.fromDoc(snapshot));
+        } catch (e) {}
       }
       return models;
     } catch (e) {
@@ -120,6 +128,23 @@ class FirestoreReader {
     }
   }
 
+  Future<List<ProjectModel>> fetchProjects(QueryOrder order) async {
+    try {
+      String field = QueryOrder.newest == order ? 'timestamp' : 'signups_num';
+      QuerySnapshot snapshot = await _firestore
+          .collection(projectCollection)
+          .orderBy(field)
+          .limit(NUM_ITEM_PREVIEW)
+          .getDocuments();
+      return snapshot.documents
+          .map((doc) => ProjectModel.fromDoc(doc))
+          .toList();
+    } on PlatformException catch (e) {
+      print(e);
+      throw NetworkError(message: 'Resources requested unavailable');
+    }
+  }
+
   Stream<List<Comments>> fetchComments(CollectionReference reference) {
     return reference
         .orderBy('upvotes', descending: true)
@@ -174,6 +199,20 @@ class FirestoreReader {
           message: 'Couldn\'t find the resources you\'re looking for...');
     }
   }
+
+  Stream<ProjectSignupModel> fetchProjectSignupById(
+    String userId,
+    ProjectModel project,
+  ) {
+    return _firestore
+        .collection(projectCollection)
+        .document(project.docId)
+        .collection('applications')
+        .document(userId)
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.exists ? ProjectSignupModel.fromDoc(snapshot) : null);
+  }
 }
 
 class FirestoreWriter {
@@ -198,6 +237,21 @@ class FirestoreWriter {
       },
     );
     print(result);
+  }
+
+  Future postNewThinkTank(ThinkTanksModel model) async {
+    await _firestore.collection(thinkTanksCollection).add(model.toJson());
+  }
+
+  Future removeThinkTank(ThinkTanksModel model) async {
+    await _firestore
+        .collection(thinkTanksCollection)
+        .document(model.docId)
+        .delete();
+  }
+
+  Future postNewSkill(SkillsModel model) async {
+    await _firestore.collection(skillsCollection).add(model.toJson());
   }
 
   Future postComment({Comments model, CollectionReference collection}) async {
@@ -264,4 +318,20 @@ class FirestoreWriter {
       throw e.toString();
     }
   }
+
+  Future uploadSignUpDocument(
+          {ProjectSignupModel model, ProjectModel project}) async =>
+      await _firestore
+          .collection(projectCollection)
+          .document(project.docId)
+          .collection('applications')
+          .document(Locator.of<AuthService>().currentUser.uid)
+          .setData(model.toJson());
+
+  Future removeApplicant(String projectId) async => await _firestore
+      .collection(projectCollection)
+      .document(projectId)
+      .collection('applications')
+      .document(Locator.of<AuthService>().currentUser.uid)
+      .delete();
 }

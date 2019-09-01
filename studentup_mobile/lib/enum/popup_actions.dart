@@ -1,3 +1,4 @@
 enum PopupAction {
   DELETE,
+  LOGOUT,
 }

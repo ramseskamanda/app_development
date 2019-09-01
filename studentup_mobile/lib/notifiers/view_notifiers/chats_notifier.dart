@@ -7,11 +7,9 @@ import 'package:studentup_mobile/services/locator.dart';
 class ChatsNotifier extends NetworkNotifier {
   String _uid;
   FirestoreReader _firestoreReader;
-  FirestoreWriter _firestoreWriter;
 
   ChatsNotifier() {
     _firestoreReader = FirestoreReader();
-    _firestoreWriter = FirestoreWriter();
     _uid = Locator.of<AuthService>().currentUser.uid;
   }
 

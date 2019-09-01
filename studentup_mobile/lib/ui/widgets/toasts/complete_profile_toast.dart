@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 class CompleteProfileToast {
   static void show({
     BuildContext context,
-    void Function() stateManagerCallback,
+    @required void Function() stateManagerCallback,
     int percentage = 20,
   }) {
     if (percentage == 100) return;

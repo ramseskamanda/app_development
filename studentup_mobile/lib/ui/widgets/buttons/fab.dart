@@ -17,14 +17,20 @@ class PaddedFAB extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.1),
+      padding: EdgeInsets.only(
+        bottom: kBottomNavigationBarHeight + kFloatingActionButtonMargin + 12.0,
+      ),
       child: text == null
           ? FloatingActionButton(
-              child: Icon(icon),
+              heroTag: 'padded',
+              child: Icon(
+                icon,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
               onPressed: onPressed,
             )
           : FloatingActionButton.extended(
+              heroTag: 'padded',
               icon: Icon(icon),
               label: Text(text),
               onPressed: onPressed,

@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/feed_notifier.dart';
+import 'package:studentup_mobile/ui/startup_page/startup_page.dart';
 
 class StartupStories extends StatelessWidget {
   @override
@@ -31,38 +33,48 @@ class StartupStories extends StatelessWidget {
                   color: CupertinoColors.destructiveRed,
                 ),
               );
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: feed.startups[index - 1].imageUrl,
-                  placeholder: (_, url) => CircleAvatar(
-                    radius: MediaQuery.of(context).size.width * 0.08,
-                    backgroundColor: CupertinoColors.lightBackgroundGray,
+            StartupInfoModel model = feed.startups[index - 1];
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => StartUpPageRoot(model: model),
                   ),
-                  errorWidget: (_, __, error) => CircleAvatar(
-                    radius: MediaQuery.of(context).size.width * 0.08,
-                    backgroundColor: CupertinoColors.lightBackgroundGray,
-                    child: const Icon(
-                      Icons.error,
-                      color: CupertinoColors.destructiveRed,
+                );
+              },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  CachedNetworkImage(
+                    imageUrl: model.imageUrl,
+                    placeholder: (_, url) => CircleAvatar(
+                      radius: MediaQuery.of(context).size.width * 0.08,
+                      backgroundColor: CupertinoColors.lightBackgroundGray,
+                    ),
+                    errorWidget: (_, __, error) => CircleAvatar(
+                      radius: MediaQuery.of(context).size.width * 0.08,
+                      backgroundColor: CupertinoColors.lightBackgroundGray,
+                      child: const Icon(
+                        Icons.error,
+                        color: CupertinoColors.destructiveRed,
+                      ),
+                    ),
+                    imageBuilder: (_, image) => CircleAvatar(
+                      radius: MediaQuery.of(context).size.width * 0.08,
+                      backgroundImage: image,
                     ),
                   ),
-                  imageBuilder: (_, image) => CircleAvatar(
-                    radius: MediaQuery.of(context).size.width * 0.08,
-                    backgroundImage: image,
+                  const SizedBox(height: 2.0),
+                  Text(
+                    model.name,
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontWeight: FontWeight.bold)
+                        .apply(color: CupertinoColors.black),
                   ),
-                ),
-                const SizedBox(height: 2.0),
-                Text(
-                  feed.startups[index - 1].name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption
-                      .copyWith(fontWeight: FontWeight.bold)
-                      .apply(color: CupertinoColors.black),
-                ),
-              ],
+                ],
+              ),
             );
           },
         );

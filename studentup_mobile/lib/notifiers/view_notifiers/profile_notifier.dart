@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studentup_mobile/models/education_model.dart';
@@ -30,7 +29,7 @@ class ProfileNotifier extends NetworkNotifier {
   ProfileNotifier() {
     _firestore = FirestoreReader();
     _firestoreUpload = FirestoreWriter();
-    _uid = 'sYP0IBARJtdYj9apnwYD'; //Locator.of<AuthService>().currentUser.uid;
+    _uid = Locator.of<AuthService>().currentUser.uid;
     _education = [];
     _experience = [];
     _nameEditor = TextEditingController();
