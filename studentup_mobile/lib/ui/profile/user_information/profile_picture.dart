@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/util/config.dart';
 
 class ProfilePicture extends StatelessWidget {
   @override
@@ -23,11 +24,14 @@ class ProfilePicture extends StatelessWidget {
                 return Center(child: CircularProgressIndicator());
               if (notifier.hasError) return Center(child: Icon(Icons.error));
               return CachedNetworkImage(
-                imageUrl: notifier.info.mediaRef,
+                imageUrl: notifier?.info?.imageUrl ?? defaultImageUrl,
                 placeholder: (context, url) =>
                     Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) =>
-                    Center(child: Icon(Icons.error)),
+                errorWidget: (context, url, error) {
+                  print(url);
+                  print(error);
+                  return Center(child: Icon(Icons.error));
+                },
                 imageBuilder: (context, image) {
                   return CircleAvatar(
                     radius: _kDefaultSize / 2,

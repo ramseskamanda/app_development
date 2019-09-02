@@ -29,10 +29,8 @@ class Locator {
     _locator.registerSingleton(FirestoreReader());
     _locator.registerSingleton(FirestoreWriter());
     _locator.registerSingleton(AlgoliaService());
+    _locator.registerSingleton(ProfileNotifier());
   }
-
-  static void registerUniqueProfile(ProfileNotifier instance) =>
-      _locator.registerSingleton<ProfileNotifier>(instance);
 
   static T of<T>() => _locator.get<T>();
 }

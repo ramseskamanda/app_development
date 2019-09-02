@@ -10,10 +10,16 @@ import 'package:studentup_mobile/ui/home/chat_screen/conversation.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 class NewMessage extends StatelessWidget {
+  final UserInfoModel model;
+  final bool fromSearch;
+
+  const NewMessage({Key key, this.model, this.fromSearch = false})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<NewMessageNotifier>(
-      builder: (_) => NewMessageNotifier(),
+      builder: (_) => NewMessageNotifier(selectedUser: model),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -60,17 +66,19 @@ class NewMessage extends StatelessWidget {
                               ),
                               title: Text(notifier.selectedUser.givenName),
                               subtitle: Text(notifier.selectedUser.university),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () async {
-                                  final result = await showSearch(
-                                    context: context,
-                                    delegate: CustomSearchDelegate(),
-                                  );
-                                  if (result != null)
-                                    notifier.selectedUser = result;
-                                },
-                              ),
+                              trailing: fromSearch
+                                  ? null
+                                  : IconButton(
+                                      icon: const Icon(Icons.edit),
+                                      onPressed: () async {
+                                        final result = await showSearch(
+                                          context: context,
+                                          delegate: CustomSearchDelegate(),
+                                        );
+                                        if (result != null)
+                                          notifier.selectedUser = result;
+                                      },
+                                    ),
                             )
                           else
                             ListTile(
@@ -109,7 +117,7 @@ class NewMessage extends StatelessWidget {
                 child: Consumer<NewMessageNotifier>(
                   builder: (context, notifier, child) {
                     if (notifier.isLoading)
-                      return Center(child: const CircularProgressIndicator());
+                      return const CircularProgressIndicator();
                     if (notifier.hasError)
                       //show Error
                       print('error');

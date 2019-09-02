@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:studentup_mobile/ui/home/chat_screen/chats.dart';
 import 'package:studentup_mobile/ui/home/feed/feed.dart';
 
 class Home extends StatefulWidget {
@@ -42,7 +43,7 @@ class _HomeState extends State<Home> {
           physics: ClampingScrollPhysics(),
           children: <Widget>[
             Feed(),
-            //Chats(),
+            Chats(),
           ],
         ),
       ),

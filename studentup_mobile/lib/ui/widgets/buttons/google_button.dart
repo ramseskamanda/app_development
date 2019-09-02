@@ -8,6 +8,9 @@ import 'package:studentup_mobile/ui/signup/signup.dart';
 /// Button that takes care of all the signup logic related to Google Auth
 /// ⚠️ Row widget!!
 class GoogleButton extends StatelessWidget {
+  final bool isStartup;
+  GoogleButton({Key key, this.isStartup = false}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -28,7 +31,7 @@ class GoogleButton extends StatelessWidget {
                             ) ??
                             false;
                         if (!_proceed) return;
-                        await auth.loginWithGoogle();
+                        await auth.loginWithGoogle(isStartup);
                       },
               );
             },

@@ -48,13 +48,19 @@ class ProjectPageNotifier extends NetworkNotifier {
   Future onRefresh() async => fetchData();
 
   Future downloadAttachmentsAndPreview() async {
-    isLoading = true;
-    await _firebaseStorage.download(
-      filePath: model.attachment,
-      callback: () => isLoading = false,
-      onError: () => error =
-          NetworkError(message: 'An error occured during the download.'),
-    );
+    try {
+      isLoading = true;
+      for (String attachment in model.files)
+        await _firebaseStorage.download(
+          filePath: attachment,
+          callback: () => isLoading = false,
+          onError: () => error =
+              NetworkError(message: 'An error occured during download.'),
+        );
+    } catch (e) {
+      print(e);
+      isLoading = false;
+    }
   }
 
   Future signUp() async {
@@ -91,6 +97,14 @@ class ProjectPageNotifier extends NetworkNotifier {
       await _firestoreWriter.removeApplicant(docId);
     } catch (e) {
       error = NetworkError(message: '(TRACE)   ::    ${e.runtimeType}');
+    }
+  }
+
+  Future deleteProject() async {
+    try {
+      await _firestoreWriter.removeProject(id: model.docId);
+    } catch (e) {
+      error = NetworkError(message: 'Your request failed. Please try again.');
     }
   }
 }

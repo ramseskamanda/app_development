@@ -13,7 +13,8 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final s = category.toString().split('.')[1].toLowerCase();
+    final s =
+        category.toString().split('.')[1].toLowerCase().replaceAll('_', ' ');
 
     return ChangeNotifierProvider<SearchCategoryNotifier>(
       builder: (_) => SearchCategoryNotifier(category),

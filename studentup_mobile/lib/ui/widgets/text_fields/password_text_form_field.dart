@@ -41,6 +41,7 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      autovalidate: false,
       validator: widget.confirm ? widget.validator : Validator.password,
       onFieldSubmitted: (String data) =>
           FocusScope.of(context).requestFocus(widget.nextNode ?? FocusNode()),

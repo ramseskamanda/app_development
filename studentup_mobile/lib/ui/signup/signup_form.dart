@@ -27,6 +27,8 @@ class _SignUpFormState extends State<SignUpForm> {
   FocusNode _passwordNode;
   FocusNode _passwordConfirmNode;
 
+  bool _isStartup;
+
   @override
   void initState() {
     super.initState();
@@ -35,6 +37,7 @@ class _SignUpFormState extends State<SignUpForm> {
     _emailNode = FocusNode();
     _passwordNode = FocusNode();
     _passwordConfirmNode = FocusNode();
+    _isStartup = false;
   }
 
   @override
@@ -84,21 +87,36 @@ class _SignUpFormState extends State<SignUpForm> {
                 ),
                 Spacer(flex: 2),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     const Text(
                       'Register',
                       style: TextStyle(fontSize: 28.0),
                     ),
+                    Spacer(),
+                    const Text(
+                      'Startup?',
+                      style: TextStyle(fontSize: 24.0),
+                    ),
+                    Switch.adaptive(
+                      value: _isStartup,
+                      onChanged: (value) {
+                        setState(() {
+                          _isStartup = value;
+                        });
+                      },
+                    ),
                   ],
                 ),
                 Spacer(),
                 NameTextFormField(
+                  hintText: _isStartup ? 'Startup Name' : 'Full Name',
                   sink: _bloc.name,
                   nextNode: _emailNode,
                 ),
                 SizedBox(height: 16.0),
                 EmailTextFormField(
+                  hintText: _isStartup ? 'Company Email' : 'Email',
                   sink: _bloc.email,
                   nextNode: _passwordNode,
                 ),
@@ -114,8 +132,8 @@ class _SignUpFormState extends State<SignUpForm> {
                   validator: _bloc.passwordValidator,
                 ),
                 Spacer(),
-                GoogleButton(),
-                SignUpButton(formKey: _key, bloc: _bloc),
+                GoogleButton(isStartup: _isStartup),
+                SignUpButton(formKey: _key, bloc: _bloc, isStartup: _isStartup),
                 _buildAccountReminder(context),
                 Spacer(flex: 4),
               ],

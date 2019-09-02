@@ -2,6 +2,7 @@ import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
 import 'package:studentup_mobile/util/config.dart';
+import 'package:studentup_mobile/util/util.dart';
 
 class UserInfoModel extends BaseModel {
   String _givenName;
@@ -20,40 +21,32 @@ class UserInfoModel extends BaseModel {
 
   UserInfoModel({
     String givenName,
-    int age,
-    String university,
-    String faculty,
-    String degree,
-    String gradDate,
-    GeoPoint location,
-    String bio,
     String mediaRef,
-    bool banned,
-    int experienceMonthly,
-    int experienceOverall,
   }) {
     _givenName = givenName;
-    _age = age;
-    _university = university;
-    _faculty = faculty;
-    _degree = degree;
-    _gradDate = gradDate;
-    _location = location;
-    _bio = bio;
+    _age = null;
+    _university = null;
+    _faculty = null;
+    _degree = null;
+    _gradDate = null;
+    _location = null;
+    _bio = null;
     _mediaRef = mediaRef;
-    _banned = banned;
-    _experienceMonthly = experienceMonthly;
-    _experienceOverall = experienceOverall;
+    _banned = false;
+    _experienceMonthly = 0;
+    _experienceOverall = 0;
   }
 
-  String get givenName => _givenName ?? '500 Error';
+  String get givenName => _givenName ?? 'No Name';
   int get age => _age ?? 0;
   String get university => _university ?? 'No university';
   String get faculty => _faculty ?? 'No faculty';
   String get degree => _degree ?? 'No degree';
   String get gradDate => _gradDate ?? 'No graduation date';
-  GeoPoint get location => _location ?? GeoPoint(0, 0);
-  String get bio => _bio ?? 'No Bio';
+  String get location => Util.geoPointToLocation(_location) ?? 'No Location';
+  String get bio =>
+      _bio ??
+      'No bio yet!\n\n Write something short to introduce yourself to the community';
   String get mediaRef => _mediaRef ?? defaultImageUrl;
   bool get banned => _banned ?? true;
   int get experienceMonthly => _experienceMonthly ?? 0;

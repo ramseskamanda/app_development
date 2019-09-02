@@ -48,6 +48,7 @@ class _ChatsState extends State<Chats>
           ),
           body: UserChats(),
           floatingActionButton: FloatingActionButton(
+            heroTag: 'new_message',
             child: Icon(Icons.add),
             onPressed: () {
               Navigator.of(context).push(
@@ -98,14 +99,13 @@ class _UserChatsState extends State<UserChats> {
     return FirestoreAnimatedList(
       controller: _controller,
       query: notifier.chatPreviews,
-      emptyChild: Center(
-        child: const Text('No chats here yet!'),
-      ),
+      emptyChild: Center(child: const Text('No chats here yet!')),
       itemBuilder: (context, document, animation, index) {
         ChatModel model = ChatModel.fromDoc(document);
         return FadeTransition(
+          key: ObjectKey(model),
           opacity: animation,
-          child: ChatListItem(model: model),
+          child: ChatListItem(key: ObjectKey(model), model: model),
         );
       },
     );

@@ -1,24 +1,58 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firestore_ui/firestore_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/message_model.dart';
+import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/messaging_service.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/chat_bubble.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/messaging_text_field.dart';
+import 'package:studentup_mobile/ui/profile/other_profile.dart';
+import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 
-class Conversation extends StatelessWidget {
+class Conversation extends StatefulWidget {
   final ChatModel chat;
   const Conversation({Key key, @required this.chat}) : super(key: key);
 
   @override
+  _ConversationState createState() => _ConversationState();
+}
+
+class _ConversationState extends State<Conversation> {
+  ScrollController _controller;
+  MessagingService messagingService;
+
+  @override
+  void initState() {
+    super.initState();
+    messagingService = MessagingService(
+      collection: widget.chat.messagesCollection,
+      uid: widget.chat.userId,
+    );
+    // _controller = ScrollController()..addListener(_loadMore);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  // void _loadMore() {
+  //   double maxScroll = _controller.position.maxScrollExtent;
+  //   double currentScroll = _controller.position.pixels;
+  //   double delta = MediaQuery.of(context).size.height * 0.25;
+
+  //   // if (maxScroll - currentScroll <= delta) messagingService.loadMore();
+  // }
+
+  @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<MessagingService>(
-      builder: (_) => MessagingService(
-        collection: chat.messagesCollection,
-        uid: chat.userId,
-      ),
+    return ChangeNotifierProvider<MessagingService>.value(
+      value: messagingService,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
@@ -34,9 +68,9 @@ class Conversation extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 0.0, right: 10.0),
                   child: Hero(
-                    tag: 'chat_model',
+                    tag: 'chat_model:${widget.chat.docId}',
                     child: CachedNetworkImage(
-                      imageUrl: chat.otherProfile.imageUrl,
+                      imageUrl: widget.chat.otherProfile.imageUrl,
                       placeholder: (_, url) => CircleAvatar(
                         radius: 25,
                         backgroundColor: CupertinoColors.lightBackgroundGray,
@@ -61,7 +95,7 @@ class Conversation extends StatelessWidget {
                     children: <Widget>[
                       SizedBox(height: 15.0),
                       Text(
-                        chat.otherProfile.givenName,
+                        widget.chat.otherProfile.givenName,
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14.0,
@@ -69,7 +103,7 @@ class Conversation extends StatelessWidget {
                       ),
                       SizedBox(height: 5.0),
                       Text(
-                        chat.lastMessage.sentAt.isAfter(DateTime.now()
+                        widget.chat.lastMessage.sentAt.isAfter(DateTime.now()
                                 .subtract(const Duration(minutes: 5)))
                             ? 'Online'
                             : 'Offline',
@@ -85,25 +119,24 @@ class Conversation extends StatelessWidget {
             ),
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(
-                // builder: (_) => OtherProfile(
-                //   infoModel: chat.other,
-                //   fromMessaging: true,
-                // ),
-                builder: (_) => Scaffold(),
+                builder: (_) => OtherProfile(
+                  infoModel: widget.chat.otherProfile,
+                  fromMessaging: true,
+                ),
               ),
             ),
           ),
           actions: <Widget>[
-            // Consumer<MessagingService>(
-            //   builder: (context, service, child) {
-            //     return PopupMenuWithActions(
-            //       onDelete: () {
-            //         service.deleteConversation();
-            //         Navigator.of(context).pop();
-            //       },
-            //     );
-            //   },
-            // ),
+            Consumer<MessagingService>(
+              builder: (context, service, child) {
+                return PopupMenuWithActions(
+                  onDelete: () {
+                    service.deleteConversation();
+                    Navigator.of(context).pop();
+                  },
+                );
+              },
+            ),
           ],
         ),
         body: Container(
@@ -114,7 +147,44 @@ class Conversation extends StatelessWidget {
               Flexible(
                 child: Consumer<MessagingService>(
                   builder: (context, service, child) {
-                    return StreamBuilder<List<MessageModel>>(
+                    return FirestoreAnimatedList(
+                      controller: _controller,
+                      query: service.messages,
+                      reverse: true,
+                      emptyChild:
+                          Center(child: const Text('No messages here yet!')),
+                      itemBuilder: (context, document, animation, index) {
+                        MessageModel model = MessageModel.fromDoc(document);
+                        return FadeTransition(
+                          key: ObjectKey(model),
+                          opacity: animation,
+                          child: ChatBubble(
+                            key: ObjectKey(model),
+                            model: model,
+                            isUser: model.senderId ==
+                                Locator.of<AuthService>().currentUser.uid,
+                            isLast: index == 0,
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: SafeArea(child: MessagingTextField()),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/*
+StreamBuilder<List<MessageModel>>(
                       stream: service.messages,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting)
@@ -151,17 +221,4 @@ class Conversation extends StatelessWidget {
                         );
                       },
                     );
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SafeArea(child: MessagingTextField()),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+*/

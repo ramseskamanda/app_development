@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
-import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/services/auth_service.dart';
@@ -28,10 +28,10 @@ class NewThinkTankNotifier extends NetworkNotifier {
   Future<bool> send() async {
     if (!canSend) return false;
     isLoading = true;
-    UserInfoModel user = Locator.of<ProfileNotifier>().info;
+    final Preview user = Locator.of<ProfileNotifier>().info;
     final model = ThinkTanksModel(
       askerId: Locator.of<AuthService>().currentUser.uid,
-      askerImage: user.mediaRef,
+      askerImage: user.imageUrl,
       premise: _description.text,
       title: _name.text,
       lastActivity: DateTime.now(),

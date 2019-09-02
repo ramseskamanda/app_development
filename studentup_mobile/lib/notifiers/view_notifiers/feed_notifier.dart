@@ -34,7 +34,7 @@ class FeedNotifier extends NetworkNotifier {
       //fetch startup data
       _startups = await _firestoreReader.fetchStartups(QueryOrder.newest);
       _startups.forEach((model) async {
-        model.locationString = await Util.geoPointToLocation(model.location);
+        model.locationString = Util.geoPointToLocation(model.location);
       });
       //fetch think tanks data
       _thinkTanks =

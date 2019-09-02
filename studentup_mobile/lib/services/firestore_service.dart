@@ -32,6 +32,23 @@ const String chatsCollection = 'chats';
 const String messagesCollection = 'messages';
 
 class FirestoreReader {
+  Future<Map<DocumentReference, bool>> findUserDocument(String uid) async {
+    try {
+      DocumentSnapshot _user =
+          await _firestore.collection(studentsCollection).document(uid).get();
+      if (_user.exists)
+        return {_user.reference: studentsCollection == startupCollection};
+      DocumentSnapshot _startup =
+          await _firestore.collection(startupCollection).document(uid).get();
+      if (_startup.exists)
+        return {_startup.reference: startupCollection == startupCollection};
+      throw NetworkError(message: 'No User Found For UID: $uid');
+    } on PlatformException catch (e) {
+      print(e);
+      throw NetworkError(message: 'Resources requested unavailable');
+    }
+  }
+
   Future<UserInfoModel> fetchUser(String uid) async {
     try {
       DocumentSnapshot snapshot =
@@ -62,35 +79,54 @@ class FirestoreReader {
     }
   }
 
-  Future<List<SkillsModel>> fetchSkills(String uid) async {
-    final QuerySnapshot snapshot = await _firestore
+  Stream<UserInfoModel> fetchUserInfoStream(DocumentReference doc) {
+    try {
+      return doc.snapshots().map((snapshot) => UserInfoModel.fromDoc(snapshot));
+    } catch (e) {
+      return Stream.empty();
+    }
+  }
+
+  Stream<StartupInfoModel> fetchStartupInfoStream(DocumentReference doc) {
+    try {
+      return doc
+          .snapshots()
+          .map((snapshot) => StartupInfoModel.fromDoc(snapshot));
+    } catch (e) {
+      return Stream.empty();
+    }
+  }
+
+  Stream<List<SkillsModel>> fetchSkills(String uid) {
+    return _firestore
         .collection(skillsCollection)
         .where('user_id', isEqualTo: uid)
         .orderBy('avg_rating', descending: true)
-        .getDocuments();
-    return snapshot.documents.map((doc) => SkillsModel.fromDoc(doc)).toList();
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.documents.map((doc) => SkillsModel.fromDoc(doc)).toList());
   }
 
-  Future<List<EducationModel>> fetchEducation(String uid) async {
-    final QuerySnapshot snapshot = await _firestore
+  Stream<List<EducationModel>> fetchEducation(String uid) {
+    return _firestore
         .collection(educationCollection)
         .where('user_id', isEqualTo: uid)
         .orderBy('period_start', descending: true)
-        .getDocuments();
-    return snapshot.documents
-        .map((doc) => EducationModel.fromDoc(doc.data))
-        .toList();
+        .snapshots()
+        .map((snapshot) => snapshot.documents
+            .map((doc) => EducationModel.fromDoc(doc.data))
+            .toList());
   }
 
-  Future<List<LaborExeprienceModel>> fetchExperience(String uid) async {
-    final QuerySnapshot snapshot = await _firestore
+  Stream<List<LaborExeprienceModel>> fetchExperience(String uid) {
+    return _firestore
         .collection(experienceCollection)
         .orderBy('period_start', descending: true)
         .where('user_id', isEqualTo: uid)
-        .getDocuments();
-    return snapshot.documents
-        .map((doc) => LaborExeprienceModel.fromDoc(doc.data))
-        .toList();
+        .snapshots()
+        .map((snapshot) => snapshot.documents
+            .map((doc) => LaborExeprienceModel.fromDoc(doc.data))
+            .toList());
   }
 
   Future<List<StartupInfoModel>> fetchStartups(QueryOrder order) async {
@@ -100,7 +136,7 @@ class FirestoreReader {
       QuerySnapshot snapshot = await _firestore
           .collection(startupCollection)
           .orderBy(field, descending: true)
-          .limit(NUM_ITEM_PREVIEW)
+          // .limit(NUM_ITEM_PREVIEW)
           .getDocuments();
       return snapshot.documents
           .map((doc) => StartupInfoModel.fromDoc(doc))
@@ -116,8 +152,8 @@ class FirestoreReader {
       String field = QueryOrder.newest == order ? 'timestamps' : 'commentCount';
       QuerySnapshot snapshot = await _firestore
           .collection(thinkTanksCollection)
-          .orderBy(field)
-          .limit(NUM_ITEM_PREVIEW)
+          .orderBy(field, descending: true)
+          // .limit(NUM_ITEM_PREVIEW)
           .getDocuments();
       return snapshot.documents
           .map((doc) => ThinkTanksModel.fromDoc(doc))
@@ -133,8 +169,10 @@ class FirestoreReader {
       String field = QueryOrder.newest == order ? 'timestamp' : 'signups_num';
       QuerySnapshot snapshot = await _firestore
           .collection(projectCollection)
+          .where('deadline', isGreaterThan: Timestamp.now())
+          .orderBy('deadline')
           .orderBy(field)
-          .limit(NUM_ITEM_PREVIEW)
+          // .limit(NUM_ITEM_PREVIEW)
           .getDocuments();
       return snapshot.documents
           .map((doc) => ProjectModel.fromDoc(doc))
@@ -148,7 +186,7 @@ class FirestoreReader {
   Stream<List<Comments>> fetchComments(CollectionReference reference) {
     return reference
         .orderBy('upvotes', descending: true)
-        .limit(10)
+        // .limit(10)
         .snapshots()
         .map((snapshot) =>
             snapshot.documents.map((doc) => Comments.fromDoc(doc)).toList());
@@ -156,9 +194,20 @@ class FirestoreReader {
 
   Stream<QuerySnapshot> fetchChatPreviews(String uid) {
     return _firestore
-        .collectionGroup(chatsCollection)
-        .where('participants.$uid', isNull: false)
+        .collection(chatsCollection)
+        .where('list_participants', arrayContains: uid)
         .orderBy('latest_message.sentAt', descending: true)
+        // .limit(10)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> fetchMessages(
+      CollectionReference reference, int numLoaded) {
+    print('$numLoaded are being loaded');
+
+    return reference
+        .orderBy('sentAt', descending: true)
+        // .limit(numLoaded)
         .snapshots();
   }
 
@@ -169,13 +218,13 @@ class FirestoreReader {
         snapshot = await _firestore
             .collection(studentsCollection)
             .orderBy('experience_month')
-            .limit(20)
+            // .limit(20)
             .getDocuments();
       } else {
         snapshot = await _firestore
             .collection(studentsCollection)
             .orderBy('experience_overall')
-            .limit(20)
+            // .limit(20)
             .getDocuments();
       }
       return snapshot.documents
@@ -191,7 +240,7 @@ class FirestoreReader {
       QuerySnapshot snapshot = await _firestore
           .collection(prizesCollection)
           .orderBy('ranking')
-          .limit(NUM_ITEM_LIST)
+          // .limit(NUM_ITEM_LIST)
           .getDocuments();
       return snapshot.documents.map((doc) => PrizeModel.fromDoc(doc)).toList();
     } on PlatformException {
@@ -227,6 +276,17 @@ class FirestoreWriter {
     }
   }
 
+  Future createStartup(String uid, StartupInfoModel startup) async {
+    try {
+      await _firestore
+          .collection(startupCollection)
+          .document(uid)
+          .setData(startup.toJson());
+    } catch (e) {
+      throw e;
+    }
+  }
+
   Future updateProfileInfo(String uid, Map<String, dynamic> data) async {
     DocumentReference doc =
         _firestore.collection(studentsCollection).document(uid);
@@ -252,6 +312,14 @@ class FirestoreWriter {
 
   Future postNewSkill(SkillsModel model) async {
     await _firestore.collection(skillsCollection).add(model.toJson());
+  }
+
+  Future postNewEducation(EducationModel model) async {
+    await _firestore.collection(educationCollection).add(model.toJson());
+  }
+
+  Future postNewExperience(LaborExeprienceModel model) async {
+    await _firestore.collection(experienceCollection).add(model.toJson());
   }
 
   Future postComment({Comments model, CollectionReference collection}) async {
@@ -303,19 +371,49 @@ class FirestoreWriter {
     MessageModel initialMessage,
   }) async {
     try {
-      //!!!TODO: prevent people from making unlimited conversations with themselves
       DocumentReference newDoc =
-          await _firestore.collection(chatsCollection).add({
-        'participants': chat.participants,
-        'latest_message': initialMessage.toJson(),
-      });
+          await _firestore.collection(chatsCollection).add(chat.toJson());
       final CollectionReference subcollectionRef =
           newDoc.collection('messages');
       await subcollectionRef.add(initialMessage.toJson());
-      return ChatModel.fromDoc(await newDoc.get());
+      DocumentSnapshot snap = await newDoc.get();
+      return ChatModel.fromDoc(snap);
     } catch (e) {
       print(e);
-      throw e.toString();
+      throw e;
+    }
+  }
+
+  Future<bool> uploadMessage({
+    MessageModel messageModel,
+    CollectionReference to,
+  }) async {
+    try {
+      await to.add(messageModel.toJson());
+      return true;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  Future removeConversation({
+    CollectionReference conversation,
+  }) async {
+    try {
+      await conversation.parent().delete();
+    } catch (e) {
+      print(e);
+      throw e;
+    }
+  }
+
+  Future uploadProjectInformation({ProjectModel model}) async {
+    try {
+      await _firestore.collection(projectCollection).add(model.toJson());
+    } catch (e) {
+      print(e);
+      throw e;
     }
   }
 
@@ -334,4 +432,7 @@ class FirestoreWriter {
       .collection('applications')
       .document(Locator.of<AuthService>().currentUser.uid)
       .delete();
+
+  Future removeProject({String id}) async =>
+      await _firestore.collection(projectCollection).document(id).delete();
 }

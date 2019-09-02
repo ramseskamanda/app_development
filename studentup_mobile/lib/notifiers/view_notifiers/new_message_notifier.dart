@@ -16,7 +16,7 @@ class NewMessageNotifier extends NetworkNotifier {
 
   UserInfoModel selectedUser;
 
-  NewMessageNotifier() {
+  NewMessageNotifier({this.selectedUser}) {
     _firestoreWriter = FirestoreWriter();
     _newMessage = TextEditingController();
   }
@@ -42,14 +42,18 @@ class NewMessageNotifier extends NetworkNotifier {
     if (canSend) print('sending');
     isLoading = true;
     //make models
-    final UserInfoModel user = Locator.of<ProfileNotifier>().info;
+    final Preview user = Locator.of<ProfileNotifier>().info;
+    final message = MessageModel(
+      seenAt: null,
+      sentAt: DateTime.now(),
+      text: _newMessage.text,
+      senderId: Locator.of<AuthService>().currentUser.uid,
+    );
     final chat = ChatModel(
+      lastMessage: message,
       participants: Participants(
         previews: {
-          user.docId: Preview(
-            givenName: user.givenName,
-            imageUrl: user.mediaRef,
-          ),
+          user.uid: user,
           selectedUser.docId: Preview(
             givenName: selectedUser.givenName,
             imageUrl: selectedUser.mediaRef,
@@ -57,20 +61,16 @@ class NewMessageNotifier extends NetworkNotifier {
         },
       ),
     );
-    final message = MessageModel(
-      seenAt: null,
-      sentAt: DateTime.now(),
-      text: _newMessage.text,
-      senderId: Locator.of<AuthService>().currentUser.uid,
-    );
     //send message
     try {
       _ref = await _firestoreWriter.createChatRoom(
-          chat: chat, initialMessage: message);
+        chat: chat,
+        initialMessage: message,
+      );
+      print(_ref);
     } catch (e) {
       print(e);
-      error = NetworkError(message: e.toString());
-      return false;
+      error = NetworkError(message: e.runtimeType.toString());
     }
     isLoading = false;
     return _ref != null;

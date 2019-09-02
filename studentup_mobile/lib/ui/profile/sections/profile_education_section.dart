@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/education_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/theme.dart';
+import 'package:studentup_mobile/ui/profile/sections/new_education_route.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 class ProfileEducationSection extends StatelessWidget {
@@ -38,15 +39,46 @@ class ProfileEducationSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16.0),
-          EducationCard(index: 0),
-          const SizedBox(height: 8.0),
-          EducationCard(index: 1),
-          const SizedBox(height: 12.0),
+          StreamBuilder(
+            stream: Provider.of<ProfileNotifier>(context).education,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return Center(
+                    child: const CircularProgressIndicator(),
+                  );
+                return Center(
+                  child: Text('An Error Occured'),
+                );
+              } else {
+                if (snapshot.data.length == 0)
+                  return Center(
+                    child: const Text('No Education Added Yet!'),
+                  );
+                return Column(
+                  children: <Widget>[
+                    if (snapshot.data.length > 0)
+                      EducationCard(model: snapshot.data[0]),
+                    const SizedBox(height: 8.0),
+                    if (snapshot.data.length > 1)
+                      EducationCard(model: snapshot.data[1]),
+                    const SizedBox(height: 12.0),
+                  ],
+                );
+              }
+            },
+          ),
           if (isUser)
             StadiumButton.icon(
               text: 'Add Education',
               icon: Icons.add,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => NewEducationRoute(),
+                  ),
+                );
+              },
             ),
         ],
       ),
@@ -55,14 +87,12 @@ class ProfileEducationSection extends StatelessWidget {
 }
 
 class EducationCard extends StatelessWidget {
-  final int index;
+  final EducationModel model;
 
-  const EducationCard({Key key, this.index}) : super(key: key);
+  const EducationCard({Key key, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ProfileNotifier notifier = Provider.of(context);
-    if (notifier.education.length < index + 1) return Container();
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -79,42 +109,39 @@ class EducationCard extends StatelessWidget {
           top: 8.0,
           bottom: 24.0,
         ),
-        child: Consumer<ProfileNotifier>(
-          builder: (context, notifier, child) {
-            if (notifier.isLoading || notifier.hasError) return Container();
-            EducationModel model = notifier.education[index];
-            return Column(
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              title: Text(model.university),
+              subtitle: Text('${model.periodStart} - ${model.periodEnd}'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                ListTile(
-                  title: Text(model.university),
-                  subtitle: Text('${model.periodStart} - ${model.periodEnd}'),
+                Spacer(),
+                Icon(
+                  Icons.school,
+                  color: Theme.of(context).accentColor,
                 ),
-                Row(
+                Spacer(flex: 4),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Spacer(),
-                    FlutterLogo(),
-                    Spacer(flex: 4),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          '${model.degree} ${model.faculty}',
-                          style: Theme.of(context).textTheme.body2,
-                        ),
-                        Text(
-                          model.studyDescription,
-                          style: Theme.of(context).textTheme.caption,
-                        ),
-                      ],
+                    Text(
+                      '${model.degree} ${model.faculty}',
+                      style: Theme.of(context).textTheme.body2,
                     ),
-                    Spacer(),
+                    Text(
+                      model.studyDescription,
+                      style: Theme.of(context).textTheme.caption,
+                    ),
                   ],
                 ),
+                Spacer(),
               ],
-            );
-          },
+            ),
+          ],
         ),
       ),
     );

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -8,6 +6,7 @@ import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/ui/internal_router.dart';
 import 'package:studentup_mobile/ui/search/search_category.dart';
 import 'package:studentup_mobile/ui/search/search_screen_delegate.dart';
+import 'package:studentup_mobile/util/util.dart';
 // import 'package:studentup_mobile/ui/search/search.dart';
 
 class SearchRoot extends Router {
@@ -102,8 +101,11 @@ class SearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String s =
-        SearchCategory.values[index].toString().split('.')[1].toLowerCase();
+    String s = SearchCategory.values[index]
+        .toString()
+        .split('.')[1]
+        .toLowerCase()
+        .replaceAll('_', ' ');
     final String categoryName = '${s[0].toUpperCase()}${s.substring(1)}';
 
     return GestureDetector(
@@ -120,7 +122,7 @@ class SearchCard extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.0),
-              color: Color(Random().nextInt(0xffffffff)).withOpacity(0.44),
+              color: Util.getRandomColor(),
             ),
           ),
           Center(

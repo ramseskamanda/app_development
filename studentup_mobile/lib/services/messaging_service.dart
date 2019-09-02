@@ -1,27 +1,36 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studentup_mobile/models/message_model.dart';
+import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 
 class MessagingService extends ChangeNotifier {
-  Stream<List<MessageModel>> _messages;
-  // String _userId;
+  FirestoreReader _firestoreReader;
+  FirestoreWriter _firestoreWriter;
+
+  CollectionReference _collectionReference;
 
   TextEditingController _controller;
   FocusNode _focusNode;
   bool _canSend;
 
+  int _numLoaded = 100;
+
   MessagingService({
     @required CollectionReference collection,
     @required String uid,
   }) {
+    _collectionReference = collection;
     _controller = TextEditingController();
     _focusNode = FocusNode();
     _canSend = false;
-    // _userId = uid;
-    initialize();
+    _firestoreReader = Locator.of<FirestoreReader>();
+    _firestoreWriter = Locator.of<FirestoreWriter>();
   }
 
-  Stream<List<MessageModel>> get messages => _messages;
+  Stream<QuerySnapshot> get messages =>
+      _firestoreReader.fetchMessages(_collectionReference, _numLoaded);
   TextEditingController get controller => _controller;
   FocusNode get focusNode => _focusNode;
   bool get canSend => _canSend;
@@ -30,33 +39,34 @@ class MessagingService extends ChangeNotifier {
     notifyListeners();
   }
 
-  void initialize() {
-    // _messages = _FirestoreReader.fetchMessages(_collection);
-  }
-
   @override
   void dispose() {
-    _messages = null;
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
   }
 
+  void loadMore() async {
+    print('Load more $_numLoaded');
+    _numLoaded += 10;
+    notifyListeners();
+  }
+
   Future<void> sendMessage() async {
     if (_canSend) {
       try {
-        // MessageModel message = MessageModel(
-        //   seenAt: null,
-        //   senderId: _userId,
-        //   text: _controller.text,
-        //   sentAt: DateTime.now(),
-        // );
-        _controller.clear();
+        MessageModel message = MessageModel(
+          seenAt: null,
+          senderId: Locator.of<AuthService>().currentUser.uid,
+          text: _controller.text,
+          sentAt: DateTime.now(),
+        );
         canSend = false;
-        // await _firestoreWriter.uploadMessage(
-        //   messageModel: message,
-        //   to: _collection,
-        // );
+        bool result = await _firestoreWriter.uploadMessage(
+          messageModel: message,
+          to: _collectionReference,
+        );
+        if (result) _controller.clear();
       } catch (e) {
         //TODO: add error dialog
         print(e);
@@ -65,6 +75,8 @@ class MessagingService extends ChangeNotifier {
   }
 
   Future deleteConversation() async {
-    // await _firestoreWriter.removeConversation(_collection);
+    await _firestoreWriter.removeConversation(
+      conversation: _collectionReference,
+    );
   }
 }

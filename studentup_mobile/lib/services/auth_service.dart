@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/services/analytics_service.dart';
 import 'package:studentup_mobile/services/local_storage_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
@@ -89,6 +90,7 @@ class AuthService {
   }
 
   Future logout() async {
+    Locator.of<ProfileNotifier>().logout();
     await _googleSignIn.signOut();
     await _auth.signOut();
     _currentUser = null;

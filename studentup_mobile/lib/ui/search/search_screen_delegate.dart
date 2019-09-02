@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/services/algolia_service.dart';
 import 'package:studentup_mobile/ui/profile/other_profile.dart';
@@ -84,8 +85,13 @@ class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
                 onTap: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (_) =>
-                          OtherProfile(infoModel: snapshot.data[index]),
+                      builder: (_) => OtherProfile(
+                        infoModel: Preview(
+                          givenName: snapshot.data[index].givenName,
+                          imageUrl: snapshot.data[index].mediaRef,
+                          uid: snapshot.data[index].docId,
+                        ),
+                      ),
                     ),
                   );
                 },

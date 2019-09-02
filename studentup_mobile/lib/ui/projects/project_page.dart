@@ -5,9 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/project_signup_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/project_page_notifier.dart';
+import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/projects/file_attachment.dart';
+import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 import 'package:studentup_mobile/ui/widgets/slivers/custom_sliver_delegate.dart';
+import 'package:studentup_mobile/util/util.dart';
 
 class ProjectPage extends StatelessWidget {
   final ProjectModel model;
@@ -120,14 +124,27 @@ class ImageScrollbaleAppBar extends StatelessWidget {
           shape: CircleBorder(),
           color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.4),
           child: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).pop(),
+          onPressed: () => Navigator.of(context).pop(false),
         ),
         actions: <Widget>[
-          FlatButton(
-            shape: CircleBorder(),
-            color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.4),
-            child: Icon(Icons.more_horiz),
-            onPressed: () => print('object'),
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Consumer<ProjectPageNotifier>(
+              builder: (context, service, child) {
+                if (service.model.creatorId !=
+                    Locator.of<AuthService>().currentUser.uid)
+                  return Container();
+                return PopupMenuWithActions(
+                  color: Theme.of(context)
+                      .scaffoldBackgroundColor
+                      .withOpacity(0.4),
+                  onDelete: () async {
+                    await service.deleteProject();
+                    Navigator.of(context).pop(true);
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -190,7 +207,9 @@ class ProjectInformation extends StatelessWidget {
                         style: Theme.of(context).textTheme.subtitle,
                       ),
                       Text(
-                        '200 XP to earn',
+                        'Deadline: ' +
+                            Util.formatDateTime(notifier.model.deadline,
+                                deadline: true),
                         style: Theme.of(context).textTheme.subtitle,
                       ),
                     ],
@@ -215,6 +234,7 @@ class ProjectInformation extends StatelessWidget {
                     textAlign: TextAlign.center,
                     softWrap: true,
                   ),
+                  //TODO: add list of signups if the user viewing the project is the owner
                   const SizedBox(height: 16.0),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.9,

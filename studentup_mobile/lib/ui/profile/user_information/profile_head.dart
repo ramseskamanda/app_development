@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/theme.dart';
 
@@ -26,26 +27,40 @@ class ProfileAboutCard extends StatelessWidget {
             Spacer(),
             Text(
               'About',
-              style: Theme.of(context).textTheme.headline.copyWith(
+              style: Theme.of(context).textTheme.title.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
             ),
             Spacer(flex: 2),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Text(
-                'This is some random text im typing because it\'s fun and I want to test this shit'
-                'This is some random text im typing because it\'s fun and I want to test this shit',
-                softWrap: true,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.body2,
-              ),
+            Consumer<ProfileNotifier>(
+              builder: (context, notifier, child) {
+                return StreamBuilder<UserInfoModel>(
+                  stream: notifier.userInfoStream,
+                  builder: (context, snapshot) {
+                    return ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: MediaQuery.of(context).size.width * 0.8,
+                      ),
+                      child: Text(
+                        snapshot.hasData
+                            ? snapshot.data.bio
+                            : snapshot.hasError
+                                ? 'Biography Error'
+                                : 'Loading...',
+                        softWrap: true,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.body2,
+                      ),
+                    );
+                  },
+                );
+              },
             ),
             Spacer(flex: 2),
             CircleAvatar(
               radius: MediaQuery.of(context).size.width * 0.06,
               backgroundImage: CachedNetworkImageProvider(
-                'https://cdn1.iconfinder.com/data/icons/logotypes/32/square-linkedin-512.png',
+                'https://firebasestorage.googleapis.com/v0/b/studentup-nl.appspot.com/o/default_files%2Flogo%20instagram.png?alt=media&token=5a0a5c04-1bf1-49ef-883a-479bc77d578a',
                 errorListener: () =>
                     print('⚠️  [📸 CachedNetworkImageProvider Error]'),
               ),

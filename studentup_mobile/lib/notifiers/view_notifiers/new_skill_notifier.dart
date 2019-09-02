@@ -37,6 +37,7 @@ class NewSkillNotifier extends NetworkNotifier {
 
   Future send() async {
     if (!canSend) return;
+    isLoading = true;
     final model = SkillsModel(
       avgRating: 0,
       description: _description.text,
@@ -51,6 +52,7 @@ class NewSkillNotifier extends NetworkNotifier {
       print(e);
       error = NetworkError(message: e.toString());
     }
+    isLoading = false;
   }
 
   @override

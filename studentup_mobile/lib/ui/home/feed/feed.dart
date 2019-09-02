@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
@@ -15,6 +17,34 @@ class Feed extends StatefulWidget {
 class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
   final FeedNotifier notifier = FeedNotifier();
 
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+    _scrollController.addListener(_loadMore);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _loadMore() {
+    print('iubpiuybo');
+    double maxScroll = _scrollController.position.maxScrollExtent;
+    double currentScroll = _scrollController.position.pixels;
+    double delta = MediaQuery.of(context).size.height * 0.25;
+    if (_scrollController.offset >=
+            _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) print('loading once?');
+
+    if (maxScroll - currentScroll <= delta) //notifier.loadMore();
+      print('loading');
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -29,18 +59,18 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
           //   onPressed: () {},
           // ),
           title: const Text('Home'),
-          // actions: <Widget>[
-          //   IconButton(
-          //     icon: const Icon(Icons.send),
-          //     onPressed: () {
-          //       Provider.of<PageController>(context).animateToPage(
-          //         1,
-          //         duration: kTabScrollDuration,
-          //         curve: Curves.easeInOutQuad,
-          //       );
-          //     },
-          //   ),
-          // ],
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.send),
+              onPressed: () {
+                Provider.of<PageController>(context).animateToPage(
+                  1,
+                  duration: kTabScrollDuration,
+                  curve: Curves.easeInOutQuad,
+                );
+              },
+            ),
+          ],
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(
@@ -56,21 +86,24 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
             if (result) notifier.onRefresh();
           },
         ),
-        body: Consumer<FeedNotifier>(builder: (context, notifier, child) {
-          return LiquidPullToRefresh(
-            onRefresh: () => notifier.onRefresh(),
-            child: ListView(
-              children: <Widget>[
-                SizedBox(
-                  height: 100.0,
-                  child: StartupStories(),
-                ),
-                const SizedBox(height: 24.0),
-                ThinkTankPreviewsList(),
-              ],
-            ),
-          );
-        }),
+        body: Consumer<FeedNotifier>(
+          builder: (context, notifier, child) {
+            return LiquidPullToRefresh(
+              onRefresh: () => notifier.onRefresh(),
+              child: ListView(
+                controller: _scrollController,
+                children: <Widget>[
+                  SizedBox(
+                    height: 100.0,
+                    child: StartupStories(),
+                  ),
+                  const SizedBox(height: 24.0),
+                  ThinkTankPreviewsList(),
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }

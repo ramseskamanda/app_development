@@ -13,6 +13,8 @@ class StartUpPageRoot extends StatelessWidget {
 
   const StartUpPageRoot({Key key, @required this.model}) : super(key: key);
 
+  //TODO: FIX THIS TO BE LIKE THE PROFILE WITH STREAMS AND ALL THAT
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<StartupPageNotifier>(
@@ -340,10 +342,6 @@ class ProjectPost extends StatelessWidget {
                     ],
                   ),
                   Spacer(),
-                  Text(
-                    '200 XP reward!',
-                    style: Theme.of(context).textTheme.title,
-                  ),
                   const SizedBox(height: 16.0),
                   Text(
                     model.description,

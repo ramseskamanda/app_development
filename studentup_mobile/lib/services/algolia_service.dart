@@ -59,8 +59,7 @@ class AlgoliaService {
   Future<List<UserInfoModel>> searchUsers(String queryString) async {
     try {
       if (cache.containsKey(queryString) &&
-          cache[queryString].runtimeType is List<UserInfoModel>)
-        return cache[queryString];
+          cache[queryString] is List<UserInfoModel>) return cache[queryString];
 
       print('fetching from network');
 

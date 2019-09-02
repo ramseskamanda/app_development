@@ -1,60 +1,66 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+import 'package:studentup_mobile/input_blocs/user_profile_edit_bloc.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/education_model.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
+import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:studentup_mobile/services/auth_service.dart';
 import 'package:studentup_mobile/services/firestore_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
-import 'package:studentup_mobile/util/util.dart';
 
-// ? TODO: auth/linkedin
 class ProfileNotifier extends NetworkNotifier {
-  String _uid;
-  UserInfoModel _infoModel;
-  List<SkillsModel> _skills;
-  List<EducationModel> _education;
-  List<LaborExeprienceModel> _experience;
+  String _userId;
 
-  FirestoreReader _firestore;
-  FirestoreWriter _firestoreUpload;
+  FirestoreReader _firestoreReader;
+  UserProfileEditBloc _userProfileEditBloc;
 
-  TextEditingController _nameEditor;
-  TextEditingController _universityEditor;
-  TextEditingController _locationEditor;
-  TextEditingController _bioEditor;
+  DocumentReference _userDocument;
+  bool _isStartup;
+  Preview _preview;
 
-  ProfileNotifier() {
-    _firestore = FirestoreReader();
-    _firestoreUpload = FirestoreWriter();
-    _uid = Locator.of<AuthService>().currentUser.uid;
-    _education = [];
-    _experience = [];
-    _nameEditor = TextEditingController();
-    _universityEditor = TextEditingController();
-    _locationEditor = TextEditingController();
-    _bioEditor = TextEditingController();
-    fetchData();
+  ProfileNotifier([String uid]) {
+    _userId = uid;
+    _firestoreReader = Locator.of<FirestoreReader>();
+    _userProfileEditBloc = UserProfileEditBloc();
   }
 
-  TextEditingController get nameEditor => _nameEditor;
-  TextEditingController get universityEditor => _universityEditor;
-  TextEditingController get locationEditor => _locationEditor;
-  TextEditingController get bioEditor => _bioEditor;
+  bool get isStartup => _isStartup;
+  Preview get info => _preview;
 
-  bool get _noChanges =>
-      _nameEditor.text.isEmpty &&
-      _universityEditor.text.isEmpty &&
-      _locationEditor.text.isEmpty &&
-      _bioEditor.text.isEmpty;
+  UserProfileEditBloc get userBloc => _userProfileEditBloc;
 
-  UserInfoModel get info => _infoModel;
-  List<SkillsModel> get skills => isLoading || hasError ? [] : _skills;
-  List<EducationModel> get education => isLoading || hasError ? [] : _education;
-  List<LaborExeprienceModel> get experience =>
-      isLoading || hasError ? [] : _experience;
+  //USER INFORMATION
+  Stream<UserInfoModel> get userInfoStream =>
+      _firestoreReader.fetchUserInfoStream(_userDocument).asBroadcastStream();
+  Stream<List<EducationModel>> get education =>
+      _firestoreReader.fetchEducation(_userId);
+  Stream<List<LaborExeprienceModel>> get experience =>
+      _firestoreReader.fetchExperience(_userId);
+  Stream<List<SkillsModel>> get skills => _firestoreReader.fetchSkills(_userId);
+
+  //STARTUP INFORMATION
+  Stream<StartupInfoModel> get startupInfoStream =>
+      _firestoreReader.fetchStartupInfoStream(_userDocument);
+
+  set preview(dynamic value) {
+    if (value is UserInfoModel)
+      _preview = Preview(
+        uid: value.docId,
+        givenName: value.givenName,
+        imageUrl: value.mediaRef,
+      );
+    else if (value is StartupInfoModel)
+      _preview = Preview(
+        uid: value.docId,
+        givenName: value.name,
+        imageUrl: value.imageUrl,
+      );
+    notifyListeners();
+  }
 
   @override
   Future onRefresh() async => fetchData();
@@ -62,13 +68,16 @@ class ProfileNotifier extends NetworkNotifier {
   @override
   Future fetchData([dynamic data]) async {
     isLoading = true;
+    _userId ??= Locator.of<AuthService>().currentUser.uid;
     try {
-      if (_infoModel == null) _infoModel = await _firestore.fetchUser(_uid);
-      _infoModel.locationString =
-          await Util.geoPointToLocation(_infoModel.location);
-      _skills = await _firestore.fetchSkills(_uid);
-      _education = await _firestore.fetchEducation(_uid);
-      _experience = await _firestore.fetchExperience(_uid);
+      final Map<DocumentReference, bool> result =
+          await _firestoreReader.findUserDocument(_userId);
+      _userDocument = result.keys.length > 0 ? result.keys.first : null;
+      _isStartup = result.values.length > 0 ? result.values.first : false;
+      if (_isStartup)
+        startupInfoStream.listen((data) => preview = data);
+      else
+        userInfoStream.listen((data) => preview = data);
     } on PlatformException catch (pe) {
       error = NetworkError(message: pe.message + '\n' + pe.details);
     } catch (e) {
@@ -78,47 +87,23 @@ class ProfileNotifier extends NetworkNotifier {
     isLoading = false;
   }
 
-  Future fetchInfoData() async {
-    isLoading = true;
-    try {
-      _infoModel = await _firestore.fetchUser(_uid);
-    } catch (e) {
-      print(e);
-      error = NetworkError(message: e.toString());
-    }
-    isLoading = false;
+  @override
+  void dispose() {
+    _userProfileEditBloc.dispose();
+    super.dispose();
   }
 
-  Map<String, dynamic> _getData() {
-    Map<String, dynamic> data = {};
-    if (_nameEditor.text.isNotEmpty) data['given_name'] = _nameEditor.text;
-    if (_universityEditor.text.isNotEmpty)
-      data['university'] = _universityEditor.text;
-    //if (_locationEditor.text.isNotEmpty)
-    //  data['location'] = _locationEditor.text;
-    if (_bioEditor.text.isNotEmpty) data['bio'] = _bioEditor.text;
-    return data;
+  void logout() {
+    _userId = null;
   }
 
   Future uploadEditorInfo() async {
-    if (_noChanges) return;
-    isLoading = true;
-    try {
-      await _firestoreUpload.updateProfileInfo(
-        _uid,
-        _getData(),
-      );
-    } catch (e) {
-      print(e);
-      error = NetworkError(message: e.toString());
-    }
-    fetchInfoData();
+    if (isStartup) {
+    } else {}
   }
 
-  void clearEditor() {
-    _nameEditor.clear();
-    _universityEditor.clear();
-    _locationEditor.clear();
-    _bioEditor.clear();
+  void clearEditor() async {
+    if (isStartup) {
+    } else {}
   }
 }

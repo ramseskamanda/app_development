@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:path/path.dart';
 import 'package:open_file/open_file.dart';
+import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -34,28 +35,33 @@ class FirebaseStorageService {
   Future<void> download(
       {String filePath, Function callback, Function onError}) async {
     //TODO: improve this method by saving to memory and retrieving from it
-    var meta = await _firebaseStorage.ref().child(filePath).getMetadata();
-    final Directory tempDir = Directory.systemTemp;
-    final File file = File('${tempDir.path}/$filePath');
-    final StorageReference ref = FirebaseStorage.instance.ref().child(filePath);
-    final StorageFileDownloadTask downloadTask = ref.writeToFile(file);
-    print('URL Is $url');
-    downloadTask.future.whenComplete(() async {
-      callback();
-      //check that file exists
-      if (await file.exists()) {
-        //open file
-        OpenFile.open(file.path, type: meta.contentType);
-      } else {
-        onError();
-      }
-    });
+    try {
+      var meta = await _firebaseStorage.ref().child(filePath).getMetadata();
+      final Directory tempDir = Directory.systemTemp;
+      final File file = File('${tempDir.path}/$filePath');
+      final StorageReference ref =
+          FirebaseStorage.instance.ref().child(filePath);
+      final StorageFileDownloadTask downloadTask = ref.writeToFile(file);
+      print('URL Is $url');
+      downloadTask.future.whenComplete(() async {
+        callback();
+        //check that file exists
+        if (await file.exists()) {
+          //open file
+          OpenFile.open(file.path, type: meta.contentType);
+        } else {
+          onError();
+        }
+      });
+    } catch (e) {
+      print(e);
+      throw NetworkError(message: 'Error Occured During Download.');
+    }
   }
 
   //TODO: turn this into an async*
   List<StorageUploadTask> startUpload(List<File> data, List<String> filePaths) {
     assert(data.length == filePaths.length);
-    print(data.first.path);
     List<StorageUploadTask> _tasks = <StorageUploadTask>[];
     try {
       for (int i = 0; i < data.length; i++)

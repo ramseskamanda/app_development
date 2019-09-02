@@ -4,6 +4,11 @@ class NetworkError extends Error {
   final String message;
 
   NetworkError({this.message});
+
+  @override
+  String toString() {
+    return 'NetworkError(message: $message)';
+  }
 }
 
 abstract class NetworkNotifier extends ChangeNotifier {

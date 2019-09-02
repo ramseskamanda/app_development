@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
+import 'package:studentup_mobile/ui/home/chat_screen/new_message.dart';
 import 'package:studentup_mobile/ui/profile/other_profile.dart';
 
 class UserProfileCard extends StatefulWidget {
@@ -28,7 +30,13 @@ class _UserProfileCardState extends State<UserProfileCard> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (_) => OtherProfile(infoModel: widget.model),
+            builder: (_) => OtherProfile(
+              infoModel: Preview(
+                givenName: widget.model.givenName,
+                imageUrl: widget.model.mediaRef,
+                uid: widget.model.docId,
+              ),
+            ),
           ),
         );
       },
@@ -68,12 +76,20 @@ class _UserProfileCardState extends State<UserProfileCard> {
                   style: Theme.of(context).textTheme.caption,
                   textAlign: TextAlign.center,
                 ),
-                //! TODO: Add onPressed that leads to writing a new message to the person
                 RaisedButton(
                   child: const Text('Contact'),
                   color: Theme.of(context).accentColor,
                   textColor: Theme.of(context).scaffoldBackgroundColor,
-                  onPressed: () => print(widget.model.bio),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => NewMessage(
+                          model: widget.model,
+                          fromSearch: true,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

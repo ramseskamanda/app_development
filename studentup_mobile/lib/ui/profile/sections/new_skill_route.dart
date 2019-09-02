@@ -47,9 +47,14 @@ class NewSkillRoute extends StatelessWidget {
                               for (SearchCategory category
                                   in SearchCategory.values.skip(1))
                                 DropdownMenuItem(
-                                  value: category.toString().split('.')[1],
-                                  child:
-                                      Text(category.toString().split('.')[1]),
+                                  value: category
+                                      .toString()
+                                      .split('.')[1]
+                                      .replaceAll('_', ' '),
+                                  child: Text(category
+                                      .toString()
+                                      .split('.')[1]
+                                      .replaceAll('_', ' ')),
                                 ),
                             ],
                           ),

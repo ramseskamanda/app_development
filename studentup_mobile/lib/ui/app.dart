@@ -6,7 +6,7 @@ import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart'
 import 'package:studentup_mobile/services/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/home/home.dart';
-import 'package:studentup_mobile/ui/profile/profile.dart';
+import 'package:studentup_mobile/ui/profile/profile_root.dart';
 import 'package:studentup_mobile/ui/projects/projects_root.dart';
 import 'package:studentup_mobile/ui/search/search_root.dart';
 import 'package:studentup_mobile/ui/widgets/toasts/complete_profile_toast.dart';
@@ -23,7 +23,7 @@ class _ApplicationState extends State<Application> {
     Home(),
     SearchRoot(),
     ProjectFeedRoot(),
-    Profile(),
+    ProfileRoot(),
   ];
 
   List<BottomNavigationBarItem> _navigationBar = <BottomNavigationBarItem>[
@@ -72,12 +72,8 @@ class _ApplicationState extends State<Application> {
   @override
   Widget build(BuildContext context) {
     assert(_navigationBar.length == _tabs.length);
-    return ChangeNotifierProvider<ProfileNotifier>(
-      builder: (_) {
-        final value = ProfileNotifier();
-        Locator.registerUniqueProfile(value);
-        return value;
-      },
+    return ChangeNotifierProvider<ProfileNotifier>.value(
+      value: Locator.of<ProfileNotifier>()..fetchData(),
       child: WillPopScope(
         onWillPop: () async => false,
         child: CupertinoTabScaffold(

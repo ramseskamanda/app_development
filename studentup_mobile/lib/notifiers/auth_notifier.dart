@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:studentup_mobile/services/auth_service.dart';
@@ -37,6 +38,7 @@ class AuthNotifier extends NetworkNotifier {
   }
 
   Future signUpWithEmail({
+    @required bool isStartup,
     @required String name,
     @required String email,
     @required String password,
@@ -48,12 +50,20 @@ class AuthNotifier extends NetworkNotifier {
         password: password,
       );
       if (user == null) return;
-      UserInfoModel model = UserInfoModel(
-        givenName: name,
-        experienceMonthly: 0,
-        experienceOverall: 0,
-      );
-      await Locator.of<FirestoreWriter>().createUser(user.uid, model);
+      if (isStartup) {
+        StartupInfoModel model = StartupInfoModel(
+          name: name,
+          imageUrl: defaultImageUrl,
+          creation: DateTime.now(),
+        );
+        await Locator.of<FirestoreWriter>().createStartup(user.uid, model);
+      } else {
+        UserInfoModel model = UserInfoModel(
+          givenName: name,
+          mediaRef: defaultImageUrl,
+        );
+        await Locator.of<FirestoreWriter>().createUser(user.uid, model);
+      }
       isLoadingWithoutNotifiers = false;
     } catch (e) {
       print(e);
@@ -81,19 +91,27 @@ class AuthNotifier extends NetworkNotifier {
     }
   }
 
-  Future loginWithGoogle() async {
+  Future loginWithGoogle(bool isStartup) async {
     isLoading = true;
     try {
       user = await Locator.of<AuthService>()
           .loginWithGoogle(isSignedUp: isRegistered);
       if (user == null) return;
       if (Locator.of<AuthService>().currentUserisNew) {
-        UserInfoModel model = UserInfoModel(
-          givenName: user.displayName,
-          experienceMonthly: 0,
-          experienceOverall: 0,
-        );
-        await Locator.of<FirestoreWriter>().createUser(user.uid, model);
+        if (isStartup) {
+          StartupInfoModel model = StartupInfoModel(
+            name: user.displayName,
+            imageUrl: user.photoUrl,
+            creation: DateTime.now(),
+          );
+          await Locator.of<FirestoreWriter>().createStartup(user.uid, model);
+        } else {
+          UserInfoModel model = UserInfoModel(
+            givenName: user.displayName,
+            mediaRef: user.photoUrl,
+          );
+          await Locator.of<FirestoreWriter>().createUser(user.uid, model);
+        }
       }
       isLoadingWithoutNotifiers = false;
     } catch (e) {

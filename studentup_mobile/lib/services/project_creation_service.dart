@@ -6,8 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
+import 'package:studentup_mobile/models/project_model.dart';
+import 'package:studentup_mobile/notifiers/base_notifiers.dart';
+import 'package:studentup_mobile/services/auth_service.dart';
 import 'package:studentup_mobile/services/firebase_storage.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 
 const int MINIMUM_LENGTH_Project = 3;
 const int MAXIMUM_LENGTH_Project = 75;
@@ -16,7 +21,7 @@ const int MAXIMUM_PARTICIPANTS = 250;
 const int MAXIMUM_CATEGORIES_SELECTED = 3;
 
 /// Only gets instantiated when a new Project is requested
-class ProjectCreationService extends ChangeNotifier {
+class ProjectCreationService extends NetworkNotifier {
   File _image;
   TextEditingController _nameController;
   TextEditingController _descriptionController;
@@ -24,9 +29,10 @@ class ProjectCreationService extends ChangeNotifier {
   DateTime _deadline;
   int _numParticipants;
   List<SearchCategory> _categories;
-  // FirestoreReader _firestoreService;
+  FirestoreWriter _firestoreWriter;
   FirebaseStorageService _firebaseStorageService;
   List<StorageUploadTask> _uploadTasks;
+  bool _isDone;
 
   File get image => _image;
   set image(File newImage) => _image = newImage ?? image;
@@ -50,9 +56,7 @@ class ProjectCreationService extends ChangeNotifier {
 
   bool get isUploading => _uploadTasks.isNotEmpty && !isDone;
 
-  bool get isDone =>
-      _uploadTasks.isNotEmpty &&
-      _uploadTasks.map((t) => t.isComplete).reduce((a, b) => a && b);
+  bool get isDone => _isDone;
 
   set uploads(List<StorageUploadTask> list) {
     _uploadTasks = list;
@@ -92,8 +96,9 @@ class ProjectCreationService extends ChangeNotifier {
     _numParticipants = MINIMUM_PARTICIPANTS;
     _categories = <SearchCategory>[];
     _uploadTasks = <StorageUploadTask>[];
-    // _firestoreService = FirestoreReader();
+    _firestoreWriter = Locator.of<FirestoreWriter>();
     _firebaseStorageService = FirebaseStorageService();
+    _isDone = false;
   }
 
   @override
@@ -105,30 +110,38 @@ class ProjectCreationService extends ChangeNotifier {
 
   /// Upload data
   Future<void> uploadProject() async {
-    List<String> _paths = FirebaseStorageService.createFilePaths(
-      [image, ...files],
-      'projects_files',
-    );
-    print(_paths.first);
-    // ProjectModel _model = ProjectModel(
-    //   creatorId: 'xxx',
-    //   creatorMedia: 'xxx',
-    //   creator: 'Studentup',
-    //   timestamp: DateTime.now(),
-    //   categories: categories,
-    //   maxUsersNum: numParticipants,
-    //   media: _paths.first,
-    //   description: description.text,
-    //   title: name.text,
-    //   files: _paths.skip(1).toList(),
-    //   deadline: deadline,
-    // );
-    uploads = _firebaseStorageService.startUpload([image, ...files], _paths);
-    uploadStream.listen((double percent) {
-      if (1.0 == percent) notifyListeners();
-    });
-    //await _firestoreService.uploadProjectInformation(_model.toJson());
-    notifyListeners();
+    if (!formIsValid) return;
+    isLoading = true;
+    try {
+      final List<File> allFiles = [image, ...files]
+        ..removeWhere((file) => file == null);
+      List<String> _paths = FirebaseStorageService.createFilePaths(
+        allFiles,
+        'projects_files',
+      );
+      ProjectModel _model = ProjectModel(
+        creatorId: Locator.of<AuthService>().currentUser.uid,
+        creatorMedia: Locator.of<AuthService>().currentUser.photoUrl,
+        creator: Locator.of<AuthService>().currentUser.displayName,
+        timestamp: DateTime.now(),
+        categories: categories,
+        maxUsersNum: numParticipants,
+        media: null, //TODO: add background image here
+        description: description.text,
+        title: name.text,
+        files: _paths.skip(1).toList(),
+        deadline: deadline,
+      );
+      uploads = _firebaseStorageService.startUpload(allFiles, _paths);
+      uploadStream.listen((double percent) {
+        if (1.0 == percent) notifyListeners();
+      });
+      await _firestoreWriter.uploadProjectInformation(model: _model);
+      _isDone = true;
+    } catch (e) {
+      print(e);
+    }
+    isLoading = false;
   }
 
   /// Cropper plugin
@@ -184,4 +197,10 @@ class ProjectCreationService extends ChangeNotifier {
       categories.add(category);
     notifyListeners();
   }
+
+  @override
+  Future fetchData() async {}
+
+  @override
+  Future onRefresh() async {}
 }

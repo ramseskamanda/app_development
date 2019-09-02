@@ -15,22 +15,17 @@ class StartupInfoModel extends BaseModel {
   Timestamp _creationDate;
 
   StartupInfoModel({
-    String description,
-    GeoPoint location,
-    List<String> savedProfiles,
     String name,
-    String website,
     String imageUrl,
-    List<String> team,
     DateTime creation,
   }) {
-    _description = description;
-    _location = location;
-    _savedProfiles = savedProfiles;
+    _description = null;
+    _location = null;
+    _savedProfiles = [];
     _name = name;
-    _website = website;
+    _website = null;
     _imageUrl = imageUrl;
-    _team = team;
+    _team = [];
     _creationDate = Timestamp.fromDate(creation);
   }
 

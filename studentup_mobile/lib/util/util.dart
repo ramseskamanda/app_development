@@ -1,26 +1,51 @@
+import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
+import 'package:random_color/random_color.dart';
 
 class Util {
+  static final RandomColor _randomColor = RandomColor();
+
   static String formatCount(int count) {
     return count.toString();
   }
 
-  static Future<String> geoPointToLocation(GeoPoint geoPoint) async {
+  static Future<GeoPoint> locationToGeoPoint(String location) async {
     // if (geoPoint == null) return null;
     // List<Placemark> placemark = await Geolocator()
     //     .placemarkFromCoordinates(geoPoint.latitude, geoPoint.longitude);
     // if (placemark.length > 0)
     //   return '${placemark.first.locality}, ${placemark.first.country}';
     // return null;
-    return '';
+    return GeoPoint(0, 0);
+  }
+
+  static String geoPointToLocation(GeoPoint geoPoint) {
+    // if (geoPoint == null) return null;
+    // List<Placemark> placemark = await Geolocator()
+    //     .placemarkFromCoordinates(geoPoint.latitude, geoPoint.longitude);
+    // if (placemark.length > 0)
+    //   return '${placemark.first.locality}, ${placemark.first.country}';
+    // return null;
+    return 'Maastricht, Netherlands';
   }
 
   static String format(Timestamp date, {bool allowNow = false}) {
     if (date == null) return allowNow ? 'now' : '500 Error';
     var format = DateFormat.yMMM();
     return format.format(date.toDate());
+  }
+
+  static String formatDateTime(
+    DateTime date, {
+    bool allowNow = false,
+    bool deadline = false,
+  }) {
+    if (date == null) return allowNow ? 'now' : '500 Error';
+    var format = deadline ? DateFormat.yMMMd() : DateFormat.yMMM();
+    return format.format(date);
   }
 
   static String formatHour(DateTime time) {
@@ -38,5 +63,11 @@ class Util {
         : DateTime(now.year + 1, 1, 0);
 
     return lastDayDateTime.difference(now);
+  }
+
+  static Color getRandomColor() {
+    return _randomColor
+        .randomColor(colorSaturation: ColorSaturation.random)
+        .withOpacity(0.67);
   }
 }

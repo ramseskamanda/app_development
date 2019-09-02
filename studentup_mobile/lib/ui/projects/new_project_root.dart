@@ -36,7 +36,7 @@ class _NewProjectRootState extends State<NewProjectRoot> {
           ? IconButton(
               key: ValueKey(index),
               icon: Icon(Icons.close),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () => Navigator.of(context).pop(false),
             )
           : IconButton(
               key: ValueKey(index),
@@ -58,7 +58,7 @@ class _NewProjectRootState extends State<NewProjectRoot> {
     _leadingIconButton = IconButton(
       key: ValueKey(_controller.initialPage),
       icon: Icon(Icons.close),
-      onPressed: () => Navigator.of(context).pop(),
+      onPressed: () => Navigator.of(context).pop(false),
     );
   }
 
@@ -120,26 +120,26 @@ class BottomButton extends StatelessWidget {
 
   const BottomButton({Key key, this.last, this.controller}) : super(key: key);
 
+  _getFunction(BuildContext context, ProjectCreationService service) {
+    if (service.isDone) return () => Navigator.of(context).pop(true);
+    if (!last)
+      return () {
+        controller.nextPage(
+          duration: kTabScrollDuration,
+          curve: Curves.easeInOutSine,
+        );
+      };
+    if (service.isLoading || service.isUploading) return null;
+    if (!service.formIsValid) return () => print('Form is not valid');
+    return () => service.uploadProject();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProjectCreationService>(
-      builder: (context, service, child) {
-        return StadiumButton(
-          text: service.isDone ? 'Done' : last ? 'Publish' : 'Next',
-          onPressed: service.isDone
-              ? () => Navigator.of(context).pop()
-              : !last
-                  ? () {
-                      controller.nextPage(
-                        duration: kTabScrollDuration,
-                        curve: Curves.easeInOutSine,
-                      );
-                    }
-                  : service.formIsValid && !service.isUploading
-                      ? () => service.uploadProject()
-                      : null,
-        );
-      },
+    final ProjectCreationService service = Provider.of(context);
+    return StadiumButton(
+      text: service.isDone ? 'Done' : last ? 'Publish' : 'Next',
+      onPressed: _getFunction(context, service),
     );
   }
 }

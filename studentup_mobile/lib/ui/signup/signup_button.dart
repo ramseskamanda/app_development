@@ -8,8 +8,13 @@ import 'package:studentup_mobile/ui/signup/disclaimer.dart';
 class SignUpButton extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final SignUpFormBloc bloc;
-  SignUpButton({Key key, @required this.formKey, @required this.bloc})
-      : super(key: key);
+  final bool isStartup;
+  SignUpButton({
+    Key key,
+    @required this.formKey,
+    @required this.bloc,
+    this.isStartup,
+  }) : super(key: key);
   @override
   _SignUpButtonState createState() => _SignUpButtonState();
 }
@@ -40,6 +45,7 @@ class _SignUpButtonState extends State<SignUpButton> {
                             if (!_proceed) return;
                             if (!widget.formKey.currentState.validate()) return;
                             await auth.signUpWithEmail(
+                              isStartup: widget.isStartup,
                               name: widget.bloc.nameValue,
                               email: widget.bloc.emailValue,
                               password: widget.bloc.passwordValue,

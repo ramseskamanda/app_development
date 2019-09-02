@@ -4,6 +4,7 @@ enum SearchCategory {
   ART,
   BLOCKCHAIN,
   CODING,
+  DATA_SCIENCE,
   DESIGN,
   ENGINEERING,
   FINANCE,

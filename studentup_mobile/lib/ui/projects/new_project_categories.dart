@@ -68,7 +68,7 @@ class CategoryTile extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                category.toString().split('.')[1],
+                category.toString().split('.')[1].replaceAll('_', ' '),
                 style: Theme.of(context).textTheme.subtitle,
               ),
             ),

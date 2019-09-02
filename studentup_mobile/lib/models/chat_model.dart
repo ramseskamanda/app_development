@@ -12,10 +12,10 @@ class ChatModel extends BaseModel {
 
   ChatModel({
     Participants participants,
-    CollectionReference collectionReference,
+    MessageModel lastMessage,
   }) {
     _participants = participants;
-    _messages = collectionReference;
+    _lastMessage = lastMessage;
   }
 
   String get userId => _userId;
@@ -28,22 +28,30 @@ class ChatModel extends BaseModel {
 
   ChatModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;
-    print(json);
     _userId = Locator.of<AuthService>().currentUser.uid;
     _messages = doc.reference.collection('messages');
     _lastMessage = json['latest_message'] != null
-        ? MessageModel.fromJson(json['latest_message'])
+        ? MessageModel.fromJson(
+            Map<dynamic, dynamic>.from(json['latest_message']))
         : null;
     _participants = json['participants'] != null
-        ? Participants.fromJson(json['participants'])
+        ? Participants.fromJson(
+            Map<dynamic, dynamic>.from(json['participants']))
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
     if (_participants != null) data['participants'] = _participants.toJson();
+    if (_participants != null)
+      data['list_participants'] = _participants._previews.keys.toList();
     if (_lastMessage != null) data['latest_message'] = _lastMessage.toJson();
     return data;
+  }
+
+  @override
+  String toString() {
+    return '${participants.toString()}';
   }
 }
 
@@ -59,11 +67,12 @@ class Participants {
     return _previews[otherId];
   }
 
-  Participants.fromJson(Map<String, dynamic> json) {
+  Participants.fromJson(Map<dynamic, dynamic> json) {
+    _previews = {};
+
     if (json.keys.length == 2)
       json.forEach(
-          (key, value) => _previews[key] = Preview.fromJson(json[key]));
-    _previews = {};
+          (key, value) => _previews[key] = Preview.fromJson(json[key], key));
   }
 
   Map<String, dynamic> toJson() {
@@ -73,23 +82,32 @@ class Participants {
 
     return data;
   }
+
+  @override
+  String toString() {
+    return '${_previews.toString()}';
+  }
 }
 
 class Preview {
   String _givenName;
   String _imageUrl;
+  String _uid;
 
-  Preview({String givenName, String imageUrl}) {
+  Preview({String givenName, String imageUrl, String uid}) {
     _givenName = givenName;
     _imageUrl = imageUrl;
+    _uid = uid;
   }
 
   String get givenName => _givenName;
   String get imageUrl => _imageUrl;
+  String get uid => _uid;
 
-  Preview.fromJson(Map<String, dynamic> json) {
+  Preview.fromJson(Map<dynamic, dynamic> json, String uid) {
     _givenName = json['given_name'];
     _imageUrl = json['imageUrl'];
+    _uid = uid;
   }
 
   Map<String, dynamic> toJson() {
@@ -97,5 +115,10 @@ class Preview {
     data['given_name'] = _givenName;
     data['imageUrl'] = _imageUrl;
     return data;
+  }
+
+  @override
+  String toString() {
+    return '$_givenName :: $_uid';
   }
 }

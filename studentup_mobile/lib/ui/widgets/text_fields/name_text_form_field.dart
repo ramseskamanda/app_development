@@ -7,8 +7,14 @@ import 'package:studentup_mobile/util/validators.dart';
 class NameTextFormField extends StatefulWidget {
   final Sink<String> sink;
   final FocusNode nextNode;
-  NameTextFormField({Key key, @required this.sink, this.nextNode})
-      : super(key: key);
+  final String hintText;
+
+  NameTextFormField({
+    Key key,
+    @required this.sink,
+    this.nextNode,
+    this.hintText = 'Full Name',
+  }) : super(key: key);
   @override
   _NameTextFormFieldState createState() => _NameTextFormFieldState();
 }
@@ -39,7 +45,7 @@ class _NameTextFormFieldState extends State<NameTextFormField> {
           FocusScope.of(context).requestFocus(widget.nextNode ?? FocusNode()),
       decoration: InputDecoration(
         border: OutlineInputBorder(),
-        hintText: 'Full Name',
+        hintText: widget.hintText,
         errorText: _auth.hasError ? _auth.error.toString() : null,
         prefixIcon: Icon(
           Theme.of(context).platform == TargetPlatform.iOS

@@ -7,8 +7,12 @@ class MessageModel extends BaseModel {
   String _text;
   String _senderId;
 
-  MessageModel(
-      {DateTime seenAt, DateTime sentAt, String text, String senderId}) {
+  MessageModel({
+    DateTime seenAt,
+    DateTime sentAt,
+    String text,
+    String senderId,
+  }) {
     _seenAt = null;
     _sentAt = Timestamp.fromDate(sentAt);
     _text = text;
@@ -28,7 +32,7 @@ class MessageModel extends BaseModel {
     _senderId = json['sender_id'];
   }
 
-  MessageModel.fromJson(Map<String, dynamic> json) {
+  MessageModel.fromJson(Map<dynamic, dynamic> json) {
     _seenAt = json['seenAt'];
     _sentAt = json['sentAt'];
     _text = json['text'];

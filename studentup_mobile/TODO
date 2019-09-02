@@ -15,7 +15,7 @@ Todo:
   ✔ Onboarding screens @done(19-08-15 15:56)
   ✔ Sign up process @done(19-08-17 14:59)
   ✔ Robust, multi-level navigation (maybe from studentup) @started(19-08-17 15:27) @done(19-08-17 19:16) @lasted(3h49m38s)
-  ☐ Feature import from studentup_mobile
+  ✔ Feature import from studentup_mobile @done(19-09-01 13:29)
   ✔ Add search feature @started(19-08-17 19:16) @done(19-08-17 19:53) @lasted(37m54s)
   ✔ Finish search-related cloud functions (and add TODO list to functions including refining of the writing to algolia) @done(19-08-17 23:40)
   ✔ Add notifications to the app @done(19-08-18 15:29)
@@ -41,5 +41,43 @@ First Release:
   ✔ Fix registration process (too complicated and too convoluted) @done(19-08-26 13:15)
   ✔ Create new Think tank @done(19-08-26 16:37)
   ✔ Swap Leaderboard with Projects @done(19-08-26 15:35)
-  ☐ Allow for creation of startup pages
-  ☐ Fix last minute bugs
+  ✔ Allow for creation of startup pages @done(19-09-01 13:14)
+  ✔ Fix last minute bugs @done(19-09-01 13:14)
+
+v-0.0.2:
+  ☐ Fix number of solutions posted (maybe add number of total votes)
+  ☐ Add 'No Ongoing Projects' to startup pages with no projects
+  ☐ Fix latest_message updater in Cloud Functions
+  ✔ Fix ProfileNotifier to allow for Startups @done(19-09-01 18:49)
+  ✔ Implement live data in Home Feed, Project Feed, and Profile @done(19-09-01 18:55)
+  ☐ Fix Profile for startups
+  ✔ Add Bio to user profile @done(19-09-02 17:59)
+  ✔ Fix new project route @done(19-09-02 19:50)
+  ✔ Add Messaging @done(19-09-02 17:11)
+  ✔ Add Contact button to search results @done(19-09-02 20:14)
+  ✔ Add 'No Experience yet' when experience or others are empty @done(19-09-02 17:47)
+  ☐ Fix bugs from bug report
+  ✔ Search colors CANNOT be full white or full black @done(19-09-02 20:14)
+  ☐ Add Connectivity route
+  ☐ Re-enable Catcher
+  ✔ Add key to all lists @done(19-09-02 20:16)
+  ☐ Implement see all
+  ☐ Add Terms and Conditions
+  ☐ Fix Search bug where if one selects a category and goes back, they can't find anything else in all
+
+v-0.0.3:
+  ☐ Add Notifications
+  ☐ Add Hidden Menu Drawer with Saved Profiles etc.
+  ☐ Add past projects
+  ☐ Add notification icons for messaging
+  ☐ Add messaging deletion
+  ☐ Add pagination to conversations
+  ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, etc.
+  ☐ Add AlertDialog before deleting object
+  ☐ Make think tank comments editable + deletable
+  ☐ Make think tank premises editable
+  ☐ Add Setting for QueryOrder for Think Tanks etc.
+  ☐ Add Skill Endorsement
+  ☐ Add Search to Project Page
+  ☐ Add profile editor for startups and users
+  ☐ Implement account switching

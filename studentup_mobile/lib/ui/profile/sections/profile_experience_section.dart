@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/theme.dart';
+import 'package:studentup_mobile/ui/profile/sections/new_experience_route.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 class ProfileExperienceSection extends StatelessWidget {
@@ -37,15 +38,47 @@ class ProfileExperienceSection extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16.0),
-          EducationCard(index: 0),
-          const SizedBox(height: 8.0),
-          EducationCard(index: 1),
+          StreamBuilder(
+            stream: Provider.of<ProfileNotifier>(context).experience,
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+              if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.waiting)
+                  return Center(
+                    child: const CircularProgressIndicator(),
+                  );
+                return Center(
+                  child: Text('An Error Occured'),
+                );
+              } else {
+                if (snapshot.data.length == 0)
+                  return Center(
+                    child: const Text('No Experience Added Yet!'),
+                  );
+                return Column(
+                  children: <Widget>[
+                    if (snapshot.data.length > 0)
+                      ExperienceCard(model: snapshot.data[0]),
+                    const SizedBox(height: 8.0),
+                    if (snapshot.data.length > 1)
+                      ExperienceCard(model: snapshot.data[1]),
+                    const SizedBox(height: 12.0),
+                  ],
+                );
+              }
+            },
+          ),
           const SizedBox(height: 12.0),
           if (isUser)
             StadiumButton.icon(
               text: 'Add Experience',
               icon: Icons.add,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => NewExperienceRoute(),
+                  ),
+                );
+              },
             ),
         ],
       ),
@@ -53,15 +86,13 @@ class ProfileExperienceSection extends StatelessWidget {
   }
 }
 
-class EducationCard extends StatelessWidget {
-  final int index;
+class ExperienceCard extends StatelessWidget {
+  final LaborExeprienceModel model;
 
-  const EducationCard({Key key, this.index}) : super(key: key);
+  const ExperienceCard({Key key, this.model}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ProfileNotifier notifier = Provider.of(context);
-    if (notifier.experience.length < index + 1) return Container();
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
@@ -78,32 +109,29 @@ class EducationCard extends StatelessWidget {
           top: 8.0,
           bottom: 24.0,
         ),
-        child: Consumer<ProfileNotifier>(
-          builder: (context, notifier, child) {
-            if (notifier.isLoading || notifier.hasError) return Container();
-            LaborExeprienceModel model = notifier.experience[index];
-            return Column(
+        child: Column(
+          children: <Widget>[
+            ListTile(
+              title: Text(model.companyName),
+              subtitle: Text('${model.periodStart} - ${model.periodEnd}'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                ListTile(
-                  title: Text(model.companyName),
-                  subtitle: Text('${model.periodStart} - ${model.periodEnd}'),
+                Spacer(),
+                Icon(
+                  Icons.business_center,
+                  color: Theme.of(context).accentColor,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Spacer(),
-                    FlutterLogo(),
-                    Spacer(flex: 4),
-                    Text(
-                      model.position,
-                      style: Theme.of(context).textTheme.body2,
-                    ),
-                    Spacer(),
-                  ],
+                Spacer(flex: 4),
+                Text(
+                  model.position,
+                  style: Theme.of(context).textTheme.body2,
                 ),
+                Spacer(),
               ],
-            );
-          },
+            ),
+          ],
         ),
       ),
     );

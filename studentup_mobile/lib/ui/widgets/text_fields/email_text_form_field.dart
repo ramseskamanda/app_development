@@ -7,8 +7,13 @@ import 'package:flutter/material.dart';
 class EmailTextFormField extends StatefulWidget {
   final Sink<String> sink;
   final FocusNode nextNode;
-  EmailTextFormField({Key key, @required this.sink, @required this.nextNode})
-      : super(key: key);
+  final String hintText;
+  EmailTextFormField({
+    Key key,
+    @required this.sink,
+    @required this.nextNode,
+    this.hintText = 'Email',
+  }) : super(key: key);
   @override
   _EmailTextFormFieldState createState() => _EmailTextFormFieldState();
 }
@@ -40,7 +45,7 @@ class _EmailTextFormFieldState extends State<EmailTextFormField> {
       autocorrect: false,
       decoration: InputDecoration(
         border: OutlineInputBorder(),
-        hintText: 'Email',
+        hintText: widget.hintText,
         errorText: _auth.hasError ? _auth.error.toString() : null,
         prefixIcon: Icon(CupertinoIcons.mail),
       ),

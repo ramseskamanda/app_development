@@ -46,7 +46,6 @@ class ThinkTanksModel extends BaseModel {
     _lastActivity = json['lastActivity'];
     _premise = json['premise'];
     _title = json['title'];
-    print(_askerId);
   }
 
   Map<String, dynamic> toJson() {

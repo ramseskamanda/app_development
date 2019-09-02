@@ -12,7 +12,6 @@ class ChatListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(model.participants);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: ListTile(
@@ -20,7 +19,7 @@ class ChatListItem extends StatelessWidget {
         leading: Stack(
           children: <Widget>[
             Hero(
-              tag: 'chat_model',
+              tag: 'chat_model:${model.docId}',
               child: CachedNetworkImage(
                 imageUrl: model.otherProfile.imageUrl,
                 placeholder: (_, url) => CircleAvatar(
