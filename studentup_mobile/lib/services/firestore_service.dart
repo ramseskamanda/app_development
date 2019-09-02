@@ -15,7 +15,6 @@ import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:studentup_mobile/services/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
-import 'package:studentup_mobile/util/config.dart';
 
 final Firestore _firestore = Firestore.instance;
 
@@ -172,6 +171,25 @@ class FirestoreReader {
           .where('deadline', isGreaterThan: Timestamp.now())
           .orderBy('deadline')
           .orderBy(field)
+          // .limit(NUM_ITEM_PREVIEW)
+          .getDocuments();
+      return snapshot.documents
+          .map((doc) => ProjectModel.fromDoc(doc))
+          .toList();
+    } on PlatformException catch (e) {
+      print(e);
+      throw NetworkError(message: 'Resources requested unavailable');
+    }
+  }
+
+  Future<List<ProjectModel>> fetchProjectsByOwner(String uid,
+      {QueryOrder order = QueryOrder.popularity}) async {
+    try {
+      String field = QueryOrder.newest == order ? 'timestamp' : 'signups_num';
+      QuerySnapshot snapshot = await _firestore
+          .collection(projectCollection)
+          .where('creator_id', isEqualTo: uid)
+          .orderBy(field, descending: true)
           // .limit(NUM_ITEM_PREVIEW)
           .getDocuments();
       return snapshot.documents

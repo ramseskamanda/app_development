@@ -1,6 +1,7 @@
 import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 
 class StartupInfoModel extends BaseModel {
   String _description;
@@ -10,7 +11,7 @@ class StartupInfoModel extends BaseModel {
   String _name;
   String _website;
   String _imageUrl;
-  List<String> _team;
+  List<Preview> _team;
   String locationString;
   Timestamp _creationDate;
 
@@ -35,7 +36,7 @@ class StartupInfoModel extends BaseModel {
   String get name => _name ?? '500 Error';
   String get website => _website ?? '500 Error';
   String get imageUrl => _imageUrl ?? '500 Error';
-  List<String> get team => _team ?? <String>[];
+  List<Preview> get team => _team ?? <String>[];
   DateTime get creationDate => _creationDate?.toDate() ?? DateTime.now();
 
   StartupInfoModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
@@ -46,8 +47,12 @@ class StartupInfoModel extends BaseModel {
     _name = json['name'];
     _website = json['website'];
     _imageUrl = json['image_url'];
-    _team = json['team'].cast<String>();
     _creationDate = json['creation_date'];
+
+    if (json['team'] != null) {
+      _team = <Preview>[];
+      json['team'].forEach((v) => _team.add(Preview.fromJson(null, v)));
+    }
   }
 
   StartupInfoModel.fromIndex(AlgoliaObjectSnapshot snapshot)
@@ -58,8 +63,15 @@ class StartupInfoModel extends BaseModel {
     _name = json['name'];
     _website = json['website'];
     _imageUrl = json['image_url'];
-    _team = json['team'].cast<String>();
     _creationDate = json['creation_date'];
+
+    if (json['team'] != null) {
+      _team = <Preview>[];
+      //TODO: FIX THIS null TO BE A Map<dynamic, dynamic> CONTAINING:
+      //      - given_name
+      //      - image_url
+      json['team'].forEach((v) => _team.add(Preview.fromJson({}, v)));
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -70,8 +82,8 @@ class StartupInfoModel extends BaseModel {
     data['name'] = _name;
     data['website'] = _website;
     data['image_url'] = _imageUrl;
-    data['team'] = _team;
     data['creation_date'] = _creationDate;
+    if (team != null) data['teams'] = team.map((v) => v.toJson()).toList();
     return data;
   }
 }

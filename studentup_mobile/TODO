@@ -45,8 +45,8 @@ First Release:
   ✔ Fix last minute bugs @done(19-09-01 13:14)
 
 v-0.0.2:
-  ☐ Fix number of solutions posted (maybe add number of total votes)
-  ☐ Add 'No Ongoing Projects' to startup pages with no projects
+  ✔ Fix number of solutions posted (maybe add number of total votes) @done(19-09-02 23:21)
+  ✔ Add 'No Ongoing Projects' to startup pages with no projects @done(19-09-03 00:57)
   ☐ Fix latest_message updater in Cloud Functions
   ✔ Fix ProfileNotifier to allow for Startups @done(19-09-01 18:49)
   ✔ Implement live data in Home Feed, Project Feed, and Profile @done(19-09-01 18:55)
@@ -56,7 +56,7 @@ v-0.0.2:
   ✔ Add Messaging @done(19-09-02 17:11)
   ✔ Add Contact button to search results @done(19-09-02 20:14)
   ✔ Add 'No Experience yet' when experience or others are empty @done(19-09-02 17:47)
-  ☐ Fix bugs from bug report
+  ✔ Fix bugs from bug report @done(19-09-03 00:57)
   ✔ Search colors CANNOT be full white or full black @done(19-09-02 20:14)
   ☐ Add Connectivity route
   ☐ Re-enable Catcher
@@ -64,6 +64,7 @@ v-0.0.2:
   ☐ Implement see all
   ☐ Add Terms and Conditions
   ☐ Fix Search bug where if one selects a category and goes back, they can't find anything else in all
+  ☐ Remove favorites for now
 
 v-0.0.3:
   ☐ Add Notifications

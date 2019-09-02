@@ -43,8 +43,9 @@ class ProfileNotifier extends NetworkNotifier {
   Stream<List<SkillsModel>> get skills => _firestoreReader.fetchSkills(_userId);
 
   //STARTUP INFORMATION
-  Stream<StartupInfoModel> get startupInfoStream =>
-      _firestoreReader.fetchStartupInfoStream(_userDocument);
+  Stream<StartupInfoModel> get startupInfoStream => _firestoreReader
+      .fetchStartupInfoStream(_userDocument)
+      .asBroadcastStream();
 
   set preview(dynamic value) {
     if (value is UserInfoModel)

@@ -1,24 +1,39 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:percent_indicator/percent_indicator.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/startup_page_notifier.dart';
+import 'package:studentup_mobile/ui/projects/project_page.dart';
+import 'package:studentup_mobile/ui/startup_profile/team_member.dart';
+import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
-class StartUpPageRoot extends StatelessWidget {
+class StartUpPageRoot extends StatefulWidget {
   final StartupInfoModel model;
 
   const StartUpPageRoot({Key key, @required this.model}) : super(key: key);
 
-  //TODO: FIX THIS TO BE LIKE THE PROFILE WITH STREAMS AND ALL THAT
+  @override
+  _StartUpPageRootState createState() => _StartUpPageRootState();
+}
+
+class _StartUpPageRootState extends State<StartUpPageRoot> {
+  StartupPageNotifier notifier;
+
+  @override
+  void initState() {
+    super.initState();
+    notifier = StartupPageNotifier(widget.model);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<StartupPageNotifier>(
-      builder: (_) => StartupPageNotifier(model),
+    return ChangeNotifierProvider<StartupPageNotifier>.value(
+      value: notifier,
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
@@ -31,147 +46,198 @@ class StartUpPageRoot extends StatelessWidget {
         body: SafeArea(
           child: Align(
             alignment: Alignment.topCenter,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+            child: LiquidPullToRefresh(
+              onRefresh: notifier.onRefresh,
+              child: ListView(
                 children: <Widget>[
-                  const SizedBox(height: 32.0),
-                  CachedNetworkImage(
-                    imageUrl: model.imageUrl,
-                    placeholder: (_, __) => CircleAvatar(
-                      radius: 56.0,
-                      backgroundColor: CupertinoColors.lightBackgroundGray,
-                    ),
-                    errorWidget: (_, __, error) => CircleAvatar(
-                      radius: 56.0,
-                      backgroundColor: CupertinoColors.lightBackgroundGray,
-                      child: Icon(Icons.error),
-                    ),
-                    imageBuilder: (_, image) => CircleAvatar(
-                      radius: 56.0,
-                      backgroundImage: image,
-                    ),
-                  ),
-                  const SizedBox(height: 12.0),
-                  Text(
-                    model.name,
-                    style: Theme.of(context).textTheme.headline.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: CupertinoColors.black,
+                  Column(
+                    children: <Widget>[
+                      const SizedBox(height: 32.0),
+                      CachedNetworkImage(
+                        imageUrl: widget.model.imageUrl,
+                        placeholder: (_, __) => CircleAvatar(
+                          radius: 56.0,
+                          backgroundColor: CupertinoColors.lightBackgroundGray,
                         ),
-                  ),
-                  const SizedBox(height: 12.0),
-                  Text(
-                    model.locationString,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subhead
-                        .copyWith(color: CupertinoColors.inactiveGray),
-                  ),
-                  const SizedBox(height: 12.0),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.67,
-                    child: Text(
-                      model.description,
-                      softWrap: true,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.subtitle.copyWith(
-                          color: CupertinoColors.black,
-                          fontStyle: FontStyle.italic),
-                    ),
-                  ),
-                  const SizedBox(height: 12.0),
-                  Text(
-                    model.website,
-                    style: Theme.of(context)
-                        .textTheme
-                        .subhead
-                        .copyWith(color: Theme.of(context).accentColor),
-                  ),
-                  const SizedBox(height: 24.0),
-                  Container(
-                    width: MediaQuery.of(context).size.width * 0.67,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        errorWidget: (_, __, error) => CircleAvatar(
+                          radius: 56.0,
+                          backgroundColor: CupertinoColors.lightBackgroundGray,
+                          child: Icon(Icons.error),
+                        ),
+                        imageBuilder: (_, image) => CircleAvatar(
+                          radius: 56.0,
+                          backgroundImage: image,
+                        ),
+                      ),
+                      const SizedBox(height: 12.0),
+                      Text(
+                        widget.model.name,
+                        style: Theme.of(context).textTheme.headline.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: CupertinoColors.black,
+                            ),
+                      ),
+                      const SizedBox(height: 12.0),
+                      Text(
+                        widget.model.locationString,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subhead
+                            .copyWith(color: CupertinoColors.inactiveGray),
+                      ),
+                      const SizedBox(height: 12.0),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.67,
+                        child: Text(
+                          widget.model.description,
+                          softWrap: true,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.subtitle.copyWith(
+                              color: CupertinoColors.black,
+                              fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      const SizedBox(height: 12.0),
+                      Text(
+                        widget.model.website,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subhead
+                            .copyWith(color: Theme.of(context).accentColor),
+                      ),
+                      const SizedBox(height: 24.0),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.67,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text(
-                              'Team',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .title
-                                  .copyWith(fontWeight: FontWeight.bold),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  'Team',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .title
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                Consumer<StartupPageNotifier>(
+                                  builder: (context, notifier, child) {
+                                    if (notifier.team.length < 4)
+                                      return Container();
+                                    return FlatButton(
+                                      child: Text(
+                                        'See all',
+                                        style: TextStyle(
+                                            color:
+                                                Theme.of(context).accentColor),
+                                      ),
+                                      onPressed: () => print('object'),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
+                            Divider(),
                             Consumer<StartupPageNotifier>(
-                              builder: (context, notifier, child) {
-                                if (notifier.team.length < 4)
-                                  return Container();
-                                return FlatButton(
-                                  child: Text(
-                                    'See all',
-                                    style: TextStyle(
-                                        color: Theme.of(context).accentColor),
-                                  ),
-                                  onPressed: () => print('object'),
-                                );
-                              },
-                            ),
+                                builder: (context, notifier, child) {
+                              if (notifier.isLoading)
+                                return Center(
+                                    child: const CircularProgressIndicator());
+                              if (notifier.hasError)
+                                return Center(child: Icon(Icons.error));
+                              return Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  if (notifier.team.length <= 3) ...[
+                                    for (Preview member in notifier.team)
+                                      TeamMember(model: member)
+                                  ] else ...[
+                                    for (int i in [0, 1, 2])
+                                      TeamMember(model: notifier.team[i]),
+                                    TeamMember(
+                                      isAdditional: true,
+                                      numAdditional: notifier.team.length - 3,
+                                    ),
+                                  ]
+                                ],
+                              );
+                            }),
                           ],
                         ),
-                        Divider(),
-                        Consumer<StartupPageNotifier>(
-                            builder: (context, notifier, child) {
-                          if (notifier.isLoading)
-                            return Center(
-                                child: const CircularProgressIndicator());
-                          if (notifier.hasError)
-                            return Center(child: Icon(Icons.error));
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              if (notifier.team.length <= 3) ...[
-                                for (UserInfoModel member in notifier.team)
-                                  TeamMember(model: member)
-                              ] else ...[
-                                for (int i in [0, 1, 2])
-                                  TeamMember(model: notifier.team[i]),
-                                TeamMember(
-                                  isAdditional: true,
-                                  numAdditional: notifier.team.length - 3,
-                                ),
-                              ]
-                            ],
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 56.0),
-                  Text(
-                    'Ongoing Projects',
-                    style: Theme.of(context)
-                        .textTheme
-                        .title
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
-                  Consumer<StartupPageNotifier>(
-                    builder: (context, notifier, child) {
-                      if (notifier.isLoading)
-                        return Center(child: const CircularProgressIndicator());
-                      if (notifier.hasError)
-                        return Center(child: const Icon(Icons.error));
+                      ),
+                      const SizedBox(height: 32.0),
+                      Text(
+                        'Ongoing Projects',
+                        style: Theme.of(context)
+                            .textTheme
+                            .title
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12.0, bottom: 24.0),
+                        child: Consumer<StartupPageNotifier>(
+                          builder: (context, notifier, child) {
+                            if (notifier.isLoading)
+                              return Center(
+                                  child: const CircularProgressIndicator());
+                            if (notifier.hasError)
+                              return Center(child: const Icon(Icons.error));
 
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: notifier.projects.length,
-                        itemExtent: MediaQuery.of(context).size.height * 0.56,
-                        itemBuilder: (_, index) =>
-                            ProjectPost(model: notifier.projects[index]),
-                      );
-                    },
+                            if (notifier.ongoingProjects.isEmpty)
+                              return Center(
+                                child: const Text('No Ongoing Projects...'),
+                              );
+
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: notifier.ongoingProjects
+                                  .map((ProjectModel m) =>
+                                      m.deadline.isAfter(DateTime.now())
+                                          ? ProjectPost(model: m)
+                                          : Container())
+                                  .toList(),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 32.0),
+                      Text(
+                        'Past Projects',
+                        style: Theme.of(context)
+                            .textTheme
+                            .title
+                            .copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12.0, bottom: 24.0),
+                        child: Consumer<StartupPageNotifier>(
+                          builder: (context, notifier, child) {
+                            if (notifier.isLoading)
+                              return Center(
+                                  child: const CircularProgressIndicator());
+                            if (notifier.hasError)
+                              return Center(child: const Icon(Icons.error));
+
+                            if (notifier.pastProjects.isEmpty)
+                              return Center(
+                                child: const Text('No Previous Projects...'),
+                              );
+
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: notifier.pastProjects
+                                  .map((ProjectModel m) =>
+                                      m.deadline.isBefore(DateTime.now())
+                                          ? ProjectPost(model: m)
+                                          : Container())
+                                  .toList(),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -183,184 +249,113 @@ class StartUpPageRoot extends StatelessWidget {
   }
 }
 
-class TeamMember extends StatelessWidget {
-  final bool isAdditional;
-  final int numAdditional;
-  final UserInfoModel model;
-
-  const TeamMember(
-      {Key key, this.isAdditional = false, this.numAdditional = 0, this.model})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 1.0),
-      child: isAdditional
-          ? CircleAvatar(
-              radius: 32.0,
-              child: Text('+$numAdditional'),
-              backgroundColor: CupertinoColors.lightBackgroundGray,
-            )
-          : CachedNetworkImage(
-              imageUrl: model.mediaRef,
-              placeholder: (_, url) => CircleAvatar(
-                radius: 32.0,
-                backgroundColor: CupertinoColors.lightBackgroundGray,
-              ),
-              errorWidget: (_, url, error) => CircleAvatar(
-                radius: 32.0,
-                backgroundColor: CupertinoColors.lightBackgroundGray,
-                child: Icon(Icons.error),
-              ),
-              imageBuilder: (context, image) {
-                return CircleAvatar(
-                  radius: 32.0,
-                  backgroundImage: image,
-                );
-              },
-            ),
-    );
-  }
-}
-
 class ProjectPost extends StatelessWidget {
   final ProjectModel model;
 
   const ProjectPost({Key key, @required this.model}) : super(key: key);
 
+  _navigateToProject(BuildContext context) async {
+    final bool result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ProjectPage(model: model),
+      ),
+    );
+    if (result) Provider.of<StartupPageNotifier>(context).onRefresh();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: Stack(
-              children: <Widget>[
-                CachedNetworkImage(
-                  imageUrl: model.media,
-                  fit: BoxFit.cover,
-                  placeholder: (_, url) => Container(
-                    color: CupertinoColors.lightBackgroundGray,
-                  ),
-                  errorWidget: (_, __, error) => Container(
-                    color: CupertinoColors.lightBackgroundGray,
-                    child: Center(child: const Icon(Icons.error)),
-                  ),
-                  imageBuilder: (_, image) => Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: image,
-                      ),
-                    ),
-                  ),
-                ),
-                Column(
+    return GestureDetector(
+      onTap: () => _navigateToProject(context),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16.0),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.4,
+          child: Column(
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Stack(
                   children: <Widget>[
-                    Expanded(
-                      child: Container(),
+                    CachedNetworkImage(
+                      imageUrl: model.media,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) {
+                        return CircularProgressIndicator();
+                      },
+                      errorWidget: (context, url, error) {
+                        return Icon(Icons.error);
+                      },
+                      imageBuilder: (context, imageProvider) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: imageProvider,
+                            ),
+                          ),
+                        );
+                      },
                     ),
-                    Expanded(
-                      child: Container(
-                        width: double.infinity,
-                        color: CupertinoColors.inactiveGray.withOpacity(0.57),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            SizedBox(height: 12.0),
-                            Text(
-                              model.creator,
-                              style: Theme.of(context).textTheme.title.copyWith(
-                                    color: Theme.of(context)
-                                        .scaffoldBackgroundColor,
-                                  ),
-                            ),
-                            Text(
-                              model.title,
-                              style:
-                                  Theme.of(context).textTheme.headline.copyWith(
-                                        color: Theme.of(context)
-                                            .scaffoldBackgroundColor,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                            ),
-                          ],
+                    Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Container(),
                         ),
+                        Expanded(
+                          child: Container(
+                            color: CupertinoColors.darkBackgroundGray
+                                .withOpacity(0.42),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: CachedNetworkImage(
+                        imageUrl: model.creatorMedia,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) {
+                          return CircularProgressIndicator();
+                        },
+                        errorWidget: (context, url, error) {
+                          return Icon(Icons.error);
+                        },
+                        imageBuilder: (context, imageProvider) {
+                          return CircleAvatar(
+                            radius: 36.0,
+                            backgroundImage: imageProvider,
+                          );
+                        },
                       ),
                     ),
                   ],
                 ),
-                Align(
-                  alignment: Alignment.center,
-                  child: CachedNetworkImage(
-                    imageUrl: model.creatorMedia,
-                    fit: BoxFit.cover,
-                    placeholder: (_, url) => CircleAvatar(
-                      backgroundColor: CupertinoColors.lightBackgroundGray,
-                    ),
-                    errorWidget: (_, __, error) => CircleAvatar(
-                      backgroundColor: CupertinoColors.lightBackgroundGray,
-                      child: Center(child: const Icon(Icons.error)),
-                    ),
-                    imageBuilder: (_, image) => CircleAvatar(
-                      radius: 40.0,
-                      backgroundImage: image,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.87,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  const SizedBox(height: 16.0),
-                  LinearPercentIndicator(
-                    percent: model.percentSignedUp,
-                    progressColor: Theme.of(context).accentColor,
-                    backgroundColor: CupertinoColors.lightBackgroundGray,
-                    lineHeight: 8.0,
-                  ),
-                  const SizedBox(height: 4.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        '${model.signupsNum} people signed up!',
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                      Text(
-                        model.formattedDeadline,
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  const SizedBox(height: 16.0),
-                  Text(
-                    model.description,
-                    style: Theme.of(context).textTheme.subtitle,
-                  ),
-                  Spacer(),
-                  // StadiumButton(
-                  //   text: 'Learn more!',
-                  //   onPressed: () => Navigator.of(context).push(
-                  //     MaterialPageRoute(
-                  //         builder: (_) => ProjectPage(model: model)),
-                  //   ),
-                  // ),
-                  Spacer(),
-                ],
               ),
-            ),
+              Expanded(
+                flex: 1,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      model.creator,
+                      style: Theme.of(context).textTheme.subtitle,
+                    ),
+                    Text(
+                      model.title,
+                      style: Theme.of(context).textTheme.subtitle,
+                    ),
+                    StadiumButton(
+                      text: 'Read More',
+                      onPressed: () => _navigateToProject(context),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
