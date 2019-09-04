@@ -37,3 +37,5 @@ const List<IconData> iconsCompanies = <IconData>[
   Icons.hourglass_full,
   Icons.import_contacts,
 ];
+
+const String termsAndConditions = 'TERMS AND CONDITIONS / PRIVACY POLICY';

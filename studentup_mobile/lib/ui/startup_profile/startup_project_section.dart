@@ -1,71 +1,67 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/project_model.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/project_feed_notifier.dart';
-import 'package:studentup_mobile/ui/projects/new_project_root.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:studentup_mobile/ui/projects/project_page.dart';
-import 'package:studentup_mobile/ui/widgets/buttons/fab.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
-import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
-class ProjectFeedRoot extends StatelessWidget {
+class StartupProjectSection extends StatelessWidget {
+  final bool ongoing;
+
+  const StartupProjectSection({Key key, @required this.ongoing})
+      : assert(ongoing != null),
+        super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ProjectFeedNotifier>(
-      builder: (_) => ProjectFeedNotifier(),
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-          title: const Text('Projects'),
-          // actions: <Widget>[
-          //   IconButton(
-          //     icon: const Icon(CupertinoIcons.search),
-          //     onPressed: () {},
-          //   ),
-          // ],
+    return Column(
+      children: <Widget>[
+        Text(
+          '${ongoing ? 'Ongoing' : 'Past'} Projects',
+          style: Theme.of(context)
+              .textTheme
+              .title
+              .copyWith(fontWeight: FontWeight.bold),
         ),
-        floatingActionButton: Consumer<ProjectFeedNotifier>(
-          builder: (context, notifier, child) {
-            return PaddedFAB(
-              icon: Icons.add,
-              onPressed: () async {
-                final bool result = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => NewProjectRoot(),
-                  ),
-                );
-                if (result) notifier.onRefresh();
-              },
-            );
-          },
-        ),
-        body: NetworkSensitive(
-          child: SafeArea(
-            child: Consumer<ProjectFeedNotifier>(
-              builder: (context, notifier, child) {
-                if (notifier.isLoading)
-                  return Center(child: CircularProgressIndicator());
-                if (notifier.hasError)
-                  return Center(child: const Text('An Error Occured...'));
-                return LiquidPullToRefresh(
-                  onRefresh: () => notifier.onRefresh(),
-                  child: ListView.separated(
-                    itemCount: notifier.projects.length,
-                    separatorBuilder: (_, index) =>
-                        const SizedBox(height: 24.0),
-                    itemBuilder: (_, index) =>
-                        ProjectPost(model: notifier.projects[index]),
-                  ),
-                );
-              },
-            ),
+        Padding(
+          padding: const EdgeInsets.only(top: 12.0, bottom: 24.0),
+          child: Consumer<ProfileNotifier>(
+            builder: (context, notifier, child) {
+              return StreamBuilder<List<ProjectModel>>(
+                stream:
+                    ongoing ? notifier.ongoingProjects : notifier.pastProjects,
+                builder: (
+                  BuildContext context,
+                  AsyncSnapshot<List<ProjectModel>> snapshot,
+                ) {
+                  if (!snapshot.hasData) {
+                    if (snapshot.connectionState == ConnectionState.waiting)
+                      return Center(
+                        child: Text(
+                            'No ${ongoing ? 'Ongoing' : 'Past'} Projects...'),
+                      );
+                    return Center(child: const Text('An Error Occured.'));
+                  }
+                  if (snapshot.data.isEmpty)
+                    return Center(
+                      child: Text(
+                          'No ${ongoing ? 'Ongoing' : 'Past'} Projects...'),
+                    );
+
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: snapshot.data
+                        .map((m) => ProjectPost(model: m))
+                        .toList(),
+                  );
+                },
+              );
+            },
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -76,12 +72,11 @@ class ProjectPost extends StatelessWidget {
   const ProjectPost({Key key, @required this.model}) : super(key: key);
 
   _navigateToProject(BuildContext context) async {
-    final bool result = await Navigator.of(context).push(
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => ProjectPage(model: model),
       ),
     );
-    if (result ?? false) Provider.of<ProjectFeedNotifier>(context).onRefresh();
   }
 
   @override

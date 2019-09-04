@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/new_message.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class ContactOptions extends StatelessWidget {
   final UserInfoModel model;
@@ -34,7 +35,7 @@ class ContactOptions extends StatelessWidget {
             const SizedBox(width: 16.0),
             IconButton(
               icon: Icon(CupertinoIcons.heart),
-              onPressed: () {},
+              onPressed: () => Dialogs.showComingSoon(context),
             ),
           ],
         );

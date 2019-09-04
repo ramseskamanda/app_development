@@ -6,6 +6,7 @@ import 'package:studentup_mobile/notifiers/view_notifiers/feed_notifier.dart';
 import 'package:studentup_mobile/ui/home/feed/startup_stories.dart';
 import 'package:studentup_mobile/ui/home/feed/think_tanks.dart';
 import 'package:studentup_mobile/ui/think_tank/new_think_tank_route.dart';
+import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class Feed extends StatefulWidget {
   @override
@@ -84,23 +85,25 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
             if (result) notifier.onRefresh();
           },
         ),
-        body: Consumer<FeedNotifier>(
-          builder: (context, notifier, child) {
-            return LiquidPullToRefresh(
-              onRefresh: () => notifier.onRefresh(),
-              child: ListView(
-                controller: _scrollController,
-                children: <Widget>[
-                  SizedBox(
-                    height: 100.0,
-                    child: StartupStories(),
-                  ),
-                  const SizedBox(height: 24.0),
-                  ThinkTankPreviewsList(),
-                ],
-              ),
-            );
-          },
+        body: NetworkSensitive(
+          child: Consumer<FeedNotifier>(
+            builder: (context, notifier, child) {
+              return LiquidPullToRefresh(
+                onRefresh: () => notifier.onRefresh(),
+                child: ListView(
+                  controller: _scrollController,
+                  children: <Widget>[
+                    SizedBox(
+                      height: 100.0,
+                      child: StartupStories(),
+                    ),
+                    const SizedBox(height: 24.0),
+                    ThinkTankPreviewsList(),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

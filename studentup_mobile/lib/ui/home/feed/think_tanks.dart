@@ -39,12 +39,26 @@ class ThinkTankPreview extends StatelessWidget {
 
   const ThinkTankPreview({Key key, @required this.model}) : super(key: key);
 
-  void _goToThinkTank(BuildContext context) {
-    Navigator.of(context).push(
-      CupertinoPageRoute(
-        builder: (_) => ThinkTank(model: model),
-      ),
-    );
+  Future<void> _goToThinkTank(BuildContext context) async {
+    try {
+      //TODO: figure this one out so it refreshes when the user navigates back
+      Future<bool> route = Navigator.of(context).push<bool>(
+        CupertinoPageRoute(
+          builder: (_) => ThinkTank(model: model),
+        ),
+      );
+      Future<bool> refresh =
+          Future.delayed(const Duration(seconds: 5), () => true);
+
+      final bool doRefresh = await Future.any([route, refresh]) ?? false;
+
+      if (doRefresh) {
+        FeedNotifier notifier = Provider.of<FeedNotifier>(context);
+        notifier.onRefresh();
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:path/path.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/project_page_notifier.dart';
 import 'package:studentup_mobile/services/project_creation_service.dart';
 
@@ -34,7 +35,7 @@ class FileAttachment extends StatelessWidget {
                   ),
                 )
               : Text(
-                  'File #$index',
+                  basename(service.files[index].path),
                   style: TextStyle(
                     color: CupertinoColors.black,
                   ),
@@ -46,31 +47,37 @@ class FileAttachment extends StatelessWidget {
 }
 
 class SingleFileAttachment extends StatelessWidget {
+  final bool canEdit;
+
+  const SingleFileAttachment({Key key, @required this.canEdit})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Consumer<ProjectPageNotifier>(
       builder: (context, notifier, child) {
-        bool isAddButton = true; //notifier.file == null;
+        bool isAddButton = notifier.file == null;
         return ListTile(
-          onTap: null, //isAddButton ? () => notifier.pickFile() : null,
+          onTap: isAddButton && canEdit
+              ? () async => await notifier.pickFile()
+              : null,
           leading: isAddButton
               ? Icon(Icons.attach_file)
               : Icon(Icons.insert_drive_file),
-          trailing: isAddButton
+          trailing: isAddButton || !canEdit
               ? null
               : IconButton(
                   icon: Icon(Icons.delete),
-                  onPressed: null, // () => notifier.removeFile(),
+                  onPressed: () => notifier.removeFile(),
                 ),
           title: isAddButton
-              ? const Text(
-                  'Add attachments, if necessary',
+              ? Text(
+                  !canEdit ? 'No attachments' : 'Add attachments, if necessary',
                   style: TextStyle(
                     color: CupertinoColors.inactiveGray,
                   ),
                 )
               : Text(
-                  'null', //basename(notifier.file.path),
+                  basename(notifier.file.path),
                   style: TextStyle(
                     color: CupertinoColors.black,
                   ),

@@ -6,11 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
-import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/startup_page_notifier.dart';
 import 'package:studentup_mobile/ui/projects/project_page.dart';
 import 'package:studentup_mobile/ui/startup_profile/team_member.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
+import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
+import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class StartUpPageRoot extends StatefulWidget {
   final StartupInfoModel model;
@@ -43,203 +44,283 @@ class _StartUpPageRootState extends State<StartUpPageRoot> {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        body: SafeArea(
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: LiquidPullToRefresh(
-              onRefresh: notifier.onRefresh,
-              child: ListView(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      const SizedBox(height: 32.0),
-                      CachedNetworkImage(
-                        imageUrl: widget.model.imageUrl,
-                        placeholder: (_, __) => CircleAvatar(
-                          radius: 56.0,
-                          backgroundColor: CupertinoColors.lightBackgroundGray,
+        body: NetworkSensitive(
+          child: SafeArea(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: LiquidPullToRefresh(
+                onRefresh: notifier.onRefresh,
+                child: ListView(
+                  children: <Widget>[
+                    Column(
+                      children: <Widget>[
+                        const SizedBox(height: 32.0),
+                        CachedNetworkImage(
+                          imageUrl: widget.model.imageUrl,
+                          placeholder: (_, __) => CircleAvatar(
+                            radius: 56.0,
+                            backgroundColor:
+                                CupertinoColors.lightBackgroundGray,
+                          ),
+                          errorWidget: (_, __, error) => CircleAvatar(
+                            radius: 56.0,
+                            backgroundColor:
+                                CupertinoColors.lightBackgroundGray,
+                            child: Icon(Icons.error),
+                          ),
+                          imageBuilder: (_, image) => CircleAvatar(
+                            radius: 56.0,
+                            backgroundImage: image,
+                          ),
                         ),
-                        errorWidget: (_, __, error) => CircleAvatar(
-                          radius: 56.0,
-                          backgroundColor: CupertinoColors.lightBackgroundGray,
-                          child: Icon(Icons.error),
+                        const SizedBox(height: 12.0),
+                        Text(
+                          widget.model.name,
+                          style: Theme.of(context).textTheme.headline.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: CupertinoColors.black,
+                              ),
                         ),
-                        imageBuilder: (_, image) => CircleAvatar(
-                          radius: 56.0,
-                          backgroundImage: image,
+                        const SizedBox(height: 12.0),
+                        Text(
+                          widget.model.locationString,
+                          style: Theme.of(context)
+                              .textTheme
+                              .subhead
+                              .copyWith(color: CupertinoColors.inactiveGray),
                         ),
-                      ),
-                      const SizedBox(height: 12.0),
-                      Text(
-                        widget.model.name,
-                        style: Theme.of(context).textTheme.headline.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: CupertinoColors.black,
-                            ),
-                      ),
-                      const SizedBox(height: 12.0),
-                      Text(
-                        widget.model.locationString,
-                        style: Theme.of(context)
-                            .textTheme
-                            .subhead
-                            .copyWith(color: CupertinoColors.inactiveGray),
-                      ),
-                      const SizedBox(height: 12.0),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.67,
-                        child: Text(
-                          widget.model.description,
-                          softWrap: true,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.subtitle.copyWith(
-                              color: CupertinoColors.black,
-                              fontStyle: FontStyle.italic),
+                        const SizedBox(height: 12.0),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.67,
+                          child: Text(
+                            widget.model.description,
+                            softWrap: true,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle
+                                .copyWith(
+                                    color: CupertinoColors.black,
+                                    fontStyle: FontStyle.italic),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 12.0),
-                      Text(
-                        widget.model.website,
-                        style: Theme.of(context)
-                            .textTheme
-                            .subhead
-                            .copyWith(color: Theme.of(context).accentColor),
-                      ),
-                      const SizedBox(height: 24.0),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.67,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        const SizedBox(height: 12.0),
+                        Text(
+                          widget.model.website,
+                          style: Theme.of(context)
+                              .textTheme
+                              .subhead
+                              .copyWith(color: Theme.of(context).accentColor),
+                        ),
+                        const SizedBox(height: 24.0),
+                        if (widget.model.team.isNotEmpty)
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.67,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                Text(
-                                  'Team',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .title
-                                      .copyWith(fontWeight: FontWeight.bold),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(
+                                      'Team',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .title
+                                          .copyWith(
+                                              fontWeight: FontWeight.bold),
+                                    ),
+                                    Consumer<StartupPageNotifier>(
+                                      builder: (context, notifier, child) {
+                                        if (notifier.team.length < 4)
+                                          return Container();
+                                        return FlatButton(
+                                          child: Text(
+                                            'See all',
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                          ),
+                                          onPressed: () {
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (_) {
+                                                  final String name =
+                                                      widget.model.name;
+                                                  return SeeAll<Preview>(
+                                                    title:
+                                                        '$name${name.endsWith('s') ? '\'' : '\'s'} Team',
+                                                    objects: widget.model.team,
+                                                    separator: const SizedBox(
+                                                        height: 16.0),
+                                                    builder: (context, index) {
+                                                      Preview user = widget
+                                                          .model.team[index];
+                                                      return Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    16.0),
+                                                        child: ListTile(
+                                                          title: Text(
+                                                              user.givenName),
+                                                          subtitle: Text(
+                                                              'Team Member of ${widget.model.name}'),
+                                                          leading:
+                                                              CachedNetworkImage(
+                                                            imageUrl:
+                                                                user.imageUrl,
+                                                            placeholder: (_,
+                                                                    url) =>
+                                                                CircleAvatar(
+                                                              radius: 25,
+                                                              backgroundColor:
+                                                                  CupertinoColors
+                                                                      .lightBackgroundGray,
+                                                            ),
+                                                            errorWidget: (_,
+                                                                    url,
+                                                                    error) =>
+                                                                CircleAvatar(
+                                                              radius: 25,
+                                                              backgroundColor:
+                                                                  CupertinoColors
+                                                                      .lightBackgroundGray,
+                                                              child: Icon(
+                                                                  Icons.error),
+                                                            ),
+                                                            imageBuilder:
+                                                                (context,
+                                                                    image) {
+                                                              return CircleAvatar(
+                                                                radius: 25,
+                                                                backgroundImage:
+                                                                    image,
+                                                              );
+                                                            },
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
+                                Divider(),
                                 Consumer<StartupPageNotifier>(
-                                  builder: (context, notifier, child) {
-                                    if (notifier.team.length < 4)
-                                      return Container();
-                                    return FlatButton(
-                                      child: Text(
-                                        'See all',
-                                        style: TextStyle(
-                                            color:
-                                                Theme.of(context).accentColor),
-                                      ),
-                                      onPressed: () => print('object'),
-                                    );
-                                  },
-                                ),
+                                    builder: (context, notifier, child) {
+                                  if (notifier.isLoading)
+                                    return Center(
+                                        child:
+                                            const CircularProgressIndicator());
+                                  if (notifier.hasError)
+                                    return Center(child: Icon(Icons.error));
+                                  return Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      if (notifier.team.length <= 3) ...[
+                                        for (Preview member in notifier.team)
+                                          TeamMember(model: member)
+                                      ] else ...[
+                                        for (int i in [0, 1, 2])
+                                          TeamMember(model: notifier.team[i]),
+                                        TeamMember(
+                                          isAdditional: true,
+                                          numAdditional:
+                                              notifier.team.length - 3,
+                                        ),
+                                      ]
+                                    ],
+                                  );
+                                }),
                               ],
                             ),
-                            Divider(),
-                            Consumer<StartupPageNotifier>(
-                                builder: (context, notifier, child) {
+                          ),
+                        const SizedBox(height: 32.0),
+                        Text(
+                          'Ongoing Projects',
+                          style: Theme.of(context)
+                              .textTheme
+                              .title
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 12.0, bottom: 24.0),
+                          child: Consumer<StartupPageNotifier>(
+                            builder: (context, notifier, child) {
                               if (notifier.isLoading)
                                 return Center(
                                     child: const CircularProgressIndicator());
                               if (notifier.hasError)
-                                return Center(child: Icon(Icons.error));
-                              return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: <Widget>[
-                                  if (notifier.team.length <= 3) ...[
-                                    for (Preview member in notifier.team)
-                                      TeamMember(model: member)
-                                  ] else ...[
-                                    for (int i in [0, 1, 2])
-                                      TeamMember(model: notifier.team[i]),
-                                    TeamMember(
-                                      isAdditional: true,
-                                      numAdditional: notifier.team.length - 3,
-                                    ),
-                                  ]
-                                ],
+                                return Center(child: const Icon(Icons.error));
+
+                              if (notifier.ongoingProjects.isEmpty)
+                                return Center(
+                                  child: const Text('No Ongoing Projects...'),
+                                );
+
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: notifier.ongoingProjects
+                                    .map((ProjectModel m) =>
+                                        m.deadline.isAfter(DateTime.now())
+                                            ? ProjectPost(model: m)
+                                            : Container())
+                                    .toList(),
                               );
-                            }),
-                          ],
+                            },
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 32.0),
-                      Text(
-                        'Ongoing Projects',
-                        style: Theme.of(context)
-                            .textTheme
-                            .title
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12.0, bottom: 24.0),
-                        child: Consumer<StartupPageNotifier>(
-                          builder: (context, notifier, child) {
-                            if (notifier.isLoading)
-                              return Center(
-                                  child: const CircularProgressIndicator());
-                            if (notifier.hasError)
-                              return Center(child: const Icon(Icons.error));
+                        const SizedBox(height: 32.0),
+                        Text(
+                          'Past Projects',
+                          style: Theme.of(context)
+                              .textTheme
+                              .title
+                              .copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 12.0, bottom: 24.0),
+                          child: Consumer<StartupPageNotifier>(
+                            builder: (context, notifier, child) {
+                              if (notifier.isLoading)
+                                return Center(
+                                    child: const CircularProgressIndicator());
+                              if (notifier.hasError)
+                                return Center(child: const Icon(Icons.error));
 
-                            if (notifier.ongoingProjects.isEmpty)
-                              return Center(
-                                child: const Text('No Ongoing Projects...'),
+                              if (notifier.pastProjects.isEmpty)
+                                return Center(
+                                  child: const Text('No Previous Projects...'),
+                                );
+
+                              return Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: notifier.pastProjects
+                                    .map((ProjectModel m) =>
+                                        m.deadline.isBefore(DateTime.now())
+                                            ? ProjectPost(model: m)
+                                            : Container())
+                                    .toList(),
                               );
-
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: notifier.ongoingProjects
-                                  .map((ProjectModel m) =>
-                                      m.deadline.isAfter(DateTime.now())
-                                          ? ProjectPost(model: m)
-                                          : Container())
-                                  .toList(),
-                            );
-                          },
+                            },
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 32.0),
-                      Text(
-                        'Past Projects',
-                        style: Theme.of(context)
-                            .textTheme
-                            .title
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12.0, bottom: 24.0),
-                        child: Consumer<StartupPageNotifier>(
-                          builder: (context, notifier, child) {
-                            if (notifier.isLoading)
-                              return Center(
-                                  child: const CircularProgressIndicator());
-                            if (notifier.hasError)
-                              return Center(child: const Icon(Icons.error));
-
-                            if (notifier.pastProjects.isEmpty)
-                              return Center(
-                                child: const Text('No Previous Projects...'),
-                              );
-
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: notifier.pastProjects
-                                  .map((ProjectModel m) =>
-                                      m.deadline.isBefore(DateTime.now())
-                                          ? ProjectPost(model: m)
-                                          : Container())
-                                  .toList(),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

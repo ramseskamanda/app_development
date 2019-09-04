@@ -18,7 +18,6 @@ class LeaderBoardRoot extends StatelessWidget {
         return AlertDialog(
           title: const Text('Here are the rules of the game:'),
           content: const Text(
-            //TODO: add the rules in here
             'RULES',
             textAlign: TextAlign.center,
           ),

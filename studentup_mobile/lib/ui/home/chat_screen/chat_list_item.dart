@@ -52,8 +52,8 @@ class ChatListItem extends StatelessWidget {
                 child: Center(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: model.lastMessage.sentAt.isBefore(DateTime.now()
-                              .subtract(const Duration(minutes: 5)))
+                      color: model.lastMessage.sentAt.isAfter(DateTime.now()
+                              .subtract(const Duration(minutes: 15)))
                           ? Colors.greenAccent
                           : Colors.grey,
                       borderRadius: BorderRadius.circular(6),
@@ -68,11 +68,19 @@ class ChatListItem extends StatelessWidget {
         ),
         title: Text(
           model.otherProfile.givenName,
+          softWrap: false,
+          maxLines: 1,
+          overflow: TextOverflow.fade,
           style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: Text(model.lastMessage.text),
+        subtitle: Text(
+          model.lastMessage.text,
+          softWrap: true,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
+        ),
         trailing: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: <Widget>[
@@ -112,7 +120,7 @@ class ChatListItem extends StatelessWidget {
           ],
         ),
         onTap: () {
-          //Provider.of<ChatsNotifier>(context)?.updateRead(model.docId);
+          // Provider.of<ChatsNotifier>(context)?.updateRead(model.docId);
           Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute(
               builder: (context) => Conversation(chat: model),

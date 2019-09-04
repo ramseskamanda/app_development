@@ -3,6 +3,7 @@ import 'package:studentup_mobile/models/base_model.dart';
 import 'package:studentup_mobile/models/message_model.dart';
 import 'package:studentup_mobile/services/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/util/config.dart';
 
 class ChatModel extends BaseModel {
   Participants _participants;
@@ -63,14 +64,15 @@ class Participants {
   }
 
   Preview getOtherUserInfo(String user) {
-    String otherId = _previews.keys.firstWhere((key) => key != user);
+    String otherId =
+        _previews.keys.firstWhere((key) => key != user, orElse: () => user);
     return _previews[otherId];
   }
 
   Participants.fromJson(Map<dynamic, dynamic> json) {
     _previews = {};
 
-    if (json.keys.length == 2)
+    if (json.keys.length > 0 && json.keys.length <= 2)
       json.forEach(
           (key, value) => _previews[key] = Preview.fromJson(json[key], key));
   }
@@ -100,9 +102,9 @@ class Preview {
     _uid = uid;
   }
 
-  String get givenName => _givenName;
-  String get imageUrl => _imageUrl;
-  String get uid => _uid;
+  String get givenName => _givenName ?? 'No Name Provided';
+  String get imageUrl => _imageUrl ?? defaultImageUrl;
+  String get uid => _uid ?? '';
 
   Preview.fromJson(Map<dynamic, dynamic> json, String uid) {
     _givenName = json['given_name'];

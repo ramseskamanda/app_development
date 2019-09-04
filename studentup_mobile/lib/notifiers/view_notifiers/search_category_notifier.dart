@@ -21,11 +21,8 @@ class SearchCategoryNotifier extends NetworkNotifier {
   Future fetchData() async {
     isLoading = true;
     try {
-      if (_searchCategory == SearchCategory.ALL)
-        _users = await _algoliaService.searchUsers('');
-      else
-        _users = await _algoliaService.searchUsersWithFacets(
-            category: _searchCategory);
+      _users = await _algoliaService.searchUsersWithFacets(
+          category: _searchCategory);
     } catch (e) {
       print(e);
       error = NetworkError(message: e.toString());

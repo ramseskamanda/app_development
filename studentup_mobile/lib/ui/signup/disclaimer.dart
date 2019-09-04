@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/enum/login_types.dart';
+import 'package:studentup_mobile/util/config.dart';
 
 class Disclaimer extends StatelessWidget {
   final AuthType type;
@@ -26,7 +27,7 @@ class Disclaimer extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Text(
-                  'Studentup, Inc. uses Google Cloud Services for means of Authentication, Data Storage, and Analytics. The third party information we use from our customers is as follows: \n\n      - Email address',
+                  termsAndConditions,
                   softWrap: true,
                   textAlign: TextAlign.justify,
                 ),
@@ -35,18 +36,18 @@ class Disclaimer extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   FlatButton(
-                    child: const Text('Proceed'),
+                    child: const Text('Cancel'),
                     onPressed: () => Navigator.of(context, rootNavigator: true)
-                        .pop<bool>(true),
+                        .pop<bool>(false),
                   ),
                   const SizedBox(width: 24.0),
                   RaisedButton(
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
                     textColor: Theme.of(context).scaffoldBackgroundColor,
-                    child: const Text('Cancel'),
+                    child: const Text('Proceed'),
                     onPressed: () => Navigator.of(context, rootNavigator: true)
-                        .pop<bool>(false),
+                        .pop<bool>(true),
                   ),
                 ],
               ),

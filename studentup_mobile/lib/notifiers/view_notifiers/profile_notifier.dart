@@ -4,6 +4,7 @@ import 'package:studentup_mobile/input_blocs/user_profile_edit_bloc.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/education_model.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
+import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
@@ -16,6 +17,7 @@ class ProfileNotifier extends NetworkNotifier {
   String _userId;
 
   FirestoreReader _firestoreReader;
+  FirestoreWriter _firestoreWriter;
   UserProfileEditBloc _userProfileEditBloc;
 
   DocumentReference _userDocument;
@@ -25,6 +27,7 @@ class ProfileNotifier extends NetworkNotifier {
   ProfileNotifier([String uid]) {
     _userId = uid;
     _firestoreReader = Locator.of<FirestoreReader>();
+    _firestoreWriter = Locator.of<FirestoreWriter>();
     _userProfileEditBloc = UserProfileEditBloc();
   }
 
@@ -46,6 +49,11 @@ class ProfileNotifier extends NetworkNotifier {
   Stream<StartupInfoModel> get startupInfoStream => _firestoreReader
       .fetchStartupInfoStream(_userDocument)
       .asBroadcastStream();
+  Stream<List<ProjectModel>> get ongoingProjects =>
+      _firestoreReader.fetchOngoingProjects(_userId);
+
+  Stream<List<ProjectModel>> get pastProjects =>
+      _firestoreReader.fetchPastProjects(_userId);
 
   set preview(dynamic value) {
     if (value is UserInfoModel)
@@ -106,5 +114,33 @@ class ProfileNotifier extends NetworkNotifier {
   void clearEditor() async {
     if (isStartup) {
     } else {}
+  }
+
+  Future addTeamMember(UserInfoModel model) async {
+    isLoading = true;
+    try {
+      await _firestoreWriter.postNewTeamMember(
+        model: model,
+        document: _userDocument,
+      );
+    } catch (e) {
+      print(e);
+      error = NetworkError(message: e.toString());
+    }
+    isLoading = false;
+  }
+
+  Future removeTeamMember(Preview model) async {
+    isLoading = true;
+    try {
+      await _firestoreWriter.removeTeamMember(
+        model: model,
+        document: _userDocument,
+      );
+    } catch (e) {
+      print(e);
+      error = NetworkError(message: e.toString());
+    }
+    isLoading = false;
   }
 }

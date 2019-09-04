@@ -31,6 +31,9 @@ class MessagingTextField extends StatelessWidget {
                 child: Container(
                   child: TextField(
                     controller: service.controller,
+                    autofocus: true,
+                    minLines: 1,
+                    maxLines: 5,
                     onSubmitted: (value) => service.sendMessage(),
                     onChanged: (value) {
                       if (value.length > 0) service.canSend = true;

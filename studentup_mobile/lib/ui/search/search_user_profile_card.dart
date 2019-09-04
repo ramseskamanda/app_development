@@ -5,24 +5,12 @@ import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/new_message.dart';
 import 'package:studentup_mobile/ui/profile/other_profile.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
-class UserProfileCard extends StatefulWidget {
+class UserProfileCard extends StatelessWidget {
   final UserInfoModel model;
 
   const UserProfileCard({Key key, @required this.model}) : super(key: key);
-
-  @override
-  _UserProfileCardState createState() => _UserProfileCardState();
-}
-
-class _UserProfileCardState extends State<UserProfileCard> {
-  bool hearted;
-
-  @override
-  void initState() {
-    super.initState();
-    hearted = false;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +20,9 @@ class _UserProfileCardState extends State<UserProfileCard> {
           MaterialPageRoute(
             builder: (_) => OtherProfile(
               infoModel: Preview(
-                givenName: widget.model.givenName,
-                imageUrl: widget.model.mediaRef,
-                uid: widget.model.docId,
+                givenName: model.givenName,
+                imageUrl: model.mediaRef,
+                uid: model.docId,
               ),
             ),
           ),
@@ -49,7 +37,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 CachedNetworkImage(
-                  imageUrl: widget.model.mediaRef,
+                  imageUrl: model.mediaRef,
                   fit: BoxFit.cover,
                   placeholder: (context, url) {
                     return CircularProgressIndicator();
@@ -65,13 +53,13 @@ class _UserProfileCardState extends State<UserProfileCard> {
                   },
                 ),
                 Text(
-                  widget.model.givenName,
+                  model.givenName,
                   softWrap: true,
                   style: Theme.of(context).textTheme.subtitle,
                   textAlign: TextAlign.center,
                 ),
                 Text(
-                  widget.model.university,
+                  model.university,
                   softWrap: true,
                   style: Theme.of(context).textTheme.caption,
                   textAlign: TextAlign.center,
@@ -84,7 +72,7 @@ class _UserProfileCardState extends State<UserProfileCard> {
                     Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => NewMessage(
-                          model: widget.model,
+                          model: model,
                           fromSearch: true,
                         ),
                       ),
@@ -96,14 +84,8 @@ class _UserProfileCardState extends State<UserProfileCard> {
             Align(
               alignment: Alignment.topRight,
               child: IconButton(
-                icon: hearted
-                    ? Icon(CupertinoIcons.heart_solid, color: Colors.red)
-                    : Icon(CupertinoIcons.heart),
-                onPressed: () {
-                  setState(() {
-                    hearted = true;
-                  });
-                },
+                icon: Icon(CupertinoIcons.heart),
+                onPressed: () => Dialogs.showComingSoon(context),
               ),
             ),
           ],

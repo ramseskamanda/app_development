@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/new_skill_notifier.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class NewSkillRoute extends StatelessWidget {
   @override
@@ -92,13 +93,16 @@ class NewSkillRoute extends StatelessWidget {
                 child: Consumer<NewSkillNotifier>(
                   builder: (context, notifier, child) {
                     if (notifier.isLoading)
-                      return Center(child: const CircularProgressIndicator());
+                      return const CircularProgressIndicator();
+
+                    if (notifier.hasError)
+                      Dialogs.showNetworkErrorDialog(context);
 
                     return StadiumButton(
                       text: 'Send',
                       onPressed: () async {
-                        await notifier.send();
-                        Navigator.of(context).pop();
+                        final bool result = await notifier.send();
+                        if (result) Navigator.of(context).pop();
                       },
                     );
                   },

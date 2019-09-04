@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/project_signup_model.dart';
@@ -31,10 +32,15 @@ class ProjectPageNotifier extends NetworkNotifier {
   }
 
   TextEditingController get message => _messageController;
-  String get fileName => _file.path.split('/').last ?? 'No name';
   Stream<ProjectSignupModel> get userSignUpStream => _userSignups;
   bool get canApply =>
       _messageController.text?.isNotEmpty ?? false || _file != null;
+  File get file => _file;
+  set file(File value) {
+    _file = value;
+    print('value.path');
+    notifyListeners();
+  }
 
   @override
   Future fetchData() async {
@@ -65,12 +71,13 @@ class ProjectPageNotifier extends NetworkNotifier {
 
   Future signUp() async {
     if (!canApply) return;
+    isLoading = true;
     try {
       String _filePath;
       if (_file != null)
         _filePath = await _firebaseStorage.uploadProjectFile(
           _file,
-          onError: () =>
+          onError: (Object e) =>
               error = NetworkError(message: 'Couldn\'t store your image'),
         );
       final ProjectSignupModel _signupModel = ProjectSignupModel(
@@ -85,16 +92,17 @@ class ProjectPageNotifier extends NetworkNotifier {
         project: model,
       );
       _messageController.clear();
-      await Future.delayed(const Duration(milliseconds: 500));
     } catch (e) {
       print(e);
       error = NetworkError(message: '(TRACE)   ::    ${e.runtimeType}');
     }
+    isLoading = false;
   }
 
   Future removeApplicant(String docId) async {
     try {
       await _firestoreWriter.removeApplicant(docId);
+      removeFile();
     } catch (e) {
       error = NetworkError(message: '(TRACE)   ::    ${e.runtimeType}');
     }
@@ -107,4 +115,13 @@ class ProjectPageNotifier extends NetworkNotifier {
       error = NetworkError(message: 'Your request failed. Please try again.');
     }
   }
+
+  /// Pick a single file directly
+  Future<void> pickFile() async {
+    File f = await FilePicker.getFile(type: FileType.ANY);
+    if (f != null) file = f;
+  }
+
+  /// Remove file
+  void removeFile() => file = null;
 }

@@ -7,6 +7,7 @@ import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/app.dart';
 import 'package:studentup_mobile/ui/signup/signup.dart';
+import 'package:studentup_mobile/util/dev_settings.dart';
 import 'package:studentup_mobile/util/system.dart';
 import 'package:catcher/catcher_plugin.dart';
 
@@ -15,14 +16,13 @@ Future<void> main() async {
   await Locator.setup();
   await Locator.of<AuthService>().attemptAutoLogin();
   await Locator.of<AnalyticsService>().logger.logAppOpen();
-  runApp(MyApp());
-  // Catcher(
-  //   MyApp(),
-  //   debugConfig: debugOptions,
-  //   releaseConfig: releaseOptions,
-  //   profileConfig: profileOptions,
-  //   enableLogger: false,
-  // );
+  Catcher(
+    MyApp(),
+    debugConfig: DevSettings.debugOptions,
+    releaseConfig: DevSettings.releaseOptions,
+    profileConfig: DevSettings.profileOptions,
+    enableLogger: false,
+  );
 }
 
 class MyApp extends StatelessWidget {

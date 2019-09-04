@@ -31,7 +31,10 @@ class PaddedFAB extends StatelessWidget {
             )
           : FloatingActionButton.extended(
               heroTag: 'padded',
-              icon: Icon(icon),
+              icon: Icon(
+                icon,
+                color: Theme.of(context).scaffoldBackgroundColor,
+              ),
               label: Text(text),
               onPressed: onPressed,
             ),

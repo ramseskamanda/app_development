@@ -14,7 +14,7 @@ class ChatsNotifier extends NetworkNotifier {
   }
 
   Stream<QuerySnapshot> get chatPreviews =>
-      _firestoreReader.fetchChatPreviews(_uid);
+      _firestoreReader.fetchChatPreviews(_uid).asBroadcastStream();
 
   @override
   Future fetchData() async {}

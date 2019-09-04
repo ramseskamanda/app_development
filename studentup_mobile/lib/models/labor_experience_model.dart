@@ -18,16 +18,16 @@ class LaborExeprienceModel {
   }) {
     _userId = userId;
     _companyName = companyName;
-    _periodStart = Timestamp.fromDate(periodStart);
-    _periodEnd = Timestamp.fromDate(periodEnd);
+    _periodStart = periodStart == null ? null : Timestamp.fromDate(periodStart);
+    _periodEnd = periodEnd == null ? null : Timestamp.fromDate(periodEnd);
     _position = position;
   }
 
-  String get userId => _userId ?? '500 Error';
-  String get companyName => _companyName ?? '500 Error';
+  String get userId => _userId ?? '';
+  String get companyName => _companyName ?? 'No Company';
   String get periodStart => Util.format(_periodStart);
   String get periodEnd => Util.format(_periodEnd, allowNow: true);
-  String get position => _position ?? '500 Error';
+  String get position => _position ?? 'No Position';
 
   LaborExeprienceModel.fromDoc(Map<String, dynamic> json) {
     _userId = json['user_id'];

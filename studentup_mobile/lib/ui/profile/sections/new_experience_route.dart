@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/new_experience_notifier.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 import 'package:studentup_mobile/ui/widgets/text_fields/date_picker_form_field.dart';
 
 class NewExperienceRoute extends StatelessWidget {
@@ -52,7 +53,7 @@ class NewExperienceRoute extends StatelessWidget {
                             maxLines: 1,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Faculty',
+                              hintText: 'Position',
                             ),
                           ),
                           const SizedBox(height: 24.0),
@@ -64,6 +65,7 @@ class NewExperienceRoute extends StatelessWidget {
                           ),
                           const SizedBox(height: 24.0),
                           InlineDatePickerFormField(
+                            allowBlank: true,
                             controller: notifier.gradDateController,
                             hintText: 'End Date (Leave blank for ongoing)',
                             onConfirm: (value, indices) =>
@@ -82,30 +84,14 @@ class NewExperienceRoute extends StatelessWidget {
                     if (notifier.isLoading)
                       return const CircularProgressIndicator();
 
+                    if (notifier.hasError)
+                      Dialogs.showNetworkErrorDialog(context);
+
                     return StadiumButton(
                       text: 'Send',
                       onPressed: () async {
-                        if (await notifier.send()) Navigator.of(context).pop();
-                        if (notifier.hasError) {
-                          //TODO: add AlertDialog in case the user presses the button too early
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('An Error Occured.'),
-                                content: const Text(
-                                    'Unfortunately we weren\'t able to deliver your data to our severs. Please try again.'),
-                                actions: <Widget>[
-                                  FlatButton(
-                                    child: const Text('Done'),
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
+                        final bool result = await notifier.send();
+                        if (result) Navigator.of(context).pop();
                       },
                     );
                   },

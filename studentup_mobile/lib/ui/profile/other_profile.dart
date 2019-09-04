@@ -11,6 +11,7 @@ import 'package:studentup_mobile/ui/profile/sections/profile_skill_section.dart'
 import 'package:studentup_mobile/ui/profile/user_information/profile_head.dart';
 import 'package:studentup_mobile/ui/profile/user_information/profile_picture.dart';
 import 'package:studentup_mobile/ui/profile/user_information/profile_text.dart';
+import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class OtherProfile extends StatelessWidget {
   final Preview infoModel;
@@ -34,27 +35,29 @@ class OtherProfile extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
-        body: SafeArea(
-          child: LiquidPullToRefresh(
-            onRefresh: notifier.onRefresh,
-            child: ListView(
-              children: <Widget>[
-                const SizedBox(height: 16.0),
-                ProfilePicture(),
-                const SizedBox(height: 16.0),
-                ProfileText(),
-                const SizedBox(height: 16.0),
-                if (!fromMessaging) ContactOptions(),
-                const SizedBox(height: 16.0),
-                ProfileAboutCard(),
-                const SizedBox(height: 32.0),
-                ProfileSkillSection(isUser: false),
-                const SizedBox(height: 32.0),
-                ProfileEducationSection(isUser: false),
-                const SizedBox(height: 32.0),
-                ProfileExperienceSection(isUser: false),
-                const SizedBox(height: 32.0),
-              ],
+        body: NetworkSensitive(
+          child: SafeArea(
+            child: LiquidPullToRefresh(
+              onRefresh: notifier.onRefresh,
+              child: ListView(
+                children: <Widget>[
+                  const SizedBox(height: 16.0),
+                  ProfilePicture(),
+                  const SizedBox(height: 16.0),
+                  ProfileText(),
+                  const SizedBox(height: 16.0),
+                  if (!fromMessaging) ContactOptions(),
+                  const SizedBox(height: 16.0),
+                  ProfileAboutCard(),
+                  const SizedBox(height: 32.0),
+                  ProfileSkillSection(isUser: false),
+                  const SizedBox(height: 32.0),
+                  ProfileEducationSection(isUser: false),
+                  const SizedBox(height: 32.0),
+                  ProfileExperienceSection(isUser: false),
+                  const SizedBox(height: 32.0),
+                ],
+              ),
             ),
           ),
         ),

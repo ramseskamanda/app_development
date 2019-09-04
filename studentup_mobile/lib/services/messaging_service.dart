@@ -15,8 +15,6 @@ class MessagingService extends ChangeNotifier {
   FocusNode _focusNode;
   bool _canSend;
 
-  int _numLoaded = 100;
-
   MessagingService({
     @required CollectionReference collection,
     @required String uid,
@@ -30,7 +28,7 @@ class MessagingService extends ChangeNotifier {
   }
 
   Stream<QuerySnapshot> get messages =>
-      _firestoreReader.fetchMessages(_collectionReference, _numLoaded);
+      _firestoreReader.fetchMessages(_collectionReference);
   TextEditingController get controller => _controller;
   FocusNode get focusNode => _focusNode;
   bool get canSend => _canSend;
@@ -44,12 +42,6 @@ class MessagingService extends ChangeNotifier {
     _controller.dispose();
     _focusNode.dispose();
     super.dispose();
-  }
-
-  void loadMore() async {
-    print('Load more $_numLoaded');
-    _numLoaded += 10;
-    notifyListeners();
   }
 
   Future<void> sendMessage() async {

@@ -35,24 +35,26 @@ class NewSkillNotifier extends NetworkNotifier {
     notifyListeners();
   }
 
-  Future send() async {
-    if (!canSend) return;
-    isLoading = true;
-    final model = SkillsModel(
-      avgRating: 0,
-      description: _description.text,
-      name: _name.text,
-      userId: Locator.of<AuthService>().currentUser.uid,
-      category: _category.toLowerCase(),
-      ratings: null,
-    );
+  Future<bool> send() async {
     try {
+      if (!canSend) return false;
+      isLoading = true;
+      final model = SkillsModel(
+        avgRating: 0,
+        description: _description.text,
+        name: _name.text,
+        userId: Locator.of<AuthService>().currentUser.uid,
+        category: _category.toLowerCase(),
+        ratings: null,
+      );
       await _firestoreWriter.postNewSkill(model);
     } catch (e) {
       print(e);
       error = NetworkError(message: e.toString());
+      return false;
     }
     isLoading = false;
+    return true;
   }
 
   @override

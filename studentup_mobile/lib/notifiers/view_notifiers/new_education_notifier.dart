@@ -63,19 +63,19 @@ class NewEducationNotifier extends NetworkNotifier {
   }
 
   Future<bool> send() async {
-    if (!canSend) return false;
-    isLoading = true;
-    final model = EducationModel(
-      userId: Locator.of<AuthService>().currentUser.uid,
-      university: _university.text,
-      faculty: _faculty.text,
-      degree: _category,
-      gradDate: _gradDate,
-      periodStart: _startDate,
-      periodEnd: _gradDate,
-      studyDescription: _description.text,
-    );
     try {
+      if (!canSend) return false;
+      isLoading = true;
+      final model = EducationModel(
+        userId: Locator.of<AuthService>().currentUser.uid,
+        university: _university.text,
+        faculty: _faculty.text,
+        degree: _category,
+        gradDate: _gradDate,
+        periodStart: _startDate,
+        periodEnd: _gradDate,
+        studyDescription: _description.text,
+      );
       await _firestoreWriter.postNewEducation(model);
     } catch (e) {
       print(e);

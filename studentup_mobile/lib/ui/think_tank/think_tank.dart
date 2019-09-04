@@ -9,6 +9,7 @@ import 'package:studentup_mobile/notifiers/view_notifiers/think_tank_notifier.da
 import 'package:studentup_mobile/services/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/think_tank/new_comment_route.dart';
+import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class ThinkTank extends StatelessWidget {
   final ThinkTanksModel model;
@@ -44,65 +45,69 @@ class ThinkTank extends StatelessWidget {
           },
         ),
       ),
-      body: ChangeNotifierProvider<ThinkTankNotifier>.value(
-        value: notifier,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        model.title,
-                        softWrap: true,
-                        style: Theme.of(context).textTheme.display1.copyWith(
-                            color: CupertinoColors.black,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        model.premise,
-                        softWrap: true,
-                        style: Theme.of(context).textTheme.subhead,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24.0),
-                  Divider(),
-                  StreamBuilder(
-                    stream: notifier.comments,
-                    initialData: null,
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (!snapshot.hasData) {
-                        if (snapshot.connectionState == ConnectionState.waiting)
+      body: NetworkSensitive(
+        child: ChangeNotifierProvider<ThinkTankNotifier>.value(
+          value: notifier,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          model.title,
+                          softWrap: true,
+                          style: Theme.of(context).textTheme.display1.copyWith(
+                              color: CupertinoColors.black,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          model.premise,
+                          softWrap: true,
+                          style: Theme.of(context).textTheme.subhead,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24.0),
+                    Divider(),
+                    StreamBuilder(
+                      stream: notifier.comments,
+                      initialData: null,
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (!snapshot.hasData) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting)
+                            return Center(
+                              child: const CircularProgressIndicator(),
+                            );
+                          print(snapshot.error);
                           return Center(
-                            child: const CircularProgressIndicator(),
-                          );
-                        print(snapshot.error);
-                        return Center(child: const Text('An Error Occured...'));
-                      }
-                      String uid = Locator.of<AuthService>().currentUser.uid;
-                      return Column(
-                        children: <Widget>[
-                          for (Comments comment in snapshot.data)
-                            CommentWidget(
-                              key: ValueKey(comment.docId),
-                              uid: uid,
-                              model: comment,
-                            ),
-                        ],
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.1,
-                  ),
-                ],
+                              child: const Text('An Error Occured...'));
+                        }
+                        String uid = Locator.of<AuthService>().currentUser.uid;
+                        return Column(
+                          children: <Widget>[
+                            for (Comments comment in snapshot.data)
+                              CommentWidget(
+                                key: ValueKey(comment.docId),
+                                uid: uid,
+                                model: comment,
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.1,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

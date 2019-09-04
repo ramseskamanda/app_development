@@ -32,9 +32,16 @@ class FirebaseStorageService {
     return _paths;
   }
 
+  static String createFilePath(File file, String folderName) {
+    Uuid _uuid = Uuid();
+    Context _context = Context();
+    String generatedPath = _uuid.v1();
+    String extension = _context.extension(file.path);
+    return '$folderName/${generatedPath + extension}';
+  }
+
   Future<void> download(
       {String filePath, Function callback, Function onError}) async {
-    //TODO: improve this method by saving to memory and retrieving from it
     try {
       var meta = await _firebaseStorage.ref().child(filePath).getMetadata();
       final Directory tempDir = Directory.systemTemp;
@@ -59,7 +66,7 @@ class FirebaseStorageService {
     }
   }
 
-  //TODO: turn this into an async*
+  //? turn this into an async*
   List<StorageUploadTask> startUpload(List<File> data, List<String> filePaths) {
     assert(data.length == filePaths.length);
     List<StorageUploadTask> _tasks = <StorageUploadTask>[];
@@ -72,12 +79,12 @@ class FirebaseStorageService {
     return _tasks;
   }
 
-  Future<String> uploadProjectFile(File file, {void Function() onError}) async {
-    final String _fileName = file.path.split('/').last;
-    String path = '$projectsFolder/$_fileName';
+  Future<String> uploadProjectFile(File file,
+      {void Function(Object) onError}) async {
+    final String _fileName = createFilePath(file, projectsFolder);
     final StorageUploadTask task =
-        _firebaseStorage.ref().child(path).putFile(file);
-    task.onComplete.catchError(onError);
-    return path;
+        _firebaseStorage.ref().child(_fileName).putFile(file);
+    final StorageTaskSnapshot snap = await task.onComplete;
+    return await snap.ref.getDownloadURL();
   }
 }

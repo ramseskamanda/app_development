@@ -6,6 +6,7 @@ import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart'
 import 'package:studentup_mobile/services/algolia_service.dart';
 import 'package:studentup_mobile/services/analytics_service.dart';
 import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/connectivity_service.dart';
 import 'package:studentup_mobile/services/firestore_service.dart';
 import 'package:studentup_mobile/services/local_storage_service.dart';
 import 'package:studentup_mobile/services/notification_service.dart';
@@ -17,6 +18,10 @@ class Locator {
   static List<SingleChildCloneableWidget> get providers {
     return [
       ChangeNotifierProvider(builder: (_) => AuthNotifier()),
+      StreamProvider(
+        builder: (_) => ConnectivityService().connectionStatusController.stream,
+        updateShouldNotify: (a, b) => a != b,
+      ),
     ];
   }
 

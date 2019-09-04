@@ -6,6 +6,7 @@ import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart'
 import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/profile/sections/new_education_route.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
+import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
 class ProfileEducationSection extends StatelessWidget {
   final bool isUser;
@@ -14,75 +15,93 @@ class ProfileEducationSection extends StatelessWidget {
       : super(key: key);
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return StreamBuilder<List<EducationModel>>(
+        stream: Provider.of<ProfileNotifier>(context).education,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.waiting)
+              return Center(
+                child: const CircularProgressIndicator(),
+              );
+            return Center(
+              child: Text('An Error Occured'),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                //TODO: add navigation here with a hero to show all
-                Text(
-                  'Education',
-                  style: Theme.of(context).textTheme.title,
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        'Education',
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                      if (snapshot.data.length > 0)
+                        FlatButton(
+                          child: const Text('See all'),
+                          textColor: Theme.of(context).accentColor,
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) {
+                                  return SeeAll<EducationModel>(
+                                    title: 'Education',
+                                    objects: snapshot.data,
+                                    separator: const SizedBox(height: 16.0),
+                                    builder: (context, index) => Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16.0),
+                                      child: EducationCard(
+                                        model: snapshot.data[index],
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                    ],
+                  ),
                 ),
-                FlatButton(
-                  child: const Text('See all'),
-                  textColor: Theme.of(context).accentColor,
-                  onPressed: () {},
-                ),
+                const SizedBox(height: 16.0),
+                if (snapshot.data.length == 0)
+                  Center(
+                    child: const Text('No Education Added Yet!'),
+                  )
+                else
+                  Column(
+                    children: <Widget>[
+                      if (snapshot.data.length > 0)
+                        EducationCard(model: snapshot.data[0]),
+                      const SizedBox(height: 8.0),
+                      if (snapshot.data.length > 1)
+                        EducationCard(model: snapshot.data[1]),
+                      const SizedBox(height: 12.0),
+                    ],
+                  ),
+                if (isUser)
+                  StadiumButton.icon(
+                    text: 'Add Education',
+                    icon: Icons.add,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => NewEducationRoute(),
+                        ),
+                      );
+                    },
+                  ),
               ],
             ),
-          ),
-          const SizedBox(height: 16.0),
-          StreamBuilder(
-            stream: Provider.of<ProfileNotifier>(context).education,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (!snapshot.hasData) {
-                if (snapshot.connectionState == ConnectionState.waiting)
-                  return Center(
-                    child: const CircularProgressIndicator(),
-                  );
-                return Center(
-                  child: Text('An Error Occured'),
-                );
-              } else {
-                if (snapshot.data.length == 0)
-                  return Center(
-                    child: const Text('No Education Added Yet!'),
-                  );
-                return Column(
-                  children: <Widget>[
-                    if (snapshot.data.length > 0)
-                      EducationCard(model: snapshot.data[0]),
-                    const SizedBox(height: 8.0),
-                    if (snapshot.data.length > 1)
-                      EducationCard(model: snapshot.data[1]),
-                    const SizedBox(height: 12.0),
-                  ],
-                );
-              }
-            },
-          ),
-          if (isUser)
-            StadiumButton.icon(
-              text: 'Add Education',
-              icon: Icons.add,
-              onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => NewEducationRoute(),
-                  ),
-                );
-              },
-            ),
-        ],
-      ),
-    );
+          );
+        });
   }
 }
 

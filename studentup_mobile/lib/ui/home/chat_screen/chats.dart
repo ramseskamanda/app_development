@@ -6,10 +6,9 @@ import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/chats_notifier.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/chat_list_item.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/new_message.dart';
+import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class Chats extends StatefulWidget {
-  //! TODO: pagination (messages and chats)
-  //! TODO: fix database issues with listing message threads
   @override
   _ChatsState createState() => _ChatsState();
 }
@@ -46,10 +45,13 @@ class _ChatsState extends State<Chats>
               },
             ),
           ),
-          body: UserChats(),
+          body: NetworkSensitive(child: UserChats()),
           floatingActionButton: FloatingActionButton(
             heroTag: 'new_message',
-            child: Icon(Icons.add),
+            child: Icon(
+              Icons.add,
+              color: Theme.of(context).scaffoldBackgroundColor,
+            ),
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(

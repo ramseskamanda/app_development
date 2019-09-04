@@ -11,6 +11,7 @@ import 'package:studentup_mobile/ui/projects/file_attachment.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 import 'package:studentup_mobile/ui/widgets/slivers/custom_sliver_delegate.dart';
+import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 import 'package:studentup_mobile/util/util.dart';
 
 class ProjectPage extends StatelessWidget {
@@ -20,50 +21,56 @@ class ProjectPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      builder: (_) => ProjectPageNotifier(model),
-      child: Scaffold(
-        body: SafeArea(
-          top: false,
-          child: Stack(
-            children: <Widget>[
-              CustomScrollView(
-                slivers: <Widget>[
-                  ImageScrollbaleAppBar(model: model),
-                  ProjectInformation(),
-                ],
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Consumer<ProjectPageNotifier>(
-                  builder: (context, notifier, child) {
-                    if (notifier.model.userIsOwner)
-                      return StadiumButton(
-                        text: 'Select Candidate',
-                        onPressed: () => print('object'),
-                      );
-                    return StreamBuilder<ProjectSignupModel>(
-                      stream: notifier.userSignUpStream,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting)
-                          return Center(
-                              child: const CircularProgressIndicator());
-                        return StadiumButton(
-                          text: snapshot.hasData
-                              ? 'Withdraw Application'
-                              : 'Apply',
-                          //TODO: Add visual cue that user can't signup
-                          onPressed: snapshot.hasData
-                              ? () => notifier
-                                  .removeApplicant(snapshot.data.projectId)
-                              : () => notifier.signUp(),
+    return WillPopScope(
+      onWillPop: () async => Navigator.of(context).canPop(),
+      child: ChangeNotifierProvider(
+        builder: (_) => ProjectPageNotifier(model),
+        child: Scaffold(
+          body: NetworkSensitive(
+            child: SafeArea(
+              top: false,
+              child: Stack(
+                children: <Widget>[
+                  CustomScrollView(
+                    slivers: <Widget>[
+                      ImageScrollbaleAppBar(model: model),
+                      ProjectInformation(),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Consumer<ProjectPageNotifier>(
+                      builder: (context, notifier, child) {
+                        if (notifier.model.userIsOwner)
+                          return StadiumButton(
+                            text: 'Select Candidate',
+                            onPressed: () => print('object'),
+                          );
+                        return StreamBuilder<ProjectSignupModel>(
+                          stream: notifier.userSignUpStream,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                    ConnectionState.waiting ||
+                                notifier.isLoading)
+                              return const CircularProgressIndicator();
+                            return StadiumButton(
+                              text: snapshot.hasData
+                                  ? 'Withdraw Application'
+                                  : 'Apply',
+                              //TODO: Add visual cue that user can't signup
+                              onPressed: snapshot.hasData
+                                  ? () => notifier
+                                      .removeApplicant(snapshot.data.projectId)
+                                  : () => notifier.signUp(),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -207,7 +214,7 @@ class ProjectInformation extends StatelessWidget {
                         style: Theme.of(context).textTheme.subtitle,
                       ),
                       Text(
-                        'Deadline: ' +
+                        'Applications close: ' +
                             Util.formatDateTime(notifier.model.deadline,
                                 deadline: true),
                         style: Theme.of(context).textTheme.subtitle,
@@ -215,19 +222,20 @@ class ProjectInformation extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16.0),
-                  FlatButton.icon(
-                    textColor: Theme.of(context).accentColor,
-                    icon: notifier.isLoading
-                        ? CircularProgressIndicator()
-                        : Icon(Icons.file_download),
-                    label: Text(
-                      'Download attachement',
-                      style: Theme.of(context).textTheme.title,
+                  if (notifier.model.files.isNotEmpty)
+                    FlatButton.icon(
+                      textColor: Theme.of(context).accentColor,
+                      icon: notifier.isLoading
+                          ? CircularProgressIndicator()
+                          : Icon(Icons.file_download),
+                      label: Text(
+                        'Download attachement',
+                        style: Theme.of(context).textTheme.title,
+                      ),
+                      onPressed: notifier.isLoading
+                          ? null
+                          : () => notifier.downloadAttachmentsAndPreview(),
                     ),
-                    onPressed: notifier.isLoading
-                        ? null
-                        : () => notifier.downloadAttachmentsAndPreview(),
-                  ),
                   const SizedBox(height: 16.0),
                   Text(
                     notifier.model.description,
@@ -259,7 +267,11 @@ class ProjectInformation extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 24.0),
-                        Center(child: SingleFileAttachment()),
+                        Center(
+                          child: SingleFileAttachment(
+                            canEdit: !snapshot.hasData,
+                          ),
+                        ),
                       ],
                     ),
                   ),

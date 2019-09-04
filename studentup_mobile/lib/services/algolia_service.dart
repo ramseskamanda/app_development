@@ -10,7 +10,6 @@ const String startupIndex = 'startups';
 const String skillsIndex = 'skills';
 const String studentSuggestionsIndex = 'Student Suggestions';
 
-//TODO: add Timer.periodic() cache cleaner that checks if cache entry has been there for a long time
 class AlgoliaService {
   FirestoreReader _reader = Locator.of<FirestoreReader>();
   static final Algolia algolia = Algolia.init(
@@ -20,27 +19,45 @@ class AlgoliaService {
 
   static final Map<String, dynamic> cache = <String, dynamic>{};
 
+  _removeDuplicates({List<AlgoliaObjectSnapshot> list, String property}) {
+    final List<String> _valuesPresent = [];
+    return list.where((value) {
+      if (_valuesPresent.contains(value.data[property])) return false;
+      _valuesPresent.add(value.data[property]);
+      return true;
+    }).toList();
+  }
+
+  _searchCache<T>(String queryString, SearchCategory category) {
+    return null;
+    // if (cache.containsKey(queryString) &&
+    //     cache[queryString].runtimeType is List<T>) return cache[queryString];
+  }
+
   Future<List<UserInfoModel>> searchUsersWithFacets({
     SearchCategory category = SearchCategory.ALL,
     String queryString = '',
   }) async {
     try {
-      if (cache.containsKey(queryString) &&
-          cache[queryString].runtimeType is List<UserInfoModel>)
-        return cache[queryString];
-
+      final cacheResult = _searchCache<UserInfoModel>(queryString, category);
+      if (cacheResult != null) return cacheResult;
       print('fetching from network');
 
       String facet = category.toString().split('.')[1].toLowerCase();
-      AlgoliaQuery query = algolia.instance
-          .index(skillsIndex)
-          .setLength(10)
-          .setFilters('category:$facet');
+      AlgoliaQuery query = category == SearchCategory.ALL
+          ? algolia.instance.index(skillsIndex).setLength(10)
+          : algolia.instance
+              .index(skillsIndex)
+              .setLength(10)
+              .setFilters('category:$facet');
       query = query.search(queryString);
 
       AlgoliaQuerySnapshot _objects = await query.getObjects();
 
-      List<AlgoliaObjectSnapshot> _results = _objects.hits;
+      List<AlgoliaObjectSnapshot> _results = _removeDuplicates(
+        list: _objects.hits,
+        property: 'user_id',
+      );
 
       print(_results.length);
 
@@ -58,8 +75,9 @@ class AlgoliaService {
 
   Future<List<UserInfoModel>> searchUsers(String queryString) async {
     try {
-      if (cache.containsKey(queryString) &&
-          cache[queryString] is List<UserInfoModel>) return cache[queryString];
+      final cacheResult =
+          _searchCache<UserInfoModel>(queryString, SearchCategory.ALL);
+      if (cacheResult != null) return cacheResult;
 
       print('fetching from network');
 
@@ -85,9 +103,9 @@ class AlgoliaService {
 
   Future<List<StartupInfoModel>> searchStartups(String queryString) async {
     try {
-      if (cache.containsKey(queryString) &&
-          cache[queryString].runtimeType is List<StartupInfoModel>)
-        return cache[queryString];
+      final cacheResult =
+          _searchCache<StartupInfoModel>(queryString, SearchCategory.ALL);
+      if (cacheResult != null) return cacheResult;
 
       print('fetching from network');
 

@@ -47,16 +47,16 @@ class NewExperienceNotifier extends NetworkNotifier {
   }
 
   Future<bool> send() async {
-    if (!canSend) return false;
-    isLoading = true;
-    final model = LaborExeprienceModel(
-      userId: Locator.of<AuthService>().currentUser.uid,
-      periodStart: _startDate,
-      periodEnd: _endDate,
-      companyName: _company.text,
-      position: _position.text,
-    );
     try {
+      if (!canSend) return false;
+      isLoading = true;
+      final model = LaborExeprienceModel(
+        userId: Locator.of<AuthService>().currentUser.uid,
+        periodStart: _startDate,
+        periodEnd: _endDate,
+        companyName: _company.text,
+        position: _position.text,
+      );
       await _firestoreWriter.postNewExperience(model);
     } catch (e) {
       print(e);

@@ -6,6 +6,7 @@ import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/new_message_notifier.dart';
 import 'package:studentup_mobile/services/algolia_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/conversation.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
@@ -146,7 +147,7 @@ class NewMessage extends StatelessWidget {
 }
 
 class CustomSearchDelegate extends SearchDelegate {
-  final AlgoliaService _algoliaService = AlgoliaService();
+  final AlgoliaService _algoliaService = Locator.of<AlgoliaService>();
 
   @override
   List<Widget> buildActions(BuildContext context) {

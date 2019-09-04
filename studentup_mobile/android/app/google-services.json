@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "335522247224-akvnbpp17sob3rdcg740du0p65jklk35.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studentup.mobile",
+            "certificate_hash": "f0fc24477fe78e53fa957dd2d77c05696018a991"
+          }
+        },
+        {
+          "client_id": "335522247224-vf82rfa1rhpfsn5ij9dp25kfl9aikbb1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studentup.mobile",
+            "certificate_hash": "86d0dab8bc8d9e81f512b09553709789e8605a73"
+          }
+        },
+        {
+          "client_id": "335522247224-f3t2rmlijlmui6q4b2m18a1pav7i2jh3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.studentup.mobile",
+            "certificate_hash": "b14db803c147449228e5e8f29d29574498879030"
+          }
+        },
+        {
           "client_id": "335522247224-sisgma009eej4fp3fog87mqrm0u5463c.apps.googleusercontent.com",
           "client_type": 3
         }

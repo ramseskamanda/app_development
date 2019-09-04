@@ -148,7 +148,8 @@ class FirestoreReader {
 
   Future<List<ThinkTanksModel>> fetchThinkTanks(QueryOrder order) async {
     try {
-      String field = QueryOrder.newest == order ? 'timestamps' : 'commentCount';
+      String field =
+          QueryOrder.newest == order ? 'lastActivity' : 'commentCount';
       QuerySnapshot snapshot = await _firestore
           .collection(thinkTanksCollection)
           .orderBy(field, descending: true)
@@ -201,6 +202,33 @@ class FirestoreReader {
     }
   }
 
+  Stream<List<ProjectModel>> fetchOngoingProjects(String uid,
+      {QueryOrder order = QueryOrder.popularity}) {
+    String field = QueryOrder.newest == order ? 'timestamp' : 'signups_num';
+    return _firestore
+        .collection(projectCollection)
+        .where('creator_id', isEqualTo: uid)
+        .where('deadline',
+            isGreaterThan: DateTime.now().subtract(Duration(days: 1)))
+        .orderBy('deadline')
+        .orderBy(field, descending: true)
+        // .limit(NUM_ITEM_PREVIEW)
+        .snapshots()
+        .map((snap) =>
+            snap.documents.map((doc) => ProjectModel.fromDoc(doc)).toList());
+  }
+
+  Stream<List<ProjectModel>> fetchPastProjects(String uid) {
+    return _firestore
+        .collection(projectCollection)
+        .where('creator_id', isEqualTo: uid)
+        .where('deadline', isLessThan: DateTime.now())
+        // .limit(NUM_ITEM_PREVIEW)
+        .snapshots()
+        .map((snap) =>
+            snap.documents.map((doc) => ProjectModel.fromDoc(doc)).toList());
+  }
+
   Stream<List<Comments>> fetchComments(CollectionReference reference) {
     return reference
         .orderBy('upvotes', descending: true)
@@ -216,13 +244,10 @@ class FirestoreReader {
         .where('list_participants', arrayContains: uid)
         .orderBy('latest_message.sentAt', descending: true)
         // .limit(10)
-        .snapshots();
+        .snapshots(includeMetadataChanges: true);
   }
 
-  Stream<QuerySnapshot> fetchMessages(
-      CollectionReference reference, int numLoaded) {
-    print('$numLoaded are being loaded');
-
+  Stream<QuerySnapshot> fetchMessages(CollectionReference reference) {
     return reference
         .orderBy('sentAt', descending: true)
         // .limit(numLoaded)
@@ -338,6 +363,26 @@ class FirestoreWriter {
 
   Future postNewExperience(LaborExeprienceModel model) async {
     await _firestore.collection(experienceCollection).add(model.toJson());
+  }
+
+  Future postNewTeamMember({
+    UserInfoModel model,
+    DocumentReference document,
+  }) async {
+    await document.updateData({
+      'team.${model.docId}': Preview(
+        givenName: model.givenName,
+        imageUrl: model.mediaRef,
+        uid: model.docId,
+      ).toJson(),
+    });
+  }
+
+  Future removeTeamMember({
+    Preview model,
+    DocumentReference document,
+  }) async {
+    await document.updateData({'team.${model.uid}': FieldValue.delete()});
   }
 
   Future postComment({Comments model, CollectionReference collection}) async {

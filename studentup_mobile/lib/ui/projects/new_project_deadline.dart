@@ -9,7 +9,6 @@ class NewProjectDeadline extends StatefulWidget {
   _NewProjectDeadlineState createState() => _NewProjectDeadlineState();
 }
 
-//TODO: Change the number of participants to a slider
 class _NewProjectDeadlineState extends State<NewProjectDeadline> {
   void _setDeadline(DateTime date) {
     ProjectCreationService _service =
@@ -31,7 +30,6 @@ class _NewProjectDeadlineState extends State<NewProjectDeadline> {
                 style: TextStyle(color: CupertinoColors.activeBlue),
               ),
               onPressed: () {
-                //TODO: reset position of the marker when wrong date is picked.
                 Navigator.pop(context);
               },
             ),
@@ -106,6 +104,7 @@ class _NewProjectDeadlineState extends State<NewProjectDeadline> {
                 );
               },
             ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.1),
           ],
         ),
       ),

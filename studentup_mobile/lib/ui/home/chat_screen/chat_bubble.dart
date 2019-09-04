@@ -61,7 +61,6 @@ class ChatBubble extends StatelessWidget {
                   ),
                 ),
               ),
-              //TODO: align this to the right
               FittedBox(
                 child: Align(
                   alignment: Alignment.bottomRight,

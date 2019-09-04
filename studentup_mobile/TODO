@@ -33,7 +33,7 @@ Feature Import and TODO checks:
   ✔ Search Screen with Category-Search @done(19-08-25 20:36)
   ✔ Leaderboards @done(19-08-25 19:19)
   ✔ Notifications with notifications collection @done(19-08-25 21:15)
-  ☐ Profile with creating new skills, education, jobs
+  ✔ Profile with creating new skills, education, jobs @done(19-09-04 02:36)
   ✔ Saved Profiles @done(19-08-25 21:15)
   ✔ Side Bar Menu @done(19-08-25 21:15)
 
@@ -47,10 +47,11 @@ First Release:
 v-0.0.2:
   ✔ Fix number of solutions posted (maybe add number of total votes) @done(19-09-02 23:21)
   ✔ Add 'No Ongoing Projects' to startup pages with no projects @done(19-09-03 00:57)
-  ☐ Fix latest_message updater in Cloud Functions
+  ✔ Fix latest_message updater in Cloud Functions @done(19-09-03 21:00)
+  ✔ Add deletion functions for documents with subcollection(s) @done(19-09-03 22:52)
   ✔ Fix ProfileNotifier to allow for Startups @done(19-09-01 18:49)
   ✔ Implement live data in Home Feed, Project Feed, and Profile @done(19-09-01 18:55)
-  ☐ Fix Profile for startups
+  ✔ Fix Profile for startups @done(19-09-03 14:42)
   ✔ Add Bio to user profile @done(19-09-02 17:59)
   ✔ Fix new project route @done(19-09-02 19:50)
   ✔ Add Messaging @done(19-09-02 17:11)
@@ -58,27 +59,36 @@ v-0.0.2:
   ✔ Add 'No Experience yet' when experience or others are empty @done(19-09-02 17:47)
   ✔ Fix bugs from bug report @done(19-09-03 00:57)
   ✔ Search colors CANNOT be full white or full black @done(19-09-02 20:14)
-  ☐ Add Connectivity route
-  ☐ Re-enable Catcher
+  ✔ Add Connectivity route @done(19-09-03 16:40)
+  ✔ Re-enable Catcher @done(19-09-03 19:39)
   ✔ Add key to all lists @done(19-09-02 20:16)
-  ☐ Implement see all
-  ☐ Add Terms and Conditions
-  ☐ Fix Search bug where if one selects a category and goes back, they can't find anything else in all
-  ☐ Remove favorites for now
+  ✔ Implement see all @done(19-09-03 17:19)
+  ✔ Fix Search bug where if one selects a category and goes back, they can't find anything else in all @done(19-09-03 18:01)
+  ✔ Remove favorites for now @done(19-09-03 18:01)
+  ✔ Implement 'Add Team' onPressed && its route @done(19-09-03 18:59)
 
 v-0.0.3:
   ☐ Add Notifications
+  ☐ Add Terms and Conditions
   ☐ Add Hidden Menu Drawer with Saved Profiles etc.
-  ☐ Add past projects
-  ☐ Add notification icons for messaging
-  ☐ Add messaging deletion
-  ☐ Add pagination to conversations
-  ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, etc.
+  ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, messaging, etc.
   ☐ Add AlertDialog before deleting object
-  ☐ Make think tank comments editable + deletable
   ☐ Make think tank premises editable
-  ☐ Add Setting for QueryOrder for Think Tanks etc.
-  ☐ Add Skill Endorsement
+  ☐ Finish Skill Endorsement
   ☐ Add Search to Project Page
   ☐ Add profile editor for startups and users
+  ☐ Fix Connectivity bug where profile picture doesn't show up after network is back (+other connectivity-related bugs)
+  ☐ Add Search Caching + Cache Cleaner (in Algolia Search)
+  ☐ Ability to delete anything from SeeAll, Projects, Chats, Messages, Think Tanks, Comments, Account, Skills, Experience, Education, etc.
+  ☐ Enable automatic email bug report sending through email
+  ☐ Allow posting custom pictures as backgrounds for projects
+  ☐ Implement chat messages read (just make last message seenAt??)
+  ☐ Check for existing conversation when creating new conversation
+
+  v-0.0.4:
+  ☐ Implement WebView on tap for startup websites
+  ☐ Add notification icons for messaging
+  ☐ Add Setting for QueryOrder for Think Tanks etc.
   ☐ Implement account switching
+  ☐ Add permanent storage to attachment downloads
+  ☐ Menu Drawer with 'My Projects' and 'My Think Tanks'

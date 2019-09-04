@@ -33,7 +33,7 @@ class Util {
   }
 
   static String format(Timestamp date, {bool allowNow = false}) {
-    if (date == null) return allowNow ? 'now' : '500 Error';
+    if (date == null) return allowNow ? 'now' : 'No Date Given';
     var format = DateFormat.yMMM();
     return format.format(date.toDate());
   }

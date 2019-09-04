@@ -6,6 +6,7 @@ import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/profile/profile.dart';
 import 'package:studentup_mobile/ui/startup_profile/startup_profile.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
+import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class ProfileRoot extends StatelessWidget {
   @override
@@ -43,15 +44,17 @@ class ProfileRoot extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<ProfileNotifier>(
-        builder: (context, notifier, child) {
-          if (notifier.isLoading)
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          if (notifier.isStartup) return StartUpProfile();
-          return Profile();
-        },
+      body: NetworkSensitive(
+        child: Consumer<ProfileNotifier>(
+          builder: (context, notifier, child) {
+            if (notifier.isLoading)
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            if (notifier.isStartup) return StartUpProfile();
+            return Profile();
+          },
+        ),
       ),
     );
   }

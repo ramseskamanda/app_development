@@ -12,6 +12,7 @@ import 'package:studentup_mobile/ui/home/chat_screen/chat_bubble.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/messaging_text_field.dart';
 import 'package:studentup_mobile/ui/profile/other_profile.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
+import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class Conversation extends StatefulWidget {
   final ChatModel chat;
@@ -32,7 +33,7 @@ class _ConversationState extends State<Conversation> {
       collection: widget.chat.messagesCollection,
       uid: widget.chat.userId,
     );
-    // _controller = ScrollController()..addListener(_loadMore);
+    _controller = ScrollController(); //..addListener(_loadMore);
   }
 
   @override
@@ -104,7 +105,7 @@ class _ConversationState extends State<Conversation> {
                       SizedBox(height: 5.0),
                       Text(
                         widget.chat.lastMessage.sentAt.isAfter(DateTime.now()
-                                .subtract(const Duration(minutes: 5)))
+                                .subtract(const Duration(minutes: 15)))
                             ? 'Online'
                             : 'Offline',
                         style: TextStyle(
@@ -139,43 +140,45 @@ class _ConversationState extends State<Conversation> {
             ),
           ],
         ),
-        body: Container(
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            children: <Widget>[
-              SizedBox(height: 10.0),
-              Flexible(
-                child: Consumer<MessagingService>(
-                  builder: (context, service, child) {
-                    return FirestoreAnimatedList(
-                      controller: _controller,
-                      query: service.messages,
-                      reverse: true,
-                      emptyChild:
-                          Center(child: const Text('No messages here yet!')),
-                      itemBuilder: (context, document, animation, index) {
-                        MessageModel model = MessageModel.fromDoc(document);
-                        return FadeTransition(
-                          key: ObjectKey(model),
-                          opacity: animation,
-                          child: ChatBubble(
+        body: NetworkSensitive(
+          child: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: <Widget>[
+                SizedBox(height: 10.0),
+                Flexible(
+                  child: Consumer<MessagingService>(
+                    builder: (context, service, child) {
+                      return FirestoreAnimatedList(
+                        controller: _controller,
+                        query: service.messages,
+                        reverse: true,
+                        emptyChild:
+                            Center(child: const Text('No messages here yet!')),
+                        itemBuilder: (context, document, animation, index) {
+                          MessageModel model = MessageModel.fromDoc(document);
+                          return FadeTransition(
                             key: ObjectKey(model),
-                            model: model,
-                            isUser: model.senderId ==
-                                Locator.of<AuthService>().currentUser.uid,
-                            isLast: index == 0,
-                          ),
-                        );
-                      },
-                    );
-                  },
+                            opacity: animation,
+                            child: ChatBubble(
+                              key: ObjectKey(model),
+                              model: model,
+                              isUser: model.senderId ==
+                                  Locator.of<AuthService>().currentUser.uid,
+                              isLast: index == 0,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SafeArea(child: MessagingTextField()),
-              ),
-            ],
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: SafeArea(child: MessagingTextField()),
+                ),
+              ],
+            ),
           ),
         ),
       ),
