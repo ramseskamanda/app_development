@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/chats_notifier.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/conversation.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -93,7 +95,7 @@ class ChatListItem extends StatelessWidget {
               ),
             ),
             SizedBox(height: 5),
-            model.userHasUnread
+            !model.userHasUnread
                 ? SizedBox()
                 : Container(
                     padding: EdgeInsets.all(1),
@@ -120,7 +122,8 @@ class ChatListItem extends StatelessWidget {
           ],
         ),
         onTap: () {
-          // Provider.of<ChatsNotifier>(context)?.updateRead(model.docId);
+          if (!model.userHasLastMessage)
+            Provider.of<ChatsNotifier>(context).sendData(model.docId);
           Navigator.of(context, rootNavigator: true).push(
             CupertinoPageRoute(
               builder: (context) => Conversation(chat: model),

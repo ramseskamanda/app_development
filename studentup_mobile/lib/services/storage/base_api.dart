@@ -29,7 +29,7 @@ abstract class BaseAPIReader {
       {QueryOrder order = QueryOrder.popularity});
   Stream<List<ProjectModel>> fetchPastProjects(String uid);
   Stream<List<Comments>> fetchComments(String collectionPath);
-  Stream<dynamic> fetchChatPreviews(String uid);
+  Stream<List<ChatModel>> fetchChatPreviews(String uid);
   Stream<dynamic> fetchMessages(String collectionPath);
   Future<List<UserInfoModel>> fetchRankings({bool monthly = true});
   Future<List<PrizeModel>> fetchPrizesRanking();
@@ -60,4 +60,5 @@ abstract class BaseAPIWriter {
   Future uploadSignUpDocument({ProjectSignupModel model, ProjectModel project});
   Future removeApplicant(String projectId);
   Future removeProject({String id});
+  Future markAsRead({String docId});
 }

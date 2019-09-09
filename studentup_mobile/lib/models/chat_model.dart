@@ -24,8 +24,8 @@ class ChatModel extends BaseModel {
   CollectionReference get messagesCollection => _messages;
   MessageModel get lastMessage => _lastMessage;
   Preview get otherProfile => _participants?.getOtherUserInfo(_userId);
-  bool get userHasUnread =>
-      _lastMessage.senderId == _userId && _lastMessage.seenAt == null;
+  bool get userHasLastMessage => _lastMessage.senderId == _userId;
+  bool get userHasUnread => !userHasLastMessage && _lastMessage.seenAt == null;
 
   ChatModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;

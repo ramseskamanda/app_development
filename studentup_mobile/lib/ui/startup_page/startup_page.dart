@@ -340,7 +340,7 @@ class ProjectPost extends StatelessWidget {
       Router.projectPage,
       arguments: {'model': model},
     );
-    if (result) Provider.of<StartupPageNotifier>(context).fetchData();
+    if (result ?? false) Provider.of<StartupPageNotifier>(context).fetchData();
   }
 
   @override

@@ -85,12 +85,16 @@ class ProjectCreationNotifier extends NetworkIO with StorageIO {
     if (!formIsValid) return false;
     isWriting = true;
     try {
-      final List<File> allFiles = [image, ...files]
-        ..removeWhere((file) => file == null);
-      List<String> _paths = FirebaseStorageService.createFilePaths(
-        allFiles,
-        'projects_files',
-      );
+      final List<File> allFiles = files..removeWhere((file) => file == null);
+
+      final List<String> imageUrl =
+          await storage.upload(files: [image], location: projectsFolder);
+
+      final List<String> _paths =
+          await storage.upload(files: allFiles, location: projectsFolder);
+
+      _paths.forEach(print);
+
       ProfileNotifier notifier = Locator.of<ProfileNotifier>();
       ProjectModel _model = ProjectModel(
         creatorId: notifier.info.uid,
@@ -99,17 +103,18 @@ class ProjectCreationNotifier extends NetworkIO with StorageIO {
         timestamp: DateTime.now(),
         categories: categories,
         maxUsersNum: numParticipants,
-        media: null, //TODO: add background image here
+        media: imageUrl.length > 0 ? imageUrl.first : null,
         description: description.text,
         title: name.text,
-        files: _paths.skip(1).toList(),
+        files: _paths,
         deadline: deadline,
       );
-      uploadTasks = storage.startUpload(allFiles, _paths);
-      uploadStream.listen((double percent) {
-        if (1.0 == percent) isDone = true;
-      });
+      // uploadTasks = storage.startUpload(allFiles, _paths);
+      // uploadStream.listen((double percent) {
+      //   if (1.0 == percent) isDone = true;
+      // });
       await writer.uploadProjectInformation(model: _model);
+      isDone = true;
     } catch (e) {
       print(e);
       writeError = NetworkError(message: e.toString());

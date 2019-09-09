@@ -1,6 +1,6 @@
-import 'package:firestore_ui/animated_firestore_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/chats_notifier.dart';
@@ -82,19 +82,42 @@ class _UserChatsState extends State<UserChats> {
   @override
   Widget build(BuildContext context) {
     ChatsNotifier notifier = Provider.of(context);
-    //TODO: Change this to a streambuilder, add StreamProvider, and add LiquidPullToRefresh
-    return FirestoreAnimatedList(
-      controller: _controller,
-      query: notifier.chatPreviews,
-      emptyChild: Center(child: const Text('No chats here yet!')),
-      itemBuilder: (context, document, animation, index) {
-        ChatModel model = ChatModel.fromDoc(document);
-        return FadeTransition(
-          key: ObjectKey(model),
-          opacity: animation,
-          child: ChatListItem(key: ObjectKey(model), model: model),
-        );
-      },
+    return StreamProvider<List<ChatModel>>(
+      builder: (_) => notifier.chatPreviews,
+      updateShouldNotify: (a, b) => true,
+      catchError: (_, error) => [],
+      child: Consumer<List<ChatModel>>(
+        builder: (context, chats, child) {
+          if (chats == null)
+            return Center(child: const CircularProgressIndicator());
+          if (chats.isEmpty)
+            return Center(child: const Text('No chats here yet!'));
+          return LiquidPullToRefresh(
+            onRefresh: notifier.fetchData,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: chats.length,
+              itemBuilder: (_, index) => ChatListItem(
+                  key: ObjectKey(chats[index]), model: chats[index]),
+            ),
+          );
+        },
+      ),
     );
   }
 }
+
+// return FirestoreAnimatedList(
+//   controller: _controller,
+//   query: notifier.chatPreviews,
+//   emptyChild: Center(child: const Text('No chats here yet!')),
+//   itemBuilder: (context, document, animation, index) {
+//     ChatModel model = ChatModel.fromDoc(document);
+//     print(model.lastMessage);
+//     return FadeTransition(
+//       key: ObjectKey(model),
+//       opacity: animation,
+//       child: ChatListItem(key: ObjectKey(model), model: model),
+//     );
+//   },
+// );

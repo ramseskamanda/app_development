@@ -5,6 +5,7 @@ import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/analytics/analytics_service.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/notifications/notification_service.dart';
 import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/app.dart';
 import 'package:studentup_mobile/ui/signup/signup.dart';
@@ -17,6 +18,8 @@ Future<void> main() async {
   await Locator.setup();
   await Locator.of<AuthService>().attemptAutoLogin();
   await Locator.of<AnalyticsService>().logger.logAppOpen();
+  Locator.of<NotificationService>().initialize();
+  Locator.of<NotificationService>().test();
   runApp(MyApp());
   // Catcher(
   //   MyApp(),

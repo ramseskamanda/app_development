@@ -2,11 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
-import 'package:studentup_mobile/services/search/algolia_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/search/base_search_api.dart';
 
 class TeamMemberSearchDelegate extends SearchDelegate<UserInfoModel> {
-  final AlgoliaService _algoliaService = Locator.of<AlgoliaService>();
+  final BaseSearchAPI _algoliaService = Locator.of<BaseSearchAPI>();
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -43,6 +43,9 @@ class TeamMemberSearchDelegate extends SearchDelegate<UserInfoModel> {
               return Center(child: const CircularProgressIndicator());
             return Center(child: const Text('An error occurred...'));
           }
+
+          if (snapshot.data.isEmpty)
+            return Center(child: Text('No results found for: $query'));
 
           return ListView.builder(
             itemCount: snapshot.data.length,

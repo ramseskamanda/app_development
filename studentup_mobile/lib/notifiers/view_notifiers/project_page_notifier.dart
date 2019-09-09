@@ -9,6 +9,7 @@ import 'package:studentup_mobile/models/project_signup_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/storage/firebase/firebase_storage.dart';
 
 class ProjectPageNotifier extends NetworkIO with StorageIO {
   //Model for project page
@@ -18,9 +19,11 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
   //potential actions
   TextEditingController _messageController;
   File _file;
+  List<String> _downloadedFiles;
 
   ProjectPageNotifier(this.model)
-      : _messageController = TextEditingController() {
+      : _messageController = TextEditingController(),
+        _downloadedFiles = [] {
     fetchData();
   }
 
@@ -47,11 +50,11 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
     if (!canApply) return;
     isWriting = true;
     String _filePath;
-    if (_file != null)
-      _filePath = await storage.uploadProjectFile(
-        _file,
-        onError: (Object e) => writeError = NetworkError(message: e.toString()),
-      );
+    if (_file != null) {
+      final List<String> paths =
+          await storage.upload(files: [_file], location: projectsFolder);
+      _filePath = paths.length > 0 ? paths.first : null;
+    }
     final ProjectSignupModel _signupModel = ProjectSignupModel(
       userId: Locator.of<AuthService>().currentUser.uid,
       message: _messageController.text,
@@ -104,5 +107,18 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
       return false;
     }
     return true;
+  }
+
+  Future<void> downloadAttachmentsAndPreview() async {
+    if (model.files.isEmpty) return;
+    isReading = true;
+    try {
+      _downloadedFiles = await storage.download(filePaths: model.files);
+      if (_downloadedFiles.isNotEmpty)
+        await storage.showFile(file: File(_downloadedFiles[0]));
+    } catch (e) {
+      readError = NetworkError(message: e.toString());
+    }
+    isReading = false;
   }
 }

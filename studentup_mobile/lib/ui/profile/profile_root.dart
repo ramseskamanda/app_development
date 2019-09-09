@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/profile/profile.dart';
@@ -40,7 +41,10 @@ class ProfileRoot extends StatelessWidget {
         // ),
         actions: <Widget>[
           PopupMenuWithActions(
-            onLogout: () async => await Locator.of<AuthService>().logout(),
+            onLogout: () async {
+              Provider.of<InnerRouter>(context).resetRouter();
+              await Locator.of<AuthService>().logout();
+            },
           ),
         ],
       ),

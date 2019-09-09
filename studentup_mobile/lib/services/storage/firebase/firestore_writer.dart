@@ -153,6 +153,9 @@ class FirestoreWriter implements BaseAPIWriter {
     ChatModel chat,
     MessageModel initialMessage,
   }) async {
+    //TODO: change this
+    // QuerySnapshot preExistingDoc =
+    //     await _firestore.collection(chatsCollection).where('').getDocuments();
     DocumentReference newDoc =
         await _firestore.collection(chatsCollection).add(chat.toJson());
     final CollectionReference subcollectionRef = newDoc.collection('messages');
@@ -204,4 +207,10 @@ class FirestoreWriter implements BaseAPIWriter {
   @override
   Future removeProject({String id}) async =>
       await _firestore.collection(projectCollection).document(id).delete();
+
+  @override
+  Future markAsRead({String docId}) async =>
+      await _firestore.collection(chatsCollection).document(docId).updateData({
+        'latest_message.seenAt': FieldValue.serverTimestamp(),
+      });
 }

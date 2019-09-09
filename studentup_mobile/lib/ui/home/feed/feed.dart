@@ -69,9 +69,9 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
             color: Theme.of(context).scaffoldBackgroundColor,
           ),
           onPressed: () async {
-            final result =
-                await Navigator.of(context).pushNamed(Router.newThinkTank);
-            if (result) notifier.fetchData();
+            final result = await Navigator.of(context)
+                .pushNamed<bool>(Router.newThinkTank);
+            if (result ?? false) notifier.fetchData();
           },
         ),
         body: NetworkSensitive(

@@ -68,25 +68,27 @@ v-0.0.2:
   ✔ Implement 'Add Team' onPressed && its route @done(19-09-03 18:59)
 
 v-0.0.3:
-  ☐ Add Notifications
+  ☐ ! Finish Notifications
+  ☐ Test Firebase In-App Messaging (https://pub.dev/packages/firebase_in_app_messaging#-readme-tab-)
   ☐ Add Terms and Conditions
-  ☐ Add Hidden Menu Drawer with Saved Profiles etc.
+  ✔ Add Hidden Menu Drawer @done(19-09-09 19:07)
   ☐ Add AlertDialog before deleting object
-  ☐ Make think tank premises editable
-  ☐ Finish Skill Endorsement
+  ✔ Finish Skill Endorsement @done(19-09-09 18:59)
   ✔ Add Search to Project Page @done(19-09-08 21:25)
   ☐ Add profile editor for startups and users
   ☐ Fix Connectivity bug where profile picture doesn't show up after network is back (+other connectivity-related bugs)
-  ☐ Add Search Caching + Cache Cleaner (in Algolia Search)
-  ☐ Ability to delete anything from SeeAll, Projects, Chats, Messages, Think Tanks, Comments, Account, Skills, Experience, Education, etc.
+  ☐ ! Ability to delete anything from SeeAll, Projects, Chats, Messages, Think Tanks, Comments, Account, Skills, Experience, Education, etc.
   ☐ Enable automatic email bug report sending through email
-  ☐ Allow posting custom pictures as backgrounds for projects
-  ☐ Implement chat messages read (just make last message seenAt??)
+  ✔ Allow posting custom pictures as backgrounds for projects @done(19-09-09 19:16)
+  ✔ Implement chat messages read (just make last message seenAt??) @done(19-09-09 22:52)
   ☐ Check for existing conversation when creating new conversation
+  ✔ Fix ChatList issues @done(19-09-09 22:07)
   ☐ Implement other design for Think Tanks
-  ☐ Fix bugs + Implement proper bug reporting routes
-  ☐ Make think tank comments not anonymous
-  ☐ Add access to applications for the project creator
+  ✔ Fix bugs + Implement proper bug reporting routes @done(19-09-09 19:13)
+  ☐ ! Add access to applications for the project creator
+  ☐ Look at TODOs
+  ☐ ! Fix startup creation bug
+  ☐ Add reload button to the connectivity screen
 
 v-0.0.4:
   ☐ Rewrite architecture with more abstraction and better sharing of Streams
@@ -99,6 +101,15 @@ v-0.0.4:
   ☐ Add download percentage indicator
   ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, messaging, etc.
   ☐ include a one-time pop-up (which can be permanently clicked away) telling people about what happens when you sign up for a project
+  ☐ Fix blurriness of SplashScreen
+  ☐ Add Search Caching + Cache Cleaner (in Algolia Search)
+  ☐ Fix message read when user is in the conversation
+  ☐ Add Saved Profiles
+  ☐ Fix profile tap in conversation screen to work for startups as well
+  ☐ Make think tank comments not anonymous
+  ☐ Make think tank premises editable
+
+
 
 Refactoring:
   ☐ Services:

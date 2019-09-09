@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:studentup_mobile/enum/query_order.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/education_model.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
 import 'package:studentup_mobile/models/prize_model.dart';
@@ -243,13 +244,15 @@ class FirestoreReader implements BaseAPIReader {
   }
 
   @override
-  Stream<QuerySnapshot> fetchChatPreviews(String uid) {
+  Stream<List<ChatModel>> fetchChatPreviews(String uid) {
     return _firestore
         .collection(chatsCollection)
         .where('list_participants', arrayContains: uid)
         .orderBy('latest_message.sentAt', descending: true)
         // .limit(10)
-        .snapshots(includeMetadataChanges: true);
+        .snapshots(includeMetadataChanges: true)
+        .map((snap) =>
+            snap.documents.map((doc) => ChatModel.fromDoc(doc)).toList());
   }
 
   @override

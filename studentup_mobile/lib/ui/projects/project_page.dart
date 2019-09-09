@@ -237,9 +237,7 @@ class ProjectInformation extends StatelessWidget {
                       ),
                       onPressed: notifier.isLoading
                           ? null
-                          : () => notifier.downloadAttachmentsAndPreview(
-                                notifier.model.files,
-                              ),
+                          : () => notifier.downloadAttachmentsAndPreview(),
                     ),
                   const SizedBox(height: 16.0),
                   Text(

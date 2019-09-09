@@ -6,7 +6,6 @@ import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart'
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
-import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
 class ProfileSkillSection extends StatelessWidget {
@@ -125,26 +124,27 @@ class SkillCard extends StatelessWidget {
         child: ListTile(
           title: Text(model.name),
           subtitle: Text(model.description),
-          //TODO: fix this to only be available if user is not the owner and hasn't voted yet
-          onTap: () => Dialogs.showRatingFor(context, model.name, Icons.work),
-          trailing: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  'Rating:',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                Text(
-                  model.avgRating.toString(),
-                  style: Theme.of(context).textTheme.display1.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-              ],
-            ),
-          ),
+          //TODO: fix this to only be available if user is NOT the owner and hasn't voted yet
+          onTap: null,
+          // () => Dialogs.showRatingFor(context, model.name, Icons.work),
+          // trailing: Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: <Widget>[
+          //       Text(
+          //         'Rating:',
+          //         style: Theme.of(context).textTheme.caption,
+          //       ),
+          //       Text(
+          //         model.avgRating.toString(),
+          //         style: Theme.of(context).textTheme.display1.copyWith(
+          //               fontWeight: FontWeight.w600,
+          //             ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
         ),
       ),
     );

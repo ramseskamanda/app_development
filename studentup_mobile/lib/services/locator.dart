@@ -10,6 +10,7 @@ import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/connectivity_service.dart';
 import 'package:studentup_mobile/services/search/base_search_api.dart';
 import 'package:studentup_mobile/services/storage/base_api.dart';
+import 'package:studentup_mobile/services/storage/base_file_storage_api.dart';
 import 'package:studentup_mobile/services/storage/firebase/firebase_storage.dart';
 import 'package:studentup_mobile/services/storage/firebase/firestore_reader.dart';
 import 'package:studentup_mobile/services/storage/firebase/firestore_writer.dart';
@@ -21,10 +22,12 @@ class Locator {
   static final GetIt _locator = GetIt();
 
   static List<SingleChildCloneableWidget> get providers {
+    print('Setting Up App Wide Providers...');
     return [
       ChangeNotifierProvider(builder: (_) => AuthNotifier()),
       Provider(
-        builder: (_) => InnerRouter(),
+        builder: (_) => InnerRouter(
+            initialNavBarTab: _locator<NotificationService>().initialRoute),
         dispose: (_, InnerRouter instance) => instance.dispose(),
       ),
       StreamProvider(
@@ -42,7 +45,7 @@ class Locator {
     _locator.registerSingleton<AnalyticsService>(AnalyticsService());
     _locator.registerSingleton<BaseAPIReader>(FirestoreReader());
     _locator.registerSingleton<BaseAPIWriter>(FirestoreWriter());
-    _locator.registerSingleton(FirebaseStorageService());
+    _locator.registerSingleton<BaseFileStorageAPI>(FirebaseStorageService());
     _locator.registerSingleton<BaseSearchAPI>(AlgoliaService());
     _locator.registerSingleton<ProfileNotifier>(ProfileNotifier());
   }

@@ -35,7 +35,7 @@ class Router {
   static const String userSavedProfiles = '/userSavedProfiles';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
-    Map<String, dynamic> args = settings.arguments;
+    Map<String, dynamic> args = settings.arguments ?? {};
     switch (settings.name) {
       case newMessage:
         return MaterialPageRoute(
@@ -56,7 +56,7 @@ class Router {
           builder: (_) => Conversation(chat: args['chat']),
         );
       case newThinkTank:
-        return MaterialPageRoute(
+        return MaterialPageRoute<bool>(
           builder: (_) => NewThinkTankRoute(),
         );
       case startupPage:
@@ -125,15 +125,14 @@ class InnerRouter {
   int _profileTab;
   CupertinoTabController _navBarController;
   PageController _homeController;
-  int _sideBarTab;
 
-  InnerRouter({int initialNavBarTab, bool messaging = false}) {
+  InnerRouter({int initialNavBarTab}) {
     _profileTab = 0;
     _navBarController =
         CupertinoTabController(initialIndex: initialNavBarTab ?? 0);
     _homeController = PageController(
       keepPage: true,
-      initialPage: !messaging ? 0 : 1,
+      initialPage: !(initialNavBarTab == -1) ? 0 : 1,
     );
   }
 
@@ -145,9 +144,8 @@ class InnerRouter {
   CupertinoTabController get navBar => _navBarController;
   PageController get homeView => _homeController;
   set profileTab(int value) => _profileTab = value;
-  set sideBarTab(int value) => _sideBarTab;
 
-  bool isOnSideRoute(int index) => index == _sideBarTab;
+  void resetRouter() => _homeController.jumpToPage(0);
   void goToProfile() => _navBarController.index = _profileTab ?? 0;
   void resetHomePage() => _homeController.jumpToPage(0);
   void goToPage(int index) => _homeController.animateToPage(

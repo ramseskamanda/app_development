@@ -43,7 +43,7 @@ class ProjectFeedRoot extends StatelessWidget {
               onPressed: () async {
                 final bool result =
                     await Navigator.of(context).pushNamed(Router.newProject);
-                if (result) notifier.fetchData();
+                if (result ?? false) notifier.fetchData();
               },
             );
           },
@@ -104,10 +104,16 @@ class ProjectPost extends StatelessWidget {
                       imageUrl: model.media,
                       fit: BoxFit.cover,
                       placeholder: (context, url) {
-                        return CircularProgressIndicator();
+                        return Container(
+                          color: CupertinoColors.extraLightBackgroundGray,
+                        );
                       },
                       errorWidget: (context, url, error) {
-                        return Icon(Icons.error);
+                        return Container(
+                          color:
+                              CupertinoColors.destructiveRed.withOpacity(0.23),
+                          child: Icon(Icons.error),
+                        );
                       },
                       imageBuilder: (context, imageProvider) {
                         return Container(

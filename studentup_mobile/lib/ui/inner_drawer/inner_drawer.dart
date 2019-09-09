@@ -47,35 +47,6 @@ class InnerDrawerMenu extends StatelessWidget {
                           },
                         ),
                       ),
-                      // Row(
-                      //   children: <Widget>[
-                      //     Spacer(),
-                      //     Text(
-                      //       'Profile 80% complete',
-                      //       style: Theme.of(context).textTheme.caption,
-                      //     ),
-                      //     Spacer(flex: 20),
-                      //     GestureDetector(
-                      //       onTap: () {},
-                      //       child: Text(
-                      //         'Go To Profile',
-                      //         style: Theme.of(context)
-                      //             .textTheme
-                      //             .caption
-                      //             .copyWith(
-                      //                 color: Theme.of(context).accentColor),
-                      //       ),
-                      //     ),
-                      //     Spacer(),
-                      //   ],
-                      // ),
-                      // const SizedBox(height: 4.0),
-                      // LinearPercentIndicator(
-                      //   lineHeight: 8.0,
-                      //   percent: 0.8,
-                      //   progressColor: Theme.of(context).accentColor,
-                      //   backgroundColor: CupertinoColors.lightBackgroundGray,
-                      // ),
                     ],
                   );
                 },
@@ -86,18 +57,20 @@ class InnerDrawerMenu extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.school),
             title: const Text('My Projects'),
-            onTap: () => Navigator.of(context).pushNamed(Router.userProjects),
+            onTap: () =>
+                Navigator.of(context).popAndPushNamed(Router.userProjects),
           ),
           ListTile(
             leading: const Icon(Icons.settings_system_daydream),
             title: const Text('My Think Tanks'),
-            onTap: () => Navigator.of(context).pushNamed(Router.userThinkTanks),
+            onTap: () =>
+                Navigator.of(context).popAndPushNamed(Router.userThinkTanks),
           ),
           ListTile(
             leading: const Icon(Icons.collections_bookmark),
             title: const Text('Saved Profiles'),
             onTap: () =>
-                Navigator.of(context).pushNamed(Router.userSavedProfiles),
+                Navigator.of(context).popAndPushNamed(Router.userSavedProfiles),
           ),
           Spacer(),
           Align(
@@ -130,3 +103,39 @@ class InnerDrawerMenu extends StatelessWidget {
     );
   }
 }
+
+/*
+
+Profile Completion Percentage Indicator
+
+  Row(
+    children: <Widget>[
+      Spacer(),
+      Text(
+        'Profile 80% complete',
+        style: Theme.of(context).textTheme.caption,
+      ),
+      Spacer(flex: 20),
+      GestureDetector(
+        onTap: () {},
+        child: Text(
+          'Go To Profile',
+          style: Theme.of(context)
+              .textTheme
+              .caption
+              .copyWith(
+                  color: Theme.of(context).accentColor),
+        ),
+      ),
+      Spacer(),
+    ],
+  ),
+  const SizedBox(height: 4.0),
+  LinearPercentIndicator(
+    lineHeight: 8.0,
+    percent: 0.8,
+    progressColor: Theme.of(context).accentColor,
+    backgroundColor: CupertinoColors.lightBackgroundGray,
+  ),
+
+*/
