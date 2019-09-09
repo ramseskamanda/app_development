@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/ui/profile/other_profile.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 
 class TeamMember extends StatelessWidget {
@@ -20,10 +20,9 @@ class TeamMember extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         if (isAdditional) return;
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => OtherProfile(infoModel: model),
-          ),
+        Navigator.of(context).pushNamed(
+          Router.projectPage,
+          arguments: {'infoModel': model},
         );
       },
       child: Column(
@@ -103,7 +102,7 @@ class TeamMemberListTile extends StatelessWidget {
       ),
       trailing: PopupMenuWithActions(
         onDelete: () async {
-          await notifier.removeTeamMember(model);
+          await notifier.sendData(model);
         },
       ),
     );

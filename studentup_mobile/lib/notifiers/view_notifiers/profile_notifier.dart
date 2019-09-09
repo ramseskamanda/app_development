@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/services.dart';
 import 'package:studentup_mobile/input_blocs/user_profile_edit_bloc.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/education_model.dart';
@@ -9,15 +8,11 @@ import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
-class ProfileNotifier extends NetworkNotifier {
+class ProfileNotifier extends NetworkIO {
   String _userId;
-
-  FirestoreReader _firestoreReader;
-  FirestoreWriter _firestoreWriter;
   UserProfileEditBloc _userProfileEditBloc;
 
   DocumentReference _userDocument;
@@ -26,8 +21,6 @@ class ProfileNotifier extends NetworkNotifier {
 
   ProfileNotifier([String uid]) {
     _userId = uid;
-    _firestoreReader = Locator.of<FirestoreReader>();
-    _firestoreWriter = Locator.of<FirestoreWriter>();
     _userProfileEditBloc = UserProfileEditBloc();
   }
 
@@ -38,22 +31,20 @@ class ProfileNotifier extends NetworkNotifier {
 
   //USER INFORMATION
   Stream<UserInfoModel> get userInfoStream =>
-      _firestoreReader.fetchUserInfoStream(_userDocument).asBroadcastStream();
-  Stream<List<EducationModel>> get education =>
-      _firestoreReader.fetchEducation(_userId);
+      reader.fetchUserInfoStream(_userDocument?.path).asBroadcastStream();
+  Stream<List<EducationModel>> get education => reader.fetchEducation(_userId);
   Stream<List<LaborExeprienceModel>> get experience =>
-      _firestoreReader.fetchExperience(_userId);
-  Stream<List<SkillsModel>> get skills => _firestoreReader.fetchSkills(_userId);
+      reader.fetchExperience(_userId);
+  Stream<List<SkillsModel>> get skills => reader.fetchSkills(_userId);
 
   //STARTUP INFORMATION
-  Stream<StartupInfoModel> get startupInfoStream => _firestoreReader
-      .fetchStartupInfoStream(_userDocument)
-      .asBroadcastStream();
+  Stream<StartupInfoModel> get startupInfoStream =>
+      reader.fetchStartupInfoStream(_userDocument.path).asBroadcastStream();
   Stream<List<ProjectModel>> get ongoingProjects =>
-      _firestoreReader.fetchOngoingProjects(_userId);
+      reader.fetchOngoingProjects(_userId);
 
   Stream<List<ProjectModel>> get pastProjects =>
-      _firestoreReader.fetchPastProjects(_userId);
+      reader.fetchPastProjects(_userId);
 
   set preview(dynamic value) {
     if (value is UserInfoModel)
@@ -72,75 +63,72 @@ class ProfileNotifier extends NetworkNotifier {
   }
 
   @override
-  Future onRefresh() async => fetchData();
+  void dispose() {
+    _userProfileEditBloc.dispose();
+    super.dispose();
+  }
 
   @override
   Future fetchData([dynamic data]) async {
-    isLoading = true;
+    isReading = true;
     _userId ??= Locator.of<AuthService>().currentUser.uid;
     try {
-      final Map<DocumentReference, bool> result =
-          await _firestoreReader.findUserDocument(_userId);
-      _userDocument = result.keys.length > 0 ? result.keys.first : null;
+      final Map<dynamic, bool> result = await reader.findUserDocument(_userId);
+      _userDocument = result.keys.length > 0
+          ? result.keys.first as DocumentReference
+          : null;
       _isStartup = result.values.length > 0 ? result.values.first : false;
       if (_isStartup)
         startupInfoStream.listen((data) => preview = data);
       else
         userInfoStream.listen((data) => preview = data);
-    } on PlatformException catch (pe) {
-      error = NetworkError(message: pe.message + '\n' + pe.details);
     } catch (e) {
       print(e);
-      error = NetworkError(message: 'Unknown Error');
+      readError = NetworkError(message: e.toString());
     }
-    isLoading = false;
+    isReading = false;
   }
 
   @override
-  void dispose() {
-    _userProfileEditBloc.dispose();
-    super.dispose();
+  Future<bool> sendData([data]) async {
+    try {
+      switch (data.runtimeType) {
+        case UserInfoModel:
+          addTeamMember(data);
+          break;
+        case Preview:
+          removeTeamMember(data);
+          break;
+        default:
+          throw 'No Action for Type: ${data.runtimeType}';
+      }
+    } catch (e) {
+      print(e);
+      writeError = NetworkError(message: e.toString());
+      return false;
+    }
+    return true;
   }
 
   void logout() {
     _userId = null;
   }
 
-  Future uploadEditorInfo() async {
-    if (isStartup) {
-    } else {}
-  }
-
-  void clearEditor() async {
-    if (isStartup) {
-    } else {}
-  }
-
   Future addTeamMember(UserInfoModel model) async {
-    isLoading = true;
-    try {
-      await _firestoreWriter.postNewTeamMember(
-        model: model,
-        document: _userDocument,
-      );
-    } catch (e) {
-      print(e);
-      error = NetworkError(message: e.toString());
-    }
-    isLoading = false;
+    isWriting = true;
+    await writer.postNewTeamMember(
+      model: model,
+      docPath: _userDocument.path,
+    );
+    isWriting = false;
   }
 
   Future removeTeamMember(Preview model) async {
-    isLoading = true;
-    try {
-      await _firestoreWriter.removeTeamMember(
-        model: model,
-        document: _userDocument,
-      );
-    } catch (e) {
-      print(e);
-      error = NetworkError(message: e.toString());
-    }
-    isLoading = false;
+    isWriting = true;
+    await writer.removeTeamMember(
+      model: model,
+      docPath: _userDocument.path,
+    );
+    isWriting = false;
   }
 }

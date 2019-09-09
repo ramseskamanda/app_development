@@ -56,7 +56,7 @@ class NewCommentRoute extends StatelessWidget {
                         return StadiumButton(
                           text: 'Post Comment',
                           onPressed: () async {
-                            await notifier.postComment();
+                            await notifier.sendData();
                             Navigator.of(context).pop();
                           },
                         );

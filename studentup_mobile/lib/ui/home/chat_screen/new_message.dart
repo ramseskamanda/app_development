@@ -5,9 +5,9 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/new_message_notifier.dart';
-import 'package:studentup_mobile/services/algolia_service.dart';
+import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/search/algolia_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
-import 'package:studentup_mobile/ui/home/chat_screen/conversation.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 class NewMessage extends StatelessWidget {
@@ -125,13 +125,13 @@ class NewMessage extends StatelessWidget {
                     return StadiumButton(
                       text: 'Send',
                       onPressed: () async {
-                        final bool result = await notifier.send();
+                        final bool result = await notifier.sendData();
                         if (result) Navigator.of(context).pop();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                Conversation(chat: notifier.newChat),
-                          ),
+                        Navigator.of(context).pushNamed(
+                          Router.conversation,
+                          arguments: {
+                            'chat': notifier.newChat,
+                          },
                         );
                       },
                     );

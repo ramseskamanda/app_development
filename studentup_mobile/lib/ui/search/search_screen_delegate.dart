@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
-import 'package:studentup_mobile/services/algolia_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/search/base_search_api.dart';
 import 'package:studentup_mobile/ui/profile/other_profile.dart';
 
 class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
-  final AlgoliaService _algoliaService = AlgoliaService();
+  final BaseSearchAPI _algoliaService = Locator.of<BaseSearchAPI>();
   final SearchCategory category;
 
   SearchScreenDelegate(this.category);

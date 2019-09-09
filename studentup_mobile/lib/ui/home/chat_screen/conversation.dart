@@ -3,14 +3,15 @@ import 'package:firestore_ui/firestore_ui.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/enum/messaging_action.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/message_model.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/messaging_notifier.dart';
+import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
-import 'package:studentup_mobile/services/messaging_service.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/chat_bubble.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/messaging_text_field.dart';
-import 'package:studentup_mobile/ui/profile/other_profile.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
@@ -24,12 +25,12 @@ class Conversation extends StatefulWidget {
 
 class _ConversationState extends State<Conversation> {
   ScrollController _controller;
-  MessagingService messagingService;
+  MessagingNotifier messagingService;
 
   @override
   void initState() {
     super.initState();
-    messagingService = MessagingService(
+    messagingService = MessagingNotifier(
       collection: widget.chat.messagesCollection,
       uid: widget.chat.userId,
     );
@@ -52,7 +53,7 @@ class _ConversationState extends State<Conversation> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<MessagingService>.value(
+    return ChangeNotifierProvider<MessagingNotifier>.value(
       value: messagingService,
       child: Scaffold(
         appBar: AppBar(
@@ -118,21 +119,20 @@ class _ConversationState extends State<Conversation> {
                 ),
               ],
             ),
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => OtherProfile(
-                  infoModel: widget.chat.otherProfile,
-                  fromMessaging: true,
-                ),
-              ),
+            onTap: () => Navigator.of(context).pushNamed(
+              Router.otherProfile,
+              arguments: {
+                'infoModel': widget.chat.otherProfile,
+                'fromMessaging': true,
+              },
             ),
           ),
           actions: <Widget>[
-            Consumer<MessagingService>(
+            Consumer<MessagingNotifier>(
               builder: (context, service, child) {
                 return PopupMenuWithActions(
                   onDelete: () {
-                    service.deleteConversation();
+                    service.sendData(MessagingAction.DELETE);
                     Navigator.of(context).pop();
                   },
                 );
@@ -147,7 +147,7 @@ class _ConversationState extends State<Conversation> {
               children: <Widget>[
                 SizedBox(height: 10.0),
                 Flexible(
-                  child: Consumer<MessagingService>(
+                  child: Consumer<MessagingNotifier>(
                     builder: (context, service, child) {
                       return FirestoreAnimatedList(
                         controller: _controller,

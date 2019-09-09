@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/util.dart';
 
-class NewExperienceNotifier extends NetworkNotifier {
+class NewExperienceNotifier extends NetworkWriter {
   //TODO: change these into blocs
   TextEditingController _company;
   TextEditingController _position;
@@ -15,10 +14,7 @@ class NewExperienceNotifier extends NetworkNotifier {
   DateTime _startDate;
   DateTime _endDate;
 
-  FirestoreWriter _firestoreWriter;
-
   NewExperienceNotifier() {
-    _firestoreWriter = FirestoreWriter();
     _company = TextEditingController();
     _position = TextEditingController();
     _startDateController = TextEditingController();
@@ -46,7 +42,8 @@ class NewExperienceNotifier extends NetworkNotifier {
     notifyListeners();
   }
 
-  Future<bool> send() async {
+  @override
+  Future<bool> sendData() async {
     try {
       if (!canSend) return false;
       isLoading = true;
@@ -57,7 +54,7 @@ class NewExperienceNotifier extends NetworkNotifier {
         companyName: _company.text,
         position: _position.text,
       );
-      await _firestoreWriter.postNewExperience(model);
+      await writer.postNewExperience(model);
     } catch (e) {
       print(e);
       error = NetworkError(message: e.toString());
@@ -75,10 +72,4 @@ class NewExperienceNotifier extends NetworkNotifier {
     _startDateController.dispose();
     _endDateController.dispose();
   }
-
-  @override
-  Future fetchData() async {}
-
-  @override
-  Future onRefresh() async {}
 }

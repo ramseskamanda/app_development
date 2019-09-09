@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/auth_notifier.dart';
-import 'package:studentup_mobile/services/analytics_service.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/analytics/analytics_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/app.dart';
@@ -16,13 +17,14 @@ Future<void> main() async {
   await Locator.setup();
   await Locator.of<AuthService>().attemptAutoLogin();
   await Locator.of<AnalyticsService>().logger.logAppOpen();
-  Catcher(
-    MyApp(),
-    debugConfig: DevSettings.debugOptions,
-    releaseConfig: DevSettings.releaseOptions,
-    profileConfig: DevSettings.profileOptions,
-    enableLogger: false,
-  );
+  runApp(MyApp());
+  // Catcher(
+  //   MyApp(),
+  //   debugConfig: DevSettings.debugOptions,
+  //   releaseConfig: DevSettings.releaseOptions,
+  //   profileConfig: DevSettings.profileOptions,
+  //   enableLogger: false,
+  // );
 }
 
 class MyApp extends StatelessWidget {
@@ -38,6 +40,7 @@ class MyApp extends StatelessWidget {
               theme: StudentupTheme.theme,
               debugShowCheckedModeBanner: false,
               home: Application(),
+              onGenerateRoute: Router.onGenerateRoute,
             );
           return MaterialApp(
             navigatorKey: Catcher.navigatorKey,

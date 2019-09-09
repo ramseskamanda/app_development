@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/chats_notifier.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/chat_list_item.dart';
-import 'package:studentup_mobile/ui/home/chat_screen/new_message.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class Chats extends StatefulWidget {
@@ -22,11 +22,7 @@ class _ChatsState extends State<Chats>
       builder: (_) => ChatsNotifier(),
       child: WillPopScope(
         onWillPop: () async {
-          Provider.of<PageController>(context).animateToPage(
-            0,
-            duration: kTabScrollDuration,
-            curve: Curves.easeInOutQuad,
-          );
+          Provider.of<InnerRouter>(context).goToPage(0);
           return false;
         },
         child: Scaffold(
@@ -36,13 +32,7 @@ class _ChatsState extends State<Chats>
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             leading: IconButton(
               icon: Icon(CupertinoIcons.back),
-              onPressed: () {
-                Provider.of<PageController>(context).animateToPage(
-                  0,
-                  duration: kTabScrollDuration,
-                  curve: Curves.easeInOutQuad,
-                );
-              },
+              onPressed: () => Provider.of<InnerRouter>(context).goToPage(0),
             ),
           ),
           body: NetworkSensitive(child: UserChats()),
@@ -52,13 +42,7 @@ class _ChatsState extends State<Chats>
               Icons.add,
               color: Theme.of(context).scaffoldBackgroundColor,
             ),
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => NewMessage(),
-                ),
-              );
-            },
+            onPressed: () => Navigator.of(context).pushNamed(Router.newMessage),
           ),
         ),
       ),
@@ -98,6 +82,7 @@ class _UserChatsState extends State<UserChats> {
   @override
   Widget build(BuildContext context) {
     ChatsNotifier notifier = Provider.of(context);
+    //TODO: Change this to a streambuilder, add StreamProvider, and add LiquidPullToRefresh
     return FirestoreAnimatedList(
       controller: _controller,
       query: notifier.chatPreviews,

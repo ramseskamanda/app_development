@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:studentup_mobile/ui/projects/project_page.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 class StartupProjectSection extends StatelessWidget {
@@ -72,10 +72,9 @@ class ProjectPost extends StatelessWidget {
   const ProjectPost({Key key, @required this.model}) : super(key: key);
 
   _navigateToProject(BuildContext context) async {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ProjectPage(model: model),
-      ),
+    Navigator.of(context).pushNamed(
+      Router.projectPage,
+      arguments: {'model': model},
     );
   }
 

@@ -1,0 +1,11 @@
+const String studentsCollection = 'students';
+const String educationCollection = 'education_history';
+const String experienceCollection = 'work_history';
+const String startupCollection = 'startups';
+const String prizesCollection = 'prizes';
+const String projectCollection = 'projects';
+const String projectSignupsCollection = 'project_signups';
+const String thinkTanksCollection = 'think_tanks';
+const String skillsCollection = 'skills';
+const String chatsCollection = 'chats';
+const String messagesCollection = 'messages';

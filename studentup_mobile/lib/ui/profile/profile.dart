@@ -19,7 +19,7 @@ class Profile extends StatelessWidget {
 
   Future<void> _onRefresh(BuildContext context) async {
     ProfileNotifier profileNotifier = Provider.of(context);
-    profileNotifier.onRefresh();
+    profileNotifier.fetchData();
   }
 
   @override

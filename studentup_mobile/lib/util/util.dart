@@ -70,4 +70,7 @@ class Util {
         .randomColor(colorSaturation: ColorSaturation.random)
         .withOpacity(0.67);
   }
+
+  static Timestamp algoliaTimestamp(Map<String, dynamic> map) =>
+      Timestamp(map['_seconds'], map['_nanoseconds']);
 }

@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:path/path.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/project_creation_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/project_page_notifier.dart';
-import 'package:studentup_mobile/services/project_creation_service.dart';
 
 class FileAttachment extends StatelessWidget {
   final bool isAddButton;
@@ -14,7 +14,7 @@ class FileAttachment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProjectCreationService>(
+    return Consumer<ProjectCreationNotifier>(
       builder: (context, service, child) {
         return ListTile(
           onTap: isAddButton ? () => service.pickFile() : null,
@@ -59,7 +59,7 @@ class SingleFileAttachment extends StatelessWidget {
         return ListTile(
           onTap: isAddButton && canEdit
               ? () async => await notifier.pickFile()
-              : null,
+              : null, //TODO: make it so user can view which file they're uploading
           leading: isAddButton
               ? Icon(Icons.attach_file)
               : Icon(Icons.insert_drive_file),

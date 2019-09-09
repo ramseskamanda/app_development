@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
 import 'package:studentup_mobile/models/message_model.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/config.dart';
 

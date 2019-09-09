@@ -5,8 +5,9 @@ import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/project_feed_notifier.dart';
-import 'package:studentup_mobile/ui/projects/new_project_root.dart';
-import 'package:studentup_mobile/ui/projects/project_page.dart';
+import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/ui/inner_drawer/inner_drawer.dart';
+import 'package:studentup_mobile/ui/projects/project_search.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/fab.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
@@ -17,28 +18,32 @@ class ProjectFeedRoot extends StatelessWidget {
     return ChangeNotifierProvider<ProjectFeedNotifier>(
       builder: (_) => ProjectFeedNotifier(),
       child: Scaffold(
+        drawer: InnerDrawerMenu(),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
           title: const Text('Projects'),
-          // actions: <Widget>[
-          //   IconButton(
-          //     icon: const Icon(CupertinoIcons.search),
-          //     onPressed: () {},
-          //   ),
-          // ],
+          automaticallyImplyLeading: true,
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(CupertinoIcons.search),
+              onPressed: () {
+                showSearch(
+                  context: context,
+                  delegate: ProjectSearchDelegate(),
+                );
+              },
+            ),
+          ],
         ),
         floatingActionButton: Consumer<ProjectFeedNotifier>(
           builder: (context, notifier, child) {
             return PaddedFAB(
               icon: Icons.add,
               onPressed: () async {
-                final bool result = await Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => NewProjectRoot(),
-                  ),
-                );
-                if (result) notifier.onRefresh();
+                final bool result =
+                    await Navigator.of(context).pushNamed(Router.newProject);
+                if (result) notifier.fetchData();
               },
             );
           },
@@ -52,7 +57,7 @@ class ProjectFeedRoot extends StatelessWidget {
                 if (notifier.hasError)
                   return Center(child: const Text('An Error Occured...'));
                 return LiquidPullToRefresh(
-                  onRefresh: () => notifier.onRefresh(),
+                  onRefresh: () => notifier.fetchData(),
                   child: ListView.separated(
                     itemCount: notifier.projects.length,
                     separatorBuilder: (_, index) =>
@@ -76,12 +81,9 @@ class ProjectPost extends StatelessWidget {
   const ProjectPost({Key key, @required this.model}) : super(key: key);
 
   _navigateToProject(BuildContext context) async {
-    final bool result = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ProjectPage(model: model),
-      ),
-    );
-    if (result ?? false) Provider.of<ProjectFeedNotifier>(context).onRefresh();
+    final bool result = await Navigator.of(context)
+        .pushNamed(Router.projectPage, arguments: {'model': model});
+    if (result ?? false) Provider.of<ProjectFeedNotifier>(context).fetchData();
   }
 
   @override

@@ -7,7 +7,7 @@ import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/startup_page_notifier.dart';
-import 'package:studentup_mobile/ui/projects/project_page.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/startup_profile/team_member.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
@@ -49,7 +49,7 @@ class _StartUpPageRootState extends State<StartUpPageRoot> {
             child: Align(
               alignment: Alignment.topCenter,
               child: LiquidPullToRefresh(
-                onRefresh: notifier.onRefresh,
+                onRefresh: notifier.fetchData,
                 child: ListView(
                   children: <Widget>[
                     Column(
@@ -336,12 +336,11 @@ class ProjectPost extends StatelessWidget {
   const ProjectPost({Key key, @required this.model}) : super(key: key);
 
   _navigateToProject(BuildContext context) async {
-    final bool result = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => ProjectPage(model: model),
-      ),
+    final bool result = await Navigator.of(context).pushNamed(
+      Router.projectPage,
+      arguments: {'model': model},
     );
-    if (result) Provider.of<StartupPageNotifier>(context).onRefresh();
+    if (result) Provider.of<StartupPageNotifier>(context).fetchData();
   }
 
   @override

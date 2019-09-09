@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentup_mobile/services/messaging_service.dart';
+import 'package:studentup_mobile/enum/messaging_action.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/messaging_notifier.dart';
 
 class MessagingTextField extends StatelessWidget {
   @override
@@ -18,7 +19,7 @@ class MessagingTextField extends StatelessWidget {
           ),
         ),
       ),
-      child: Consumer<MessagingService>(
+      child: Consumer<MessagingNotifier>(
         builder: (context, service, child) {
           return Row(
             children: <Widget>[
@@ -34,7 +35,8 @@ class MessagingTextField extends StatelessWidget {
                     autofocus: true,
                     minLines: 1,
                     maxLines: 5,
-                    onSubmitted: (value) => service.sendMessage(),
+                    onSubmitted: (value) =>
+                        service.sendData(MessagingAction.SEND),
                     onChanged: (value) {
                       if (value.length > 0) service.canSend = true;
                       if (value.length > 1) return;
@@ -56,7 +58,9 @@ class MessagingTextField extends StatelessWidget {
                   margin: EdgeInsets.symmetric(horizontal: 8.0),
                   child: IconButton(
                     icon: Icon(Icons.send),
-                    onPressed: service.canSend ? service.sendMessage : null,
+                    onPressed: service.canSend
+                        ? () => service.sendData(MessagingAction.SEND)
+                        : null,
                     color: Theme.of(context).accentColor,
                   ),
                 ),

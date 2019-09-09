@@ -6,7 +6,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/prize_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/prize_notifier.dart';
-import 'package:studentup_mobile/ui/leaderboard/prize_screen.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/util/util.dart';
 
 final double kBadgeSize = 48.0;
@@ -70,10 +70,9 @@ class PrizeGridTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => PrizeScreen(model: model),
-        ),
+      onTap: () => Navigator.of(context).pushNamed(
+        Router.prizeScreen,
+        arguments: {'model': model},
       ),
       child: Card(
         child: Stack(

@@ -71,7 +71,7 @@ class NewThinkTankRoute extends StatelessWidget {
                             return StadiumButton(
                               text: 'Post Think Tank',
                               onPressed: () async {
-                                final result = await notifier.send();
+                                final result = await notifier.sendData();
                                 if (result) Navigator.of(context).pop(result);
                               },
                             );

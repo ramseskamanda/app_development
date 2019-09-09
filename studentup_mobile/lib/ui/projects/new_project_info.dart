@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:studentup_mobile/services/project_creation_service.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/project_creation_notifier.dart';
 import 'package:studentup_mobile/ui/projects/file_attachment.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +40,7 @@ class NewProjectInformation extends StatelessWidget {
 class ImageSelection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProjectCreationService>(
+    return Consumer<ProjectCreationNotifier>(
       builder: (context, service, child) {
         return Stack(
           children: <Widget>[
@@ -105,7 +105,7 @@ class ImageSelection extends StatelessWidget {
 class InputTextFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProjectCreationService>(
+    return Consumer<ProjectCreationNotifier>(
       builder: (context, service, child) {
         return Form(
           child: Column(
@@ -148,7 +148,7 @@ class InputTextFields extends StatelessWidget {
 class Attachments extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProjectCreationService>(
+    return Consumer<ProjectCreationNotifier>(
       builder: (context, service, child) {
         int _length = service.files.length + 1;
         return Column(

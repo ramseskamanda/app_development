@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/util/util.dart';
 
 class UserProfileEditBloc {
@@ -80,7 +80,7 @@ class UserProfileEditBloc {
 
   Future uploadEditorInfo() async {
     try {
-      await Locator.of<FirestoreWriter>().updateProfileInfo(
+      await Locator.of<BaseAPIWriter>().updateProfileInfo(
         Locator.of<AuthService>().currentUser.uid,
         _getData(),
       );

@@ -1,16 +1,17 @@
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/storage/base_api.dart';
 
-class LeaderboardNotifier extends NetworkNotifier {
+class LeaderboardNotifier extends NetworkReader {
   bool _monthly;
   List<UserInfoModel> _leaderboard;
-  FirestoreReader _firestoreReader;
+  BaseAPIReader _firestoreReader;
 
   LeaderboardNotifier(bool monthly) {
     _monthly = monthly;
     _leaderboard = [];
-    _firestoreReader = FirestoreReader();
+    _firestoreReader = Locator.of<BaseAPIReader>();
     fetchData();
   }
 
@@ -29,7 +30,4 @@ class LeaderboardNotifier extends NetworkNotifier {
     }
     isLoading = false;
   }
-
-  @override
-  Future onRefresh() => fetchData();
 }

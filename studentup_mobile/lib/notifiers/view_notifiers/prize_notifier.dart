@@ -1,14 +1,15 @@
 import 'package:studentup_mobile/models/prize_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/storage/base_api.dart';
 
-class PrizeNotifier extends NetworkNotifier {
+class PrizeNotifier extends NetworkReader {
   //prizes
   List<PrizeModel> _prizes;
-  FirestoreReader _firestoreReader;
+  BaseAPIReader _firestoreReader;
 
   PrizeNotifier() {
-    _firestoreReader = FirestoreReader();
+    _firestoreReader = Locator.of<BaseAPIReader>();
     _prizes = [];
     fetchData();
   }
@@ -26,7 +27,4 @@ class PrizeNotifier extends NetworkNotifier {
     }
     isLoading = false;
   }
-
-  @override
-  Future onRefresh() => fetchData();
 }

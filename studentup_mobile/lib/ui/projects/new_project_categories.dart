@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
-import 'package:studentup_mobile/services/project_creation_service.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/project_creation_notifier.dart';
 
 class NewProjectCategories extends StatelessWidget {
   @override
@@ -55,7 +55,7 @@ class CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ProjectCreationService>(
+    return Consumer<ProjectCreationNotifier>(
       builder: (context, service, child) {
         bool selected = service.categories.contains(category);
         return InkWell(

@@ -1,90 +1,109 @@
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
-class ThinkTankNotifier extends NetworkNotifier {
+class ThinkTankNotifier extends NetworkIO {
   final ThinkTanksModel model;
-  FirestoreReader _firestoreReader;
-  FirestoreWriter _firestoreWriter;
   TextEditingController _newComment;
+  Stream<List<Comments>> _comments;
 
   ThinkTankNotifier(this.model) {
-    _firestoreReader = FirestoreReader();
-    _firestoreWriter = FirestoreWriter();
     _newComment = TextEditingController();
+    fetchData();
   }
 
-  Stream<List<Comments>> get comments =>
-      _firestoreReader.fetchComments(model.comments);
+  Stream<List<Comments>> get comments => _comments;
   TextEditingController get newComment => _newComment;
 
   @override
-  Future fetchData() async {}
+  Future fetchData() async {
+    isReading = true;
+    _comments = reader.fetchComments(model.comments.path);
+    isReading = false;
+  }
 
-  @override
-  Future onRefresh() async {}
-
-  Future postComment() async {
+  Future _postComment() async {
     if (_newComment.text.isEmpty) return;
-    isLoading = true;
+    isWriting = true;
     Comments comment = Comments(
       content: _newComment.text,
       createdAt: DateTime.now(),
       userId: Locator.of<AuthService>().currentUser.uid,
     );
-    try {
-      _firestoreWriter.postComment(model: comment, collection: model.comments);
-    } catch (e) {
-      print(e);
-      error = NetworkError(message: e.toString());
-    }
-    isLoading = false;
+    writer.postComment(model: comment, collectionPath: model.comments.path);
+    isWriting = false;
   }
 
-  Future upvoteComment({bool cancelVote, @required String id}) async {
-    try {
-      if (cancelVote)
-        await _firestoreWriter.removeVoter(
-          upvote: true,
-          collection: model.comments,
-          docId: id,
-          uid: Locator.of<AuthService>().currentUser.uid,
-        );
-      else
-        await _firestoreWriter.addVoter(
-          upvote: true,
-          collection: model.comments,
-          docId: id,
-          uid: Locator.of<AuthService>().currentUser.uid,
-        );
-    } catch (e) {
-      print(e);
-      error = NetworkError(message: e.toString());
-    }
+  Future _upvoteComment(Upvote vote) async {
+    if (vote.cancelVote)
+      await writer.removeVoter(
+        upvote: true,
+        collectionPath: model.comments.path,
+        docId: vote.docId,
+        uid: Locator.of<AuthService>().currentUser.uid,
+      );
+    else
+      await writer.addVoter(
+        upvote: true,
+        collectionPath: model.comments.path,
+        docId: vote.docId,
+        uid: Locator.of<AuthService>().currentUser.uid,
+      );
   }
 
-  Future downvoteComment({bool cancelVote, @required String id}) async {
+  Future _downvoteComment(Downvote vote) async {
+    if (vote.cancelVote)
+      await writer.removeVoter(
+        upvote: false,
+        collectionPath: model.comments.path,
+        docId: vote.docId,
+        uid: Locator.of<AuthService>().currentUser.uid,
+      );
+    else
+      await writer.addVoter(
+        upvote: false,
+        collectionPath: model.comments.path,
+        docId: vote.docId,
+        uid: Locator.of<AuthService>().currentUser.uid,
+      );
+  }
+
+  @override
+  Future<bool> sendData([data]) async {
     try {
-      if (cancelVote)
-        await _firestoreWriter.removeVoter(
-          upvote: false,
-          collection: model.comments,
-          docId: id,
-          uid: Locator.of<AuthService>().currentUser.uid,
-        );
-      else
-        await _firestoreWriter.addVoter(
-          upvote: false,
-          collection: model.comments,
-          docId: id,
-          uid: Locator.of<AuthService>().currentUser.uid,
-        );
+      switch (data.runtimeType) {
+        case Null:
+          _postComment();
+          break;
+        case Upvote:
+          _upvoteComment(data);
+          break;
+        case Downvote:
+          _downvoteComment(data);
+          break;
+        default:
+      }
     } catch (e) {
       print(e);
-      error = NetworkError(message: e.toString());
+      writeError = NetworkError(message: e.toString());
+      return false;
     }
+    return true;
   }
+}
+
+class Upvote {
+  final String docId;
+  final bool cancelVote;
+
+  Upvote(this.docId, this.cancelVote);
+}
+
+class Downvote {
+  final String docId;
+  final bool cancelVote;
+
+  Downvote(this.docId, this.cancelVote);
 }

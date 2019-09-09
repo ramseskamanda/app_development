@@ -1,27 +1,24 @@
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
+import 'package:studentup_mobile/mixins/storage_io.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firebase_storage.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/services/storage/firebase/firebase_storage.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
-const int MINIMUM_LENGTH_Project = 3;
-const int MAXIMUM_LENGTH_Project = 75;
+const int MINIMUM_LENGTH_PROJECT = 3;
+const int MAXIMUM_LENGTH_PROJECT = 75;
 const int MINIMUM_PARTICIPANTS = 10;
 const int MAXIMUM_PARTICIPANTS = 250;
 const int MAXIMUM_CATEGORIES_SELECTED = 3;
 
-/// Only gets instantiated when a new Project is requested
-class ProjectCreationService extends NetworkNotifier {
+class ProjectCreationNotifier extends NetworkIO with StorageIO {
   File _image;
   TextEditingController _nameController;
   TextEditingController _descriptionController;
@@ -29,10 +26,6 @@ class ProjectCreationService extends NetworkNotifier {
   DateTime _deadline;
   int _numParticipants;
   List<SearchCategory> _categories;
-  FirestoreWriter _firestoreWriter;
-  FirebaseStorageService _firebaseStorageService;
-  List<StorageUploadTask> _uploadTasks;
-  bool _isDone;
 
   File get image => _image;
   set image(File newImage) => _image = newImage ?? image;
@@ -42,9 +35,9 @@ class ProjectCreationService extends NetworkNotifier {
   DateTime get deadline => _deadline ?? minimumDeadline;
   set deadline(DateTime date) => _deadline = date ?? minimumDeadline;
   DateTime get minimumDeadline =>
-      DateTime.now().add(const Duration(days: MINIMUM_LENGTH_Project));
+      DateTime.now().add(const Duration(days: MINIMUM_LENGTH_PROJECT));
   DateTime get maximumDeadline =>
-      DateTime.now().add(const Duration(days: MAXIMUM_LENGTH_Project));
+      DateTime.now().add(const Duration(days: MAXIMUM_LENGTH_PROJECT));
   int get numParticipants => _numParticipants;
   List<SearchCategory> get categories => _categories ?? <SearchCategory>[];
   double get minimumParticipants => MINIMUM_PARTICIPANTS.toDouble();
@@ -53,26 +46,6 @@ class ProjectCreationService extends NetworkNotifier {
     _numParticipants = value;
     notifyListeners();
   }
-
-  bool get isUploading => _uploadTasks.isNotEmpty && !isDone;
-
-  bool get isDone => _isDone;
-
-  set uploads(List<StorageUploadTask> list) {
-    _uploadTasks = list;
-    notifyListeners();
-  }
-
-  Observable<double> get uploadStream =>
-      Observable.zip(_uploadTasks.map((u) => u.events),
-          (List<StorageTaskEvent> events) {
-        return events.isNotEmpty
-            ? events.fold<double>(
-                    0, (total, e) => total + e.snapshot.bytesTransferred) /
-                events.fold<double>(
-                    0, (total, e) => total + e.snapshot.totalByteCount)
-            : 0;
-      });
 
   bool get formIsValid {
     return _nameController.text != null &&
@@ -86,19 +59,15 @@ class ProjectCreationService extends NetworkNotifier {
         _categories.length > 0;
   }
 
-  ProjectCreationService() {
+  ProjectCreationNotifier() {
     _nameController = TextEditingController();
     _descriptionController = TextEditingController();
     _image = null;
     _files = <File>[];
     _deadline =
-        DateTime.now().add(const Duration(days: MINIMUM_LENGTH_Project));
+        DateTime.now().add(const Duration(days: MINIMUM_LENGTH_PROJECT));
     _numParticipants = MINIMUM_PARTICIPANTS;
     _categories = <SearchCategory>[];
-    _uploadTasks = <StorageUploadTask>[];
-    _firestoreWriter = Locator.of<FirestoreWriter>();
-    _firebaseStorageService = FirebaseStorageService();
-    _isDone = false;
   }
 
   @override
@@ -108,10 +77,13 @@ class ProjectCreationService extends NetworkNotifier {
     super.dispose();
   }
 
-  /// Upload data
-  Future<void> uploadProject() async {
-    if (!formIsValid) return;
-    isLoading = true;
+  @override
+  Future<void> fetchData() async {}
+
+  @override
+  Future<bool> sendData([data]) async {
+    if (!formIsValid) return false;
+    isWriting = true;
     try {
       final List<File> allFiles = [image, ...files]
         ..removeWhere((file) => file == null);
@@ -119,10 +91,11 @@ class ProjectCreationService extends NetworkNotifier {
         allFiles,
         'projects_files',
       );
+      ProfileNotifier notifier = Locator.of<ProfileNotifier>();
       ProjectModel _model = ProjectModel(
-        creatorId: Locator.of<AuthService>().currentUser.uid,
-        creatorMedia: Locator.of<AuthService>().currentUser.photoUrl,
-        creator: Locator.of<AuthService>().currentUser.displayName,
+        creatorId: notifier.info.uid,
+        creatorMedia: notifier.info.imageUrl,
+        creator: notifier.info.givenName,
         timestamp: DateTime.now(),
         categories: categories,
         maxUsersNum: numParticipants,
@@ -132,16 +105,18 @@ class ProjectCreationService extends NetworkNotifier {
         files: _paths.skip(1).toList(),
         deadline: deadline,
       );
-      uploads = _firebaseStorageService.startUpload(allFiles, _paths);
+      uploadTasks = storage.startUpload(allFiles, _paths);
       uploadStream.listen((double percent) {
-        if (1.0 == percent) notifyListeners();
+        if (1.0 == percent) isDone = true;
       });
-      await _firestoreWriter.uploadProjectInformation(model: _model);
-      _isDone = true;
+      await writer.uploadProjectInformation(model: _model);
     } catch (e) {
       print(e);
+      writeError = NetworkError(message: e.toString());
+      return false;
     }
-    isLoading = false;
+    isWriting = false;
+    return true;
   }
 
   /// Cropper plugin
@@ -197,10 +172,4 @@ class ProjectCreationService extends NetworkNotifier {
       categories.add(category);
     notifyListeners();
   }
-
-  @override
-  Future fetchData() async {}
-
-  @override
-  Future onRefresh() async {}
 }

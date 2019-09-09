@@ -17,7 +17,7 @@ class StartupTeam extends StatelessWidget {
       delegate: TeamMemberSearchDelegate(),
     );
     if (result == null) return;
-    notifier.addTeamMember(result);
+    notifier.sendData(result);
   }
 
   @override

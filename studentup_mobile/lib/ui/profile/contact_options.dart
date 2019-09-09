@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/ui/home/chat_screen/new_message.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class ContactOptions extends StatelessWidget {
@@ -23,12 +23,11 @@ class ContactOptions extends StatelessWidget {
             IconButton(
               icon: Icon(CupertinoIcons.conversation_bubble),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => NewMessage(
-                      model: snapshot.data,
-                    ),
-                  ),
+                Navigator.of(context).pushNamed(
+                  Router.newMessage,
+                  arguments: {
+                    'model': snapshot.data,
+                  },
                 );
               },
             ),

@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:studentup_mobile/models/education_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/util.dart';
 
-class NewEducationNotifier extends NetworkNotifier {
+class NewEducationNotifier extends NetworkWriter {
   //TODO: change these into blocs
   String _category;
   TextEditingController _university;
@@ -17,10 +16,7 @@ class NewEducationNotifier extends NetworkNotifier {
   DateTime _startDate;
   DateTime _gradDate;
 
-  FirestoreWriter _firestoreWriter;
-
   NewEducationNotifier() {
-    _firestoreWriter = FirestoreWriter();
     _university = TextEditingController();
     _description = TextEditingController();
     _faculty = TextEditingController();
@@ -62,10 +58,11 @@ class NewEducationNotifier extends NetworkNotifier {
     notifyListeners();
   }
 
-  Future<bool> send() async {
+  @override
+  Future<bool> sendData() async {
+    if (!canSend) return false;
+    isLoading = true;
     try {
-      if (!canSend) return false;
-      isLoading = true;
       final model = EducationModel(
         userId: Locator.of<AuthService>().currentUser.uid,
         university: _university.text,
@@ -76,7 +73,7 @@ class NewEducationNotifier extends NetworkNotifier {
         periodEnd: _gradDate,
         studyDescription: _description.text,
       );
-      await _firestoreWriter.postNewEducation(model);
+      await writer.postNewEducation(model);
     } catch (e) {
       print(e);
       error = NetworkError(message: e.toString());
@@ -95,10 +92,4 @@ class NewEducationNotifier extends NetworkNotifier {
     _gradDateController.dispose();
     _startDateController.dispose();
   }
-
-  @override
-  Future fetchData() async {}
-
-  @override
-  Future onRefresh() async {}
 }

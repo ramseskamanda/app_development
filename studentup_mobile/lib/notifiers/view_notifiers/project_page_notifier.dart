@@ -2,15 +2,15 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
+import 'package:studentup_mobile/enum/project_action.dart';
+import 'package:studentup_mobile/mixins/storage_io.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/project_signup_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firebase_storage.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
-class ProjectPageNotifier extends NetworkNotifier {
+class ProjectPageNotifier extends NetworkIO with StorageIO {
   //Model for project page
   ProjectModel model;
   //user sign up docs
@@ -19,15 +19,8 @@ class ProjectPageNotifier extends NetworkNotifier {
   TextEditingController _messageController;
   File _file;
 
-  FirestoreReader _firestoreReader;
-  FirestoreWriter _firestoreWriter;
-  FirebaseStorageService _firebaseStorage;
-
-  ProjectPageNotifier(this.model) {
-    _firestoreReader = FirestoreReader();
-    _firestoreWriter = FirestoreWriter();
-    _firebaseStorage = FirebaseStorageService();
-    _messageController = TextEditingController();
+  ProjectPageNotifier(this.model)
+      : _messageController = TextEditingController() {
     fetchData();
   }
 
@@ -44,77 +37,42 @@ class ProjectPageNotifier extends NetworkNotifier {
 
   @override
   Future fetchData() async {
-    _userSignups = _firestoreReader.fetchProjectSignupById(
+    _userSignups = reader.fetchProjectSignupById(
       Locator.of<AuthService>().currentUser.uid,
       model,
     );
   }
 
-  @override
-  Future onRefresh() async => fetchData();
-
-  Future downloadAttachmentsAndPreview() async {
-    try {
-      isLoading = true;
-      for (String attachment in model.files)
-        await _firebaseStorage.download(
-          filePath: attachment,
-          callback: () => isLoading = false,
-          onError: () => error =
-              NetworkError(message: 'An error occured during download.'),
-        );
-    } catch (e) {
-      print(e);
-      isLoading = false;
-    }
-  }
-
-  Future signUp() async {
+  Future _signUp() async {
     if (!canApply) return;
-    isLoading = true;
-    try {
-      String _filePath;
-      if (_file != null)
-        _filePath = await _firebaseStorage.uploadProjectFile(
-          _file,
-          onError: (Object e) =>
-              error = NetworkError(message: 'Couldn\'t store your image'),
-        );
-      final ProjectSignupModel _signupModel = ProjectSignupModel(
-        userId: Locator.of<AuthService>().currentUser.uid,
-        message: _messageController.text,
-        projectId: model.docId,
-        timestamps: DateTime.now(),
-        file: _filePath,
+    isWriting = true;
+    String _filePath;
+    if (_file != null)
+      _filePath = await storage.uploadProjectFile(
+        _file,
+        onError: (Object e) => writeError = NetworkError(message: e.toString()),
       );
-      await _firestoreWriter.uploadSignUpDocument(
-        model: _signupModel,
-        project: model,
-      );
-      _messageController.clear();
-    } catch (e) {
-      print(e);
-      error = NetworkError(message: '(TRACE)   ::    ${e.runtimeType}');
-    }
-    isLoading = false;
+    final ProjectSignupModel _signupModel = ProjectSignupModel(
+      userId: Locator.of<AuthService>().currentUser.uid,
+      message: _messageController.text,
+      projectId: model.docId,
+      timestamps: DateTime.now(),
+      file: _filePath,
+    );
+    await writer.uploadSignUpDocument(
+      model: _signupModel,
+      project: model,
+    );
+    _messageController.clear();
+    isWriting = false;
   }
 
-  Future removeApplicant(String docId) async {
-    try {
-      await _firestoreWriter.removeApplicant(docId);
-      removeFile();
-    } catch (e) {
-      error = NetworkError(message: '(TRACE)   ::    ${e.runtimeType}');
-    }
+  Future _removeApplicant() async {
+    await writer.removeApplicant(model.docId);
+    removeFile();
   }
 
-  Future deleteProject() async {
-    try {
-      await _firestoreWriter.removeProject(id: model.docId);
-    } catch (e) {
-      error = NetworkError(message: 'Your request failed. Please try again.');
-    }
-  }
+  Future _deleteProject() async => await writer.removeProject(id: model.docId);
 
   /// Pick a single file directly
   Future<void> pickFile() async {
@@ -124,4 +82,27 @@ class ProjectPageNotifier extends NetworkNotifier {
 
   /// Remove file
   void removeFile() => file = null;
+
+  @override
+  Future<bool> sendData([data]) async {
+    try {
+      switch (data as ProjectAction) {
+        case ProjectAction.SIGNUP:
+          _signUp();
+          break;
+        case ProjectAction.WITHDRAW:
+          _removeApplicant();
+          break;
+        case ProjectAction.DELETE:
+          _deleteProject();
+          break;
+        default:
+          throw 'No Action for: $data';
+      }
+    } catch (e) {
+      writeError = NetworkError(message: e.toString());
+      return false;
+    }
+    return true;
+  }
 }

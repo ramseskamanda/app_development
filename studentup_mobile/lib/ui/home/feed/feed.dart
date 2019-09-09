@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/feed_notifier.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/home/feed/startup_stories.dart';
 import 'package:studentup_mobile/ui/home/feed/think_tanks.dart';
-import 'package:studentup_mobile/ui/think_tank/new_think_tank_route.dart';
+import 'package:studentup_mobile/ui/inner_drawer/inner_drawer.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class Feed extends StatefulWidget {
@@ -32,7 +33,6 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
   }
 
   void _loadMore() {
-    print('iubpiuybo');
     double maxScroll = _scrollController.position.maxScrollExtent;
     double currentScroll = _scrollController.position.pixels;
     double delta = MediaQuery.of(context).size.height * 0.25;
@@ -50,24 +50,16 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
     return ChangeNotifierProvider<FeedNotifier>.value(
       value: notifier,
       child: Scaffold(
+        drawer: InnerDrawerMenu(),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0.0,
-          // leading: IconButton(
-          //   icon: const Icon(Icons.menu),
-          //   onPressed: () {},
-          // ),
+          automaticallyImplyLeading: true,
           title: const Text('Home'),
           actions: <Widget>[
             IconButton(
               icon: const Icon(Icons.send),
-              onPressed: () {
-                Provider.of<PageController>(context).animateToPage(
-                  1,
-                  duration: kTabScrollDuration,
-                  curve: Curves.easeInOutQuad,
-                );
-              },
+              onPressed: () => Provider.of<InnerRouter>(context).goToPage(1),
             ),
           ],
         ),
@@ -77,19 +69,16 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
             color: Theme.of(context).scaffoldBackgroundColor,
           ),
           onPressed: () async {
-            final result = await Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => NewThinkTankRoute(),
-              ),
-            );
-            if (result) notifier.onRefresh();
+            final result =
+                await Navigator.of(context).pushNamed(Router.newThinkTank);
+            if (result) notifier.fetchData();
           },
         ),
         body: NetworkSensitive(
           child: Consumer<FeedNotifier>(
             builder: (context, notifier, child) {
               return LiquidPullToRefresh(
-                onRefresh: () => notifier.onRefresh(),
+                onRefresh: () => notifier.fetchData(),
                 child: ListView(
                   controller: _scrollController,
                   children: <Widget>[

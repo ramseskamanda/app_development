@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
-import 'package:studentup_mobile/services/algolia_service.dart';
+import 'package:studentup_mobile/services/search/algolia_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class TeamMemberSearchDelegate extends SearchDelegate<UserInfoModel> {

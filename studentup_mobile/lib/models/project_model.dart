@@ -1,8 +1,9 @@
+import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/models/base_model.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/config.dart';
 import 'package:studentup_mobile/util/util.dart';
@@ -87,6 +88,26 @@ class ProjectModel extends BaseModel {
     _description = json['description'];
     _timestamp = json['timestamp'];
     _deadline = json['deadline'];
+    _category1 = json['category1'];
+    _category2 = json['category2'];
+    _category3 = json['category3'];
+    _favSolutions = json['fav_solutions']?.cast<String>() ?? <String>[];
+    _maxUsersNum = json['max_users_num'];
+    _signupsNum = json['signups_num'];
+    _files = json['files']?.cast<String>() ?? <String>[];
+  }
+
+  ProjectModel.fromIndex(AlgoliaObjectSnapshot snapshot)
+      : super.fromIndex(snapshot) {
+    final Map<String, dynamic> json = snapshot.data;
+    _creator = json['creator'];
+    _creatorMedia = json['creator_media'];
+    _creatorId = json['creator_id'];
+    _title = json['title'];
+    _media = json['media'];
+    _description = json['description'];
+    _timestamp = Util.algoliaTimestamp(json['timestamp']);
+    _deadline = Util.algoliaTimestamp(json['deadline']);
     _category1 = json['category1'];
     _category2 = json['category2'];
     _category3 = json['category3'];

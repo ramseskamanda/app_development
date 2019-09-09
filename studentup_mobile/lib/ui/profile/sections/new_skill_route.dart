@@ -101,7 +101,7 @@ class NewSkillRoute extends StatelessWidget {
                     return StadiumButton(
                       text: 'Send',
                       onPressed: () async {
-                        final bool result = await notifier.send();
+                        final bool result = await notifier.sendData();
                         if (result) Navigator.of(context).pop();
                       },
                     );

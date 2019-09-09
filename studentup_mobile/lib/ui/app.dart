@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/home/home.dart';
 import 'package:studentup_mobile/ui/profile/profile_root.dart';
@@ -17,8 +18,6 @@ class Application extends StatefulWidget {
 }
 
 class _ApplicationState extends State<Application> {
-  int _currentTab = 0;
-
   List<Widget> _tabs = <Widget>[
     Home(),
     SearchRoot(),
@@ -59,11 +58,8 @@ class _ApplicationState extends State<Application> {
           if (Locator.of<AuthService>().currentUserisNew)
             CompleteProfileToast.show(
               context: context,
-              stateManagerCallback: () {
-                setState(() {
-                  _currentTab = _tabs.length - 1;
-                });
-              },
+              stateManagerCallback: () =>
+                  Provider.of<InnerRouter>(context).goToProfile(),
             );
         },
       );
@@ -72,19 +68,19 @@ class _ApplicationState extends State<Application> {
   @override
   Widget build(BuildContext context) {
     assert(_navigationBar.length == _tabs.length);
+    InnerRouter router = Provider.of<InnerRouter>(context);
+    router.profileTab = _tabs.length - 1;
     return ChangeNotifierProvider<ProfileNotifier>.value(
       value: Locator.of<ProfileNotifier>()..fetchData(),
       child: WillPopScope(
         onWillPop: () async => false,
         child: CupertinoTabScaffold(
+          controller: router.navBar,
           tabBuilder: (BuildContext context, int index) => _tabs[index],
           tabBar: CupertinoTabBar(
-            currentIndex: _currentTab,
             items: _navigationBar,
             onTap: (int index) {
-              setState(() {
-                _currentTab = index;
-              });
+              if (index == 0) router.resetHomePage();
             },
           ),
         ),

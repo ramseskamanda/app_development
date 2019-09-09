@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup_mobile/services/project_creation_service.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/project_creation_notifier.dart';
 import 'package:studentup_mobile/ui/projects/new_project_uploader.dart';
 import 'package:studentup_mobile/ui/projects/new_project_categories.dart';
 import 'package:studentup_mobile/ui/projects/new_project_deadline.dart';
@@ -70,15 +70,15 @@ class _NewProjectRootState extends State<NewProjectRoot> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ProjectCreationService>(
-      builder: (context) => ProjectCreationService(),
+    return ChangeNotifierProvider<ProjectCreationNotifier>(
+      builder: (context) => ProjectCreationNotifier(),
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
           backgroundColor: Colors.transparent,
-          leading: Consumer<ProjectCreationService>(
+          leading: Consumer<ProjectCreationNotifier>(
             builder: (context, service, child) {
-              if (service.isUploading || service.isDone)
+              if (service.isWriting)
                 return Container();
               else
                 return child;
@@ -120,7 +120,7 @@ class BottomButton extends StatelessWidget {
 
   const BottomButton({Key key, this.last, this.controller}) : super(key: key);
 
-  _getFunction(BuildContext context, ProjectCreationService service) {
+  _getFunction(BuildContext context, ProjectCreationNotifier service) {
     if (service.isDone) return () => Navigator.of(context).pop(true);
     if (!last)
       return () {
@@ -129,14 +129,14 @@ class BottomButton extends StatelessWidget {
           curve: Curves.easeInOutSine,
         );
       };
-    if (service.isLoading || service.isUploading) return null;
+    if (service.isLoading) return null;
     if (!service.formIsValid) return () => print('Form is not valid');
-    return () => service.uploadProject();
+    return () => service.sendData();
   }
 
   @override
   Widget build(BuildContext context) {
-    final ProjectCreationService service = Provider.of(context);
+    final ProjectCreationNotifier service = Provider.of(context);
     return StadiumButton(
       text: service.isDone ? 'Done' : last ? 'Publish' : 'Next',
       onPressed: _getFunction(context, service),

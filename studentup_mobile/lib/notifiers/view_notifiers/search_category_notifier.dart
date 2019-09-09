@@ -1,15 +1,12 @@
 import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/algolia_service.dart';
 
-class SearchCategoryNotifier extends NetworkNotifier {
+class SearchCategoryNotifier extends NetworkSearch {
   List<UserInfoModel> _users;
   SearchCategory _searchCategory;
-  AlgoliaService _algoliaService;
 
   SearchCategoryNotifier(SearchCategory category) : assert(category != null) {
-    _algoliaService = AlgoliaService();
     _searchCategory = category;
     fetchData();
   }
@@ -21,15 +18,12 @@ class SearchCategoryNotifier extends NetworkNotifier {
   Future fetchData() async {
     isLoading = true;
     try {
-      _users = await _algoliaService.searchUsersWithFacets(
-          category: _searchCategory);
+      _users =
+          await searchEngine.searchUsersWithFacets(category: _searchCategory);
     } catch (e) {
       print(e);
       error = NetworkError(message: e.toString());
     }
     isLoading = false;
   }
-
-  @override
-  Future onRefresh() => fetchData();
 }

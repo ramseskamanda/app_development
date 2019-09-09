@@ -54,7 +54,7 @@ class _LeaderboardListViewState extends State<LeaderboardListView>
           if (notifier.hasError)
             return Center(child: Text(notifier.error.message));
           return LiquidPullToRefresh(
-            onRefresh: () async => notifier.onRefresh(),
+            onRefresh: () async => notifier.fetchData(),
             child: CustomScrollView(
               controller: _scrollController,
               slivers: <Widget>[

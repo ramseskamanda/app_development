@@ -38,7 +38,7 @@ class OtherProfile extends StatelessWidget {
         body: NetworkSensitive(
           child: SafeArea(
             child: LiquidPullToRefresh(
-              onRefresh: notifier.onRefresh,
+              onRefresh: notifier.fetchData,
               child: ListView(
                 children: <Widget>[
                   const SizedBox(height: 16.0),

@@ -2,10 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/enum/project_action.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/project_signup_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/project_page_notifier.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/projects/file_attachment.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
@@ -57,11 +58,13 @@ class ProjectPage extends StatelessWidget {
                               text: snapshot.hasData
                                   ? 'Withdraw Application'
                                   : 'Apply',
-                              //TODO: Add visual cue that user can't signup
-                              onPressed: snapshot.hasData
-                                  ? () => notifier
-                                      .removeApplicant(snapshot.data.projectId)
-                                  : () => notifier.signUp(),
+                              onPressed: notifier.isWriting
+                                  ? null
+                                  : () => notifier.sendData(
+                                        snapshot.hasData
+                                            ? ProjectAction.WITHDRAW
+                                            : ProjectAction.SIGNUP,
+                                      ),
                             );
                           },
                         );
@@ -146,7 +149,7 @@ class ImageScrollbaleAppBar extends StatelessWidget {
                       .scaffoldBackgroundColor
                       .withOpacity(0.4),
                   onDelete: () async {
-                    await service.deleteProject();
+                    await service.sendData(ProjectAction.DELETE);
                     Navigator.of(context).pop(true);
                   },
                 );
@@ -163,7 +166,7 @@ class ProjectInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProjectPageNotifier notifier = Provider.of<ProjectPageNotifier>(context);
-
+    print(notifier.model.creator);
     return SliverList(
       delegate: SliverChildListDelegate(
         <Widget>[
@@ -234,7 +237,9 @@ class ProjectInformation extends StatelessWidget {
                       ),
                       onPressed: notifier.isLoading
                           ? null
-                          : () => notifier.downloadAttachmentsAndPreview(),
+                          : () => notifier.downloadAttachmentsAndPreview(
+                                notifier.model.files,
+                              ),
                     ),
                   const SizedBox(height: 16.0),
                   Text(

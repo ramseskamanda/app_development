@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/feed_notifier.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/think_tank/think_tank.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
@@ -16,7 +16,8 @@ class ThinkTankPreviewsList extends StatelessWidget {
       builder: (context, feed, child) {
         if (feed.isLoading)
           return Center(child: const CircularProgressIndicator());
-        if (feed.hasError) return Center(child: Text(feed.error.message));
+        if (feed.hasReadingError)
+          return Center(child: Text(feed.readError.message));
         if (feed.thinkTanks.isEmpty)
           return Center(child: const Text('No think tanks here right now...'));
         return Column(
@@ -54,7 +55,7 @@ class ThinkTankPreview extends StatelessWidget {
 
       if (doRefresh) {
         FeedNotifier notifier = Provider.of<FeedNotifier>(context);
-        notifier.onRefresh();
+        notifier.fetchData();
       }
     } catch (e) {
       print(e);
@@ -93,8 +94,8 @@ class ThinkTankPreview extends StatelessWidget {
                     onDelete: () async {
                       FeedNotifier notifier =
                           Provider.of<FeedNotifier>(context);
-                      final result = await notifier.delete(model);
-                      if (result) notifier.onRefresh();
+                      final result = await notifier.sendData(model);
+                      if (result) notifier.fetchData();
                     },
                   )
                 : null,

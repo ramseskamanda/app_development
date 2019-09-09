@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/think_tank_notifier.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
+import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
-import 'package:studentup_mobile/ui/think_tank/new_comment_route.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class ThinkTank extends StatelessWidget {
@@ -37,10 +37,9 @@ class ThinkTank extends StatelessWidget {
             style: TextStyle(color: CupertinoColors.white),
           ),
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => NewCommentRoute(notifier: notifier),
-              ),
+            Navigator.of(context).pushNamed(
+              Router.newCommentRoute,
+              arguments: {'notifier': notifier},
             );
           },
         ),
@@ -255,9 +254,11 @@ class _CommentHeaderWidgetState extends State<CommentHeaderWidget> {
                         : Theme.of(context).disabledColor,
                   ),
                 ),
-                onPressed: () async => await notifier.upvoteComment(
-                  cancelVote: upvote,
-                  id: widget.model.docId,
+                onPressed: () async => await notifier.sendData(
+                  Upvote(
+                    widget.model.docId,
+                    upvote,
+                  ),
                 ),
               ),
               FlatButton.icon(
@@ -270,9 +271,11 @@ class _CommentHeaderWidgetState extends State<CommentHeaderWidget> {
                         : Theme.of(context).disabledColor,
                   ),
                 ),
-                onPressed: () async => await notifier.downvoteComment(
-                  cancelVote: downvote,
-                  id: widget.model.docId,
+                onPressed: () async => await notifier.sendData(
+                  Downvote(
+                    widget.model.docId,
+                    downvote,
+                  ),
                 ),
               ),
             ],

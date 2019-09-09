@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
-class NewSkillNotifier extends NetworkNotifier {
+class NewSkillNotifier extends NetworkWriter {
   //TODO: change these into blocs
   //category value
   //name value
@@ -13,10 +12,8 @@ class NewSkillNotifier extends NetworkNotifier {
   String _category;
   TextEditingController _name;
   TextEditingController _description;
-  FirestoreWriter _firestoreWriter;
 
   NewSkillNotifier() {
-    _firestoreWriter = FirestoreWriter();
     _name = TextEditingController();
     _description = TextEditingController();
     category = 'Select a category...';
@@ -35,7 +32,8 @@ class NewSkillNotifier extends NetworkNotifier {
     notifyListeners();
   }
 
-  Future<bool> send() async {
+  @override
+  Future<bool> sendData() async {
     try {
       if (!canSend) return false;
       isLoading = true;
@@ -47,7 +45,7 @@ class NewSkillNotifier extends NetworkNotifier {
         category: _category.toLowerCase(),
         ratings: null,
       );
-      await _firestoreWriter.postNewSkill(model);
+      await writer.postNewSkill(model);
     } catch (e) {
       print(e);
       error = NetworkError(message: e.toString());
@@ -63,10 +61,4 @@ class NewSkillNotifier extends NetworkNotifier {
     _name.dispose();
     _description.dispose();
   }
-
-  @override
-  Future fetchData() async {}
-
-  @override
-  Future onRefresh() async {}
 }

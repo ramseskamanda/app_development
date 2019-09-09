@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/feed_notifier.dart';
-import 'package:studentup_mobile/ui/startup_page/startup_page.dart';
+import 'package:studentup_mobile/router.dart';
 
 class StartupStories extends StatelessWidget {
   @override
@@ -36,10 +36,9 @@ class StartupStories extends StatelessWidget {
             StartupInfoModel model = feed.startups[index - 1];
             return GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (_) => StartUpPageRoot(model: model),
-                  ),
+                Navigator.of(context).pushNamed(
+                  Router.startupPage,
+                  arguments: {'model': model},
                 );
               },
               child: Column(

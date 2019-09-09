@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
+import 'package:studentup_mobile/ui/inner_drawer/inner_drawer.dart';
 import 'package:studentup_mobile/ui/search/search_category.dart';
 import 'package:studentup_mobile/ui/search/search_screen_delegate.dart';
 import 'package:studentup_mobile/util/util.dart';
@@ -14,13 +15,11 @@ class SearchRoot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: InnerDrawerMenu(),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0.0,
-        // leading: IconButton(
-        //   icon: const Icon(Icons.menu),
-        //   onPressed: () {},
-        // ),
+        automaticallyImplyLeading: true,
         title: const Text('Search'),
         actions: <Widget>[
           IconButton(

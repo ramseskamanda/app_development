@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
-import 'package:studentup_mobile/services/local_storage_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/storage/base_api.dart';
+import 'package:studentup_mobile/services/storage/local_storage_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/config.dart';
 
-class AuthNotifier extends NetworkNotifier {
+class AuthNotifier extends BaseNetworkNotifier {
   FirebaseUser _user;
   StreamSubscription _stream;
 
@@ -56,13 +56,13 @@ class AuthNotifier extends NetworkNotifier {
           imageUrl: defaultImageUrl,
           creation: DateTime.now(),
         );
-        await Locator.of<FirestoreWriter>().createStartup(user.uid, model);
+        await Locator.of<BaseAPIWriter>().createStartup(user.uid, model);
       } else {
         UserInfoModel model = UserInfoModel(
           givenName: name,
           mediaRef: defaultImageUrl,
         );
-        await Locator.of<FirestoreWriter>().createUser(user.uid, model);
+        await Locator.of<BaseAPIWriter>().createUser(user.uid, model);
       }
       isLoadingWithoutNotifiers = false;
     } catch (e) {
@@ -104,13 +104,13 @@ class AuthNotifier extends NetworkNotifier {
             imageUrl: user.photoUrl,
             creation: DateTime.now(),
           );
-          await Locator.of<FirestoreWriter>().createStartup(user.uid, model);
+          await Locator.of<BaseAPIWriter>().createStartup(user.uid, model);
         } else {
           UserInfoModel model = UserInfoModel(
             givenName: user.displayName,
             mediaRef: user.photoUrl,
           );
-          await Locator.of<FirestoreWriter>().createUser(user.uid, model);
+          await Locator.of<BaseAPIWriter>().createUser(user.uid, model);
         }
       }
       isLoadingWithoutNotifiers = false;
@@ -124,10 +124,4 @@ class AuthNotifier extends NetworkNotifier {
   Future logout(bool loggedOut) async {
     if (loggedOut) user = null;
   }
-
-  @override
-  Future fetchData() async {} //Just there for decoration
-
-  @override
-  Future onRefresh() async {} //Just there for decoration
 }

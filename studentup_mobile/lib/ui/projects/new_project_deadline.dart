@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_clean_calendar/flutter_clean_calendar.dart';
 import 'package:provider/provider.dart';
-import 'package:studentup_mobile/services/project_creation_service.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/project_creation_notifier.dart';
 
 class NewProjectDeadline extends StatefulWidget {
   @override
@@ -11,8 +11,8 @@ class NewProjectDeadline extends StatefulWidget {
 
 class _NewProjectDeadlineState extends State<NewProjectDeadline> {
   void _setDeadline(DateTime date) {
-    ProjectCreationService _service =
-        Provider.of<ProjectCreationService>(context);
+    ProjectCreationNotifier _service =
+        Provider.of<ProjectCreationNotifier>(context);
     if (date.isAfter(_service.minimumDeadline) &&
         date.isBefore(_service.maximumDeadline))
       _service.deadline = date;
@@ -58,7 +58,7 @@ class _NewProjectDeadlineState extends State<NewProjectDeadline> {
               ),
             ),
             const SizedBox(height: 32.0),
-            Consumer<ProjectCreationService>(
+            Consumer<ProjectCreationNotifier>(
               builder: (context, service, child) {
                 return Container(
                   child: Calendar(
@@ -80,7 +80,7 @@ class _NewProjectDeadlineState extends State<NewProjectDeadline> {
               style: Theme.of(context).textTheme.title,
             ),
             const SizedBox(height: 48.0),
-            Consumer<ProjectCreationService>(
+            Consumer<ProjectCreationNotifier>(
               builder: (context, service, child) {
                 return Column(
                   children: <Widget>[

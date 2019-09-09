@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/theme.dart';
-import 'package:studentup_mobile/ui/profile/sections/new_skill_route.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
@@ -93,13 +93,8 @@ class ProfileSkillSection extends StatelessWidget {
                 StadiumButton.icon(
                   text: 'Add Skill',
                   icon: Icons.add,
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => NewSkillRoute(),
-                      ),
-                    );
-                  },
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed(Router.newSkill),
                 ),
             ],
           ),

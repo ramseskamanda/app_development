@@ -3,29 +3,26 @@ import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/services/auth_service.dart';
-import 'package:studentup_mobile/services/firestore_service.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
-class NewThinkTankNotifier extends NetworkNotifier {
+class NewThinkTankNotifier extends NetworkWriter {
   //TODO: change these into blocs
   //name value
   //description value
   TextEditingController _name;
   TextEditingController _description;
-  FirestoreWriter _firestoreWriter;
 
-  NewThinkTankNotifier() {
-    _firestoreWriter = Locator.of<FirestoreWriter>();
-    _name = TextEditingController();
-    _description = TextEditingController();
-  }
+  NewThinkTankNotifier()
+      : _name = TextEditingController(),
+        _description = TextEditingController();
 
   TextEditingController get name => _name;
   TextEditingController get description => _description;
   bool get canSend => _name.text.isNotEmpty && _description.text.isNotEmpty;
 
-  Future<bool> send() async {
+  @override
+  Future<bool> sendData() async {
     if (!canSend) return false;
     isLoading = true;
     final Preview user = Locator.of<ProfileNotifier>().info;
@@ -39,7 +36,7 @@ class NewThinkTankNotifier extends NetworkNotifier {
       comments: null,
     );
     try {
-      await _firestoreWriter.postNewThinkTank(model);
+      await writer.postNewThinkTank(model);
     } catch (e) {
       print(e);
       error = NetworkError(message: e.toString());
@@ -55,10 +52,4 @@ class NewThinkTankNotifier extends NetworkNotifier {
     _name.dispose();
     _description.dispose();
   }
-
-  @override
-  Future fetchData() async {}
-
-  @override
-  Future onRefresh() async {}
 }

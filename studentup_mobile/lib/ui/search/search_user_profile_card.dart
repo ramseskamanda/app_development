@@ -3,8 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
-import 'package:studentup_mobile/ui/home/chat_screen/new_message.dart';
-import 'package:studentup_mobile/ui/profile/other_profile.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class UserProfileCard extends StatelessWidget {
@@ -16,16 +15,15 @@ class UserProfileCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => OtherProfile(
-              infoModel: Preview(
-                givenName: model.givenName,
-                imageUrl: model.mediaRef,
-                uid: model.docId,
-              ),
+        Navigator.of(context).pushNamed(
+          Router.otherProfile,
+          arguments: {
+            'infoModel': Preview(
+              givenName: model.givenName,
+              imageUrl: model.mediaRef,
+              uid: model.docId,
             ),
-          ),
+          },
         );
       },
       child: Card(
@@ -69,13 +67,12 @@ class UserProfileCard extends StatelessWidget {
                   color: Theme.of(context).accentColor,
                   textColor: Theme.of(context).scaffoldBackgroundColor,
                   onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => NewMessage(
-                          model: model,
-                          fromSearch: true,
-                        ),
-                      ),
+                    Navigator.of(context).pushNamed(
+                      Router.newMessage,
+                      arguments: {
+                        'model': model,
+                        'fromMessaging': true,
+                      },
                     );
                   },
                 ),
