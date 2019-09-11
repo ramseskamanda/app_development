@@ -213,4 +213,29 @@ class FirestoreWriter implements BaseAPIWriter {
       await _firestore.collection(chatsCollection).document(docId).updateData({
         'latest_message.seenAt': FieldValue.serverTimestamp(),
       });
+
+  @override
+  Future updateNotificationTokens({
+    String docPath,
+    String token,
+    bool remove = false,
+  }) async {
+    DocumentReference doc = _firestore.document(docPath);
+    _firestore.runTransaction((transaction) async {
+      final snap = await transaction.get(doc);
+      if (!snap.exists) throw 'Document does not exist.';
+      final List<String> _tokens = snap?.data['tokens']?.cast<String>() ?? [];
+      if (((!remove && !_tokens.contains(token)) ||
+          (remove && _tokens.contains(token)))) {
+        print('FIRESTORE ==> UPDATING TOKEN REGISTRY...');
+        print('FIRESTORE ==> CURRENT REGISTRY: $_tokens');
+        print('FIRESTORE ==> ADDING KEY: $token');
+        return await transaction.update(doc, {
+          'tokens': remove
+              ? FieldValue.arrayRemove([token])
+              : FieldValue.arrayUnion([token]),
+        });
+      }
+    });
+  }
 }

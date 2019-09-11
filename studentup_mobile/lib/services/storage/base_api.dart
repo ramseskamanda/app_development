@@ -33,6 +33,7 @@ abstract class BaseAPIReader {
   Stream<dynamic> fetchMessages(String collectionPath);
   Future<List<UserInfoModel>> fetchRankings({bool monthly = true});
   Future<List<PrizeModel>> fetchPrizesRanking();
+  Stream<List<ProjectSignupModel>> fetchProjectSignups(ProjectModel project);
   Stream<ProjectSignupModel> fetchProjectSignupById(
       String userId, ProjectModel project);
 }
@@ -40,6 +41,8 @@ abstract class BaseAPIReader {
 abstract class BaseAPIWriter {
   Future createUser(String uid, UserInfoModel user);
   Future createStartup(String uid, StartupInfoModel startup);
+  Future updateNotificationTokens(
+      {String docPath, String token, bool remove = false});
   Future updateProfileInfo(String uid, Map<String, dynamic> data);
   Future postNewThinkTank(ThinkTanksModel model);
   Future removeThinkTank(ThinkTanksModel model);

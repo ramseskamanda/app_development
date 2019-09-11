@@ -3,11 +3,14 @@ import 'package:studentup_mobile/enum/initial_routes.dart';
 
 class NotificationService {
   FirebaseMessaging _firebaseMessaging;
+  String _token;
   InitialRoute _initialRoute;
 
-  void initialize() {
+  Future initialize() async {
     _firebaseMessaging = FirebaseMessaging();
     _firebaseMessaging.requestNotificationPermissions();
+    _token = await _firebaseMessaging.getToken();
+    _firebaseMessaging.onTokenRefresh.listen((newToken) => _token = newToken);
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> data) async {
         //TODO: show a toast here
@@ -25,6 +28,7 @@ class NotificationService {
   }
 
   int get initialRoute => initialRoutes[_initialRoute] ?? 0;
+  String get deviceToken => _token;
 
   Future test() async {
     print(await _firebaseMessaging.getToken());

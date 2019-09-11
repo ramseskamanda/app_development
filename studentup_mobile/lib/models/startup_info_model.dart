@@ -62,6 +62,7 @@ class StartupInfoModel extends BaseModel {
     _creationDate = json['creation_date'];
     if (json['team'] != null) {
       _team = <Preview>[];
+      print(json['team']);
       Map<dynamic, dynamic>.from(json['team'])
           .forEach((k, v) => _team.add(Preview.fromJson(v, k)));
     }
@@ -75,7 +76,9 @@ class StartupInfoModel extends BaseModel {
     data['website'] = _website;
     data['image_url'] = _imageUrl;
     data['creation_date'] = _creationDate;
-    if (team != null) data['teams'] = team.map((v) => v.toJson()).toList();
+    final Map teamJson = {};
+    team.forEach((preview) => teamJson[preview.uid] = preview.toJson());
+    if (team != null) data['team'] = teamJson;
     return data;
   }
 }

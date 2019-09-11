@@ -32,7 +32,7 @@ class Locator {
       ),
       StreamProvider(
         builder: (_) => ConnectivityService().connectionStatusController.stream,
-        updateShouldNotify: (a, b) => a != b,
+        updateShouldNotify: (a, b) => true,
       ),
     ];
   }

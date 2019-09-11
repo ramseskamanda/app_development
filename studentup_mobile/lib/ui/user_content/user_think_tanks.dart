@@ -5,7 +5,7 @@ class UserThinkTanks extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: const Text('UserThinkTanks'),
+        child: const Text('Coming Soon!'),
       ),
     );
   }

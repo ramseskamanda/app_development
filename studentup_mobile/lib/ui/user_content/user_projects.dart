@@ -5,7 +5,7 @@ class UserProjects extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: const Text('UserProjects'),
+        child: const Text('Coming Soon!'),
       ),
     );
   }

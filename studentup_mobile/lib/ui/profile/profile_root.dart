@@ -42,8 +42,8 @@ class ProfileRoot extends StatelessWidget {
         actions: <Widget>[
           PopupMenuWithActions(
             onLogout: () async {
-              Provider.of<InnerRouter>(context).resetRouter();
               await Locator.of<AuthService>().logout();
+              Provider.of<InnerRouter>(context).resetRouter();
             },
           ),
         ],

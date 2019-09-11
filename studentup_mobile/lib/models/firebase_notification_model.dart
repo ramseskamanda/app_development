@@ -1,37 +1,34 @@
 import 'package:studentup_mobile/models/base_model.dart';
 
 class FirebaseNotificationModel extends BaseModel {
-  String _content;
+  Map<dynamic, dynamic> _content;
   String _type;
-  String _userId;
-  List<String> _tokens;
+  String _topic;
 
-  FirebaseNotificationModel(
-      {String content, String type, String userId, List<String> tokens}) {
-    this._content = content;
-    this._type = type;
-    this._userId = userId;
-    this._tokens = tokens;
+  FirebaseNotificationModel({
+    Map<dynamic, dynamic> content,
+    String type,
+    String userId,
+    String topic,
+  }) {
+    _content = content;
+    _type = type;
+    _topic = topic;
   }
 
-  String get content => _content;
-  String get type => _type;
-  String get userId => _userId;
-  List<String> get tokens => _tokens;
+  Map<dynamic, dynamic> get content => _content ?? '';
+  String get type => _type ?? '';
 
   FirebaseNotificationModel.fromJson(Map<String, dynamic> json) {
     _content = json['content'];
     _type = json['type'];
-    _userId = json['user_id'];
-    _tokens = json['tokens'].cast<String>();
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['content'] = this._content;
-    data['type'] = this._type;
-    data['user_id'] = this._userId;
-    data['tokens'] = this._tokens;
+    data['content'] = _content;
+    data['type'] = _type;
+    data['topic'] = _topic;
     return data;
   }
 }

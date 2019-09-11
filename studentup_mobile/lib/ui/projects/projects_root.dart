@@ -58,13 +58,36 @@ class ProjectFeedRoot extends StatelessWidget {
                   return Center(child: const Text('An Error Occured...'));
                 return LiquidPullToRefresh(
                   onRefresh: () => notifier.fetchData(),
-                  child: ListView.separated(
-                    itemCount: notifier.projects.length,
-                    separatorBuilder: (_, index) =>
-                        const SizedBox(height: 24.0),
-                    itemBuilder: (_, index) =>
-                        ProjectPost(model: notifier.projects[index]),
-                  ),
+                  child: notifier.projects.isEmpty
+                      ? CustomScrollView(
+                          slivers: <Widget>[
+                            SliverFillViewport(
+                              delegate: SliverChildListDelegate([
+                                Center(
+                                  child: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                        maxWidth:
+                                            MediaQuery.of(context).size.width *
+                                                0.8),
+                                    child: Text(
+                                      'No ongoing projects...\n\n Come back later or create your own!',
+                                      softWrap: true,
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context).textTheme.body2,
+                                    ),
+                                  ),
+                                ),
+                              ]),
+                            ),
+                          ],
+                        )
+                      : ListView.separated(
+                          itemCount: notifier.projects.length,
+                          separatorBuilder: (_, index) =>
+                              const SizedBox(height: 24.0),
+                          itemBuilder: (_, index) =>
+                              ProjectPost(model: notifier.projects[index]),
+                        ),
                 );
               },
             ),

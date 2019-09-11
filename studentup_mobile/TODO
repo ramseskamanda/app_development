@@ -68,27 +68,29 @@ v-0.0.2:
   ✔ Implement 'Add Team' onPressed && its route @done(19-09-03 18:59)
 
 v-0.0.3:
-  ☐ ! Finish Notifications
+  ✔ ! Finish Notifications @done(19-09-11 06:06)
   ☐ Test Firebase In-App Messaging (https://pub.dev/packages/firebase_in_app_messaging#-readme-tab-)
   ☐ Add Terms and Conditions
   ✔ Add Hidden Menu Drawer @done(19-09-09 19:07)
-  ☐ Add AlertDialog before deleting object
+  ✔ Add AlertDialog before deleting object @done(19-09-11 06:32)
   ✔ Finish Skill Endorsement @done(19-09-09 18:59)
   ✔ Add Search to Project Page @done(19-09-08 21:25)
   ☐ Add profile editor for startups and users
-  ☐ Fix Connectivity bug where profile picture doesn't show up after network is back (+other connectivity-related bugs)
+  ✔ Fix Connectivity bug where profile picture doesn't show up after network is back (+other connectivity-related bugs) @done(19-09-11 06:43)
   ☐ ! Ability to delete anything from SeeAll, Projects, Chats, Messages, Think Tanks, Comments, Account, Skills, Experience, Education, etc.
   ☐ Enable automatic email bug report sending through email
   ✔ Allow posting custom pictures as backgrounds for projects @done(19-09-09 19:16)
   ✔ Implement chat messages read (just make last message seenAt??) @done(19-09-09 22:52)
   ☐ Check for existing conversation when creating new conversation
   ✔ Fix ChatList issues @done(19-09-09 22:07)
-  ☐ Implement other design for Think Tanks
   ✔ Fix bugs + Implement proper bug reporting routes @done(19-09-09 19:13)
-  ☐ ! Add access to applications for the project creator
+  ✔ ! Add access to applications for the project creator @done(19-09-11 02:58)
   ☐ Look at TODOs
-  ☐ ! Fix startup creation bug
-  ☐ Add reload button to the connectivity screen
+  ✔ ! Fix startup creation bug @done(19-09-11 01:53)
+  ✔ Add reload button to the connectivity screen @done(19-09-11 06:43)
+  ✔ Add permanent storage to attachment downloads @done(19-09-11 06:07)
+  ☐ Allow opening of downloaded files
+  ☐ Menu Drawer with 'My Projects' and 'My Think Tanks'
 
 v-0.0.4:
   ☐ Rewrite architecture with more abstraction and better sharing of Streams
@@ -96,10 +98,7 @@ v-0.0.4:
   ☐ Add notification icons for messaging
   ☐ Add Setting for QueryOrder for Think Tanks etc.
   ☐ Implement account switching
-  ☐ Add permanent storage to attachment downloads
-  ☐ Menu Drawer with 'My Projects' and 'My Think Tanks'
   ☐ Add download percentage indicator
-  ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, messaging, etc.
   ☐ include a one-time pop-up (which can be permanently clicked away) telling people about what happens when you sign up for a project
   ☐ Fix blurriness of SplashScreen
   ☐ Add Search Caching + Cache Cleaner (in Algolia Search)
@@ -108,7 +107,13 @@ v-0.0.4:
   ☐ Fix profile tap in conversation screen to work for startups as well
   ☐ Make think tank comments not anonymous
   ☐ Make think tank premises editable
+  ☐ Do more research on in-app purchases
+  ☐ Fix bug with new profile completion toast keeps appearing after a user was created even though the user is different or not new
+  ☐ Add Notifications Screen
 
+v-0.0.5:
+  ☐ Implement other design for Think Tanks
+  ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, messaging, etc.
 
 
 Refactoring:

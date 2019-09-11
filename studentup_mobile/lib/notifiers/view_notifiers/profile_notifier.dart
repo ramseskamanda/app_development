@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:studentup_mobile/input_blocs/user_profile_edit_bloc.dart';
+// import 'package:studentup_mobile/input_blocs/user_profile_edit_bloc.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/education_model.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
@@ -10,10 +10,11 @@ import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/notifications/notification_service.dart';
 
 class ProfileNotifier extends NetworkIO {
   String _userId;
-  UserProfileEditBloc _userProfileEditBloc;
+  // UserProfileEditBloc _userProfileEditBloc;
 
   DocumentReference _userDocument;
   bool _isStartup;
@@ -21,13 +22,13 @@ class ProfileNotifier extends NetworkIO {
 
   ProfileNotifier([String uid]) {
     _userId = uid;
-    _userProfileEditBloc = UserProfileEditBloc();
+    // _userProfileEditBloc = UserProfileEditBloc();
   }
 
   bool get isStartup => _isStartup;
   Preview get info => _preview;
 
-  UserProfileEditBloc get userBloc => _userProfileEditBloc;
+  // UserProfileEditBloc get userBloc => _userProfileEditBloc;
 
   //USER INFORMATION
   Stream<UserInfoModel> get userInfoStream =>
@@ -64,7 +65,7 @@ class ProfileNotifier extends NetworkIO {
 
   @override
   void dispose() {
-    _userProfileEditBloc.dispose();
+    // _userProfileEditBloc.dispose();
     super.dispose();
   }
 
@@ -82,6 +83,7 @@ class ProfileNotifier extends NetworkIO {
         startupInfoStream.listen((data) => preview = data);
       else
         userInfoStream.listen((data) => preview = data);
+      await sendData();
     } catch (e) {
       print(e);
       readError = NetworkError(message: e.toString());
@@ -94,10 +96,13 @@ class ProfileNotifier extends NetworkIO {
     try {
       switch (data.runtimeType) {
         case UserInfoModel:
-          addTeamMember(data);
+          _addTeamMember(data);
           break;
         case Preview:
-          removeTeamMember(data);
+          _removeTeamMember(data);
+          break;
+        case Null:
+          _updateNotificationTokens();
           break;
         default:
           throw 'No Action for Type: ${data.runtimeType}';
@@ -112,9 +117,14 @@ class ProfileNotifier extends NetworkIO {
 
   void logout() {
     _userId = null;
+    writer.updateNotificationTokens(
+      docPath: _userDocument.path,
+      token: Locator.of<NotificationService>().deviceToken,
+      remove: true,
+    );
   }
 
-  Future addTeamMember(UserInfoModel model) async {
+  Future _addTeamMember(UserInfoModel model) async {
     isWriting = true;
     await writer.postNewTeamMember(
       model: model,
@@ -123,7 +133,7 @@ class ProfileNotifier extends NetworkIO {
     isWriting = false;
   }
 
-  Future removeTeamMember(Preview model) async {
+  Future _removeTeamMember(Preview model) async {
     isWriting = true;
     await writer.removeTeamMember(
       model: model,
@@ -131,4 +141,10 @@ class ProfileNotifier extends NetworkIO {
     );
     isWriting = false;
   }
+
+  Future _updateNotificationTokens() async =>
+      await writer.updateNotificationTokens(
+        docPath: _userDocument.path,
+        token: Locator.of<NotificationService>().deviceToken,
+      );
 }

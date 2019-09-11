@@ -7,6 +7,7 @@ import 'package:studentup_mobile/mixins/storage_io.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/project_signup_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/storage/firebase/firebase_storage.dart';
@@ -16,6 +17,7 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
   ProjectModel model;
   //user sign up docs
   Stream<ProjectSignupModel> _userSignups;
+  Stream<List<ProjectSignupModel>> _signups;
   //potential actions
   TextEditingController _messageController;
   File _file;
@@ -29,17 +31,19 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
 
   TextEditingController get message => _messageController;
   Stream<ProjectSignupModel> get userSignUpStream => _userSignups;
+  Stream<List<ProjectSignupModel>> get signups =>
+      model.userIsOwner ? _signups : Stream.empty();
   bool get canApply =>
       _messageController.text?.isNotEmpty ?? false || _file != null;
   File get file => _file;
   set file(File value) {
     _file = value;
-    print('value.path');
     notifyListeners();
   }
 
   @override
   Future fetchData() async {
+    _signups = reader.fetchProjectSignups(model);
     _userSignups = reader.fetchProjectSignupById(
       Locator.of<AuthService>().currentUser.uid,
       model,
@@ -57,6 +61,7 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
     }
     final ProjectSignupModel _signupModel = ProjectSignupModel(
       userId: Locator.of<AuthService>().currentUser.uid,
+      user: Locator.of<ProfileNotifier>().info,
       message: _messageController.text,
       projectId: model.docId,
       timestamps: DateTime.now(),

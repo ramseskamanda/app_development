@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/enum/popup_actions.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class PopupMenuWithActions extends StatelessWidget {
   final void Function() onDelete;
@@ -13,13 +14,13 @@ class PopupMenuWithActions extends StatelessWidget {
     this.color = Colors.transparent,
   }) : super(key: key);
 
-  void _runCommand(PopupAction action) {
+  Future<void> _runCommand(PopupAction action, BuildContext context) async {
     switch (action) {
       case PopupAction.DELETE:
-        onDelete();
+        if (await Dialogs.showDeletionDialog(context)) onDelete();
         break;
       case PopupAction.LOGOUT:
-        onLogout();
+        if (await Dialogs.showLogoutDialog(context)) onLogout();
         break;
       default:
         print('No actions matched for: $action');
@@ -35,7 +36,7 @@ class PopupMenuWithActions extends StatelessWidget {
       ),
       child: PopupMenuButton(
         elevation: 10.0,
-        onSelected: _runCommand,
+        onSelected: (PopupAction ac) async => _runCommand(ac, context),
         itemBuilder: (context) {
           return [
             if (onLogout != null)

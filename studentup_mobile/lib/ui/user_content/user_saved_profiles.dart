@@ -5,7 +5,7 @@ class UserSavedProfiles extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: const Text('UserSavedProfiles'),
+        child: const Text('Coming Soon!'),
       ),
     );
   }

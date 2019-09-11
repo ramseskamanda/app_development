@@ -75,7 +75,7 @@ class ProjectModel extends BaseModel {
       _signupsNum != null && _signupsNum > 0 ? _signupsNum : 0;
   double get percentSignedUp => signupsNum / maxUsersNum;
   bool get userIsOwner =>
-      creator == Locator.of<AuthService>().currentUser.uid ?? false;
+      creatorId == Locator.of<AuthService>().currentUser.uid ?? false;
   List<String> get files => _files ?? [];
 
   ProjectModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {

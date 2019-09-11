@@ -18,8 +18,8 @@ Future<void> main() async {
   await Locator.setup();
   await Locator.of<AuthService>().attemptAutoLogin();
   await Locator.of<AnalyticsService>().logger.logAppOpen();
-  Locator.of<NotificationService>().initialize();
-  Locator.of<NotificationService>().test();
+  await Locator.of<NotificationService>().initialize();
+  await Locator.of<NotificationService>().test();
   runApp(MyApp());
   // Catcher(
   //   MyApp(),

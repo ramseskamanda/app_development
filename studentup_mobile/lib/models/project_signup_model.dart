@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 
 class ProjectSignupModel extends BaseModel {
   String _userId;
+  Preview _user;
   String _message;
   String _projectId;
   Timestamp _timestamps;
@@ -10,12 +12,14 @@ class ProjectSignupModel extends BaseModel {
 
   ProjectSignupModel({
     String userId,
+    Preview user,
     String message,
     String projectId,
     DateTime timestamps,
     String file,
   }) {
     _userId = userId;
+    _user = user;
     _message = message;
     _projectId = projectId;
     _timestamps = Timestamp.fromDate(timestamps);
@@ -23,6 +27,7 @@ class ProjectSignupModel extends BaseModel {
   }
 
   String get userId => _userId ?? 'Error 500';
+  Preview get user => _user;
   String get message => _message ?? 'Error 500';
   String get projectId => _projectId ?? 'Error 500';
   DateTime get timestamps => _timestamps?.toDate() ?? DateTime.now();
@@ -35,6 +40,7 @@ class ProjectSignupModel extends BaseModel {
     _projectId = json['project_id'];
     _timestamps = json['timestamps'];
     _file = json['file'];
+    _user = Preview.fromJson(json['user'], _userId);
   }
 
   Map<String, dynamic> toJson() {
@@ -44,6 +50,7 @@ class ProjectSignupModel extends BaseModel {
     data['project_id'] = _projectId;
     data['timestamps'] = _timestamps;
     data['file'] = _file;
+    data['user'] = _user?.toJson();
     return data;
   }
 }

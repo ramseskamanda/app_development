@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
@@ -45,7 +46,7 @@ abstract class BaseFileStorageAPI {
     final FileStat stats = await file.stat();
     print('Trying to open ${file.path} with Mode: ' + stats.modeString());
     print('File ${file.path} has Type: ' + stats.type.toString());
-    // OpenFile.open(file.path, type: );
+    print(await OpenFile.open(file.path));
   }
 
   Future<String> getFileDownloadUrl({String path});

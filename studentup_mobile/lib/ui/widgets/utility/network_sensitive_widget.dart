@@ -8,7 +8,7 @@ class NetworkSensitive extends StatelessWidget {
 
   NetworkSensitive({
     this.child,
-    this.text = 'You have no connection. Please turn on your data.',
+    this.text = 'You have no connection\n\n Please turn on your data',
   });
 
   @override
@@ -17,17 +17,25 @@ class NetworkSensitive extends StatelessWidget {
     var connectionStatus = Provider.of<ConnectivityStatus>(context);
 
     if (connectionStatus == ConnectivityStatus.Offline)
-      return Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.8,
+      return CustomScrollView(
+        slivers: <Widget>[
+          SliverFillViewport(
+            delegate: SliverChildListDelegate([
+              Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: MediaQuery.of(context).size.width * 0.8,
+                  ),
+                  child: Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.subhead,
+                  ),
+                ),
+              ),
+            ]),
           ),
-          child: Text(
-            text,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.subhead,
-          ),
-        ),
+        ],
       );
 
     return child;

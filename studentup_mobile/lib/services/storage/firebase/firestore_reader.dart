@@ -318,4 +318,16 @@ class FirestoreReader implements BaseAPIReader {
         .map((snapshot) =>
             snapshot.exists ? ProjectSignupModel.fromDoc(snapshot) : null);
   }
+
+  @override
+  Stream<List<ProjectSignupModel>> fetchProjectSignups(ProjectModel project) {
+    return _firestore
+        .collection(projectCollection)
+        .document(project.docId)
+        .collection('applications')
+        .snapshots()
+        .map((snapshot) => snapshot.documents
+            .map((doc) => ProjectSignupModel.fromDoc(doc))
+            .toList());
+  }
 }

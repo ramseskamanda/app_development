@@ -6,11 +6,13 @@ import 'package:studentup_mobile/enum/project_action.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/project_signup_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/project_page_notifier.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/projects/file_attachment.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 import 'package:studentup_mobile/ui/widgets/slivers/custom_sliver_delegate.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 import 'package:studentup_mobile/util/util.dart';
@@ -44,8 +46,9 @@ class ProjectPage extends StatelessWidget {
                       builder: (context, notifier, child) {
                         if (notifier.model.userIsOwner)
                           return StadiumButton(
-                            text: 'Select Candidate',
-                            onPressed: () => print('object'),
+                            text: 'End Project',
+                            onPressed: () =>
+                                notifier.sendData(ProjectAction.DELETE),
                           );
                         return StreamBuilder<ProjectSignupModel>(
                           stream: notifier.userSignUpStream,
@@ -166,7 +169,6 @@ class ProjectInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProjectPageNotifier notifier = Provider.of<ProjectPageNotifier>(context);
-    print(notifier.model.creator);
     return SliverList(
       delegate: SliverChildListDelegate(
         <Widget>[
@@ -245,45 +247,104 @@ class ProjectInformation extends StatelessWidget {
                     textAlign: TextAlign.center,
                     softWrap: true,
                   ),
-                  //TODO: add list of signups if the user viewing the project is the owner
-                  const SizedBox(height: 16.0),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.9,
-                    child: Column(
-                      children: <Widget>[
-                        Card(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0, vertical: 8.0),
-                            child: TextField(
-                              controller: notifier.message,
-                              maxLines: null,
-                              minLines: 5,
-                              readOnly: snapshot.hasData,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: !snapshot.hasData
-                                    ? 'Write about your motivation...'
-                                    : snapshot.data.message,
+                  if (notifier.model.userIsOwner) ...[
+                    const SizedBox(height: 32.0),
+                    StreamBuilder<List<ProjectSignupModel>>(
+                      stream: notifier.signups,
+                      initialData: [],
+                      builder: (
+                        BuildContext context,
+                        AsyncSnapshot<List<ProjectSignupModel>> snapshot,
+                      ) {
+                        if (!snapshot.hasData) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting)
+                            return const CircularProgressIndicator();
+                          return Text('An Error Occured...');
+                        }
+                        if (snapshot.data.isEmpty)
+                          return Text('No signups yet, stay positive!');
+                        return Column(
+                          children: snapshot.data
+                              .map((signup) => UserSignupTile(signup: signup))
+                              .toList(),
+                        );
+                      },
+                    ),
+                  ] else ...[
+                    const SizedBox(height: 16.0),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      child: Column(
+                        children: <Widget>[
+                          Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0, vertical: 8.0),
+                              child: TextField(
+                                controller: notifier.message,
+                                maxLines: null,
+                                minLines: 5,
+                                readOnly: snapshot.hasData,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: !snapshot.hasData
+                                      ? 'Write about your motivation...'
+                                      : snapshot.data.message,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 24.0),
-                        Center(
-                          child: SingleFileAttachment(
-                            canEdit: !snapshot.hasData,
+                          const SizedBox(height: 24.0),
+                          Center(
+                            child: SingleFileAttachment(
+                              canEdit: !snapshot.hasData,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+                  ],
                   const SizedBox(height: 48.0),
                 ],
               );
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class UserSignupTile extends StatelessWidget {
+  final ProjectSignupModel signup;
+
+  const UserSignupTile({Key key, this.signup}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: CachedNetworkImage(
+        imageUrl: signup.user.imageUrl,
+        placeholder: (_, __) => CircleAvatar(
+          backgroundColor: CupertinoColors.extraLightBackgroundGray,
+        ),
+        errorWidget: (_, __, e) => CircleAvatar(
+          backgroundColor: CupertinoColors.extraLightBackgroundGray,
+          child: const Icon(Icons.error),
+        ),
+        imageBuilder: (_, image) => CircleAvatar(backgroundImage: image),
+      ),
+      title: Text(signup.user.givenName),
+      isThreeLine: true,
+      subtitle: Text(signup.message),
+      trailing: IconButton(
+        icon: const Icon(Icons.file_download),
+        color: Theme.of(context).accentColor,
+        onPressed: () => Dialogs.showComingSoon(context),
+      ),
+      onTap: () => Navigator.of(context).pushNamed(
+        Router.otherProfile,
+        arguments: {'infoModel': signup.user},
       ),
     );
   }
