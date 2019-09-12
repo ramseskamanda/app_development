@@ -67,7 +67,7 @@ v-0.0.2:
   ✔ Remove favorites for now @done(19-09-03 18:01)
   ✔ Implement 'Add Team' onPressed && its route @done(19-09-03 18:59)
 
-v-0.0.3:
+v-0.0.4:
   ✔ ! Finish Notifications @done(19-09-11 06:06)
   ✔ Test Firebase In-App Messaging (https://pub.dev/packages/firebase_in_app_messaging#-readme-tab-) @done(19-09-12 03:13)
   ✔ Add Hidden Menu Drawer @done(19-09-09 19:07)
@@ -90,7 +90,7 @@ v-0.0.3:
   ✔ Think tanks not always in the right order @done(19-09-12 03:36)
   ✔ Increase spacing below New Comment button @done(19-09-12 03:40)
 
-v-0.0.4:
+v-0.0.5:
   ☐ Check for existing conversation when creating new conversation  
   ☐ Rewrite architecture with more abstraction and better sharing of Streams
   ☐ Implement WebView on tap for startup websites
@@ -113,7 +113,7 @@ v-0.0.4:
   ☐ Add Notifications Screen
   ☐ Add animation to posting a think tank
 
-v-0.0.5:
+v-0.0.6:
   ☐ Add profile editor for startups and users  
   ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, messaging, etc.
   ☐ Add email verification, email reset, and account removal emails
