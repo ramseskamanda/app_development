@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:studentup_mobile/models/base_model.dart';
 import 'package:studentup_mobile/util/util.dart';
 
-class LaborExeprienceModel {
+class LaborExeprienceModel extends BaseModel {
   String _userId;
   String _companyName;
   Timestamp _periodStart;
@@ -29,7 +30,8 @@ class LaborExeprienceModel {
   String get periodEnd => Util.format(_periodEnd, allowNow: true);
   String get position => _position ?? 'No Position';
 
-  LaborExeprienceModel.fromDoc(Map<String, dynamic> json) {
+  LaborExeprienceModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
+    final Map<String, dynamic> json = doc.data;
     _userId = json['user_id'];
     _companyName = json['company_name'];
     _periodStart = json['period_start'];

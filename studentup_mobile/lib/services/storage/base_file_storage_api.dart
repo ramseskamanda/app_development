@@ -8,7 +8,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class BaseFileStorageAPI {
-  //TODO: Implement general queue so that only a certain number of downloads can be started at the same time
   @protected
   final Dio dio = Dio();
   @protected
@@ -46,11 +45,10 @@ abstract class BaseFileStorageAPI {
     final FileStat stats = await file.stat();
     print('Trying to open ${file.path} with Mode: ' + stats.modeString());
     print('File ${file.path} has Type: ' + stats.type.toString());
-    print(await OpenFile.open(file.path));
+    await OpenFile.open(file.path);
   }
 
   Future<String> getFileDownloadUrl({String path});
-  //TODO: add progress indicator on uploads and downloads
   Future<List<String>> upload({List<File> files, String location});
   Future<List<String>> download({List<String> filePaths});
 }

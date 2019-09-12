@@ -6,7 +6,7 @@ class DeletionDialog {
       context: context,
       builder: (_) {
         return AlertDialog(
-          title: const Text('Are you sure?'),
+          title: const Text('Delete this item?'),
           content: const Text(
             'Once this item is deleted, you will not be able to get it back.\n Are you sure you want to delete it?',
           ),

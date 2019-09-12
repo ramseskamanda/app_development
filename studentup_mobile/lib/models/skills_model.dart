@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:studentup_mobile/models/base_model.dart';
 
-class SkillsModel {
+class SkillsModel extends BaseModel {
   double _avgRating;
   String _description;
   String _name;
@@ -30,7 +31,7 @@ class SkillsModel {
   String get category => _category;
   CollectionReference get ratings => _ratings;
 
-  SkillsModel.fromDoc(DocumentSnapshot doc) {
+  SkillsModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;
     _ratings = doc.reference.collection('ratings');
     _avgRating = json['avg_rating'];

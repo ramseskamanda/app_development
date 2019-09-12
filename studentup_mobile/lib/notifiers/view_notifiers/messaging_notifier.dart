@@ -84,7 +84,6 @@ class MessagingNotifier extends NetworkIO {
           throw 'No Action for: $data';
       }
     } catch (e) {
-      //TODO: add error dialog
       print(e);
       writeError = NetworkError(message: e.toString());
       return false;

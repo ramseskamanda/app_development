@@ -21,7 +21,7 @@ abstract class BaseAPIReader {
   Stream<List<EducationModel>> fetchEducation(String uid);
   Stream<List<LaborExeprienceModel>> fetchExperience(String uid);
   Future<List<StartupInfoModel>> fetchStartups(QueryOrder order);
-  Future<List<ThinkTanksModel>> fetchThinkTanks(QueryOrder order);
+  Future<List<ThinkTankModel>> fetchThinkTanks(QueryOrder order);
   Future<List<ProjectModel>> fetchProjects(QueryOrder order);
   Future<List<ProjectModel>> fetchProjectsByOwner(String uid,
       {QueryOrder order = QueryOrder.popularity});
@@ -44,11 +44,15 @@ abstract class BaseAPIWriter {
   Future updateNotificationTokens(
       {String docPath, String token, bool remove = false});
   Future updateProfileInfo(String uid, Map<String, dynamic> data);
-  Future postNewThinkTank(ThinkTanksModel model);
-  Future removeThinkTank(ThinkTanksModel model);
+  Future postNewThinkTank(ThinkTankModel model);
+  Future removeThinkTank(ThinkTankModel model);
+  Future removeComment({ThinkTankModel tank, Comments comment});
   Future postNewSkill(SkillsModel model);
+  Future removeSkill(SkillsModel model);
   Future postNewEducation(EducationModel model);
+  Future removeEducation(EducationModel model);
   Future postNewExperience(LaborExeprienceModel model);
+  Future removeExperience(LaborExeprienceModel model);
   Future postNewTeamMember({UserInfoModel model, String docPath});
   Future removeTeamMember({Preview model, String docPath});
   Future postComment({Comments model, String collectionPath});

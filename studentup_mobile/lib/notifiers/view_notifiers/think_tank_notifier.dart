@@ -5,7 +5,7 @@ import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class ThinkTankNotifier extends NetworkIO {
-  final ThinkTanksModel model;
+  final ThinkTankModel model;
   TextEditingController _newComment;
   Stream<List<Comments>> _comments;
 
@@ -70,6 +70,9 @@ class ThinkTankNotifier extends NetworkIO {
       );
   }
 
+  Future _removeComment(Delete delete) async =>
+      await writer.removeComment(tank: model, comment: delete.model);
+
   @override
   Future<bool> sendData([data]) async {
     try {
@@ -82,6 +85,9 @@ class ThinkTankNotifier extends NetworkIO {
           break;
         case Downvote:
           _downvoteComment(data);
+          break;
+        case Delete:
+          _removeComment(data);
           break;
         default:
       }
@@ -106,4 +112,10 @@ class Downvote {
   final bool cancelVote;
 
   Downvote(this.docId, this.cancelVote);
+}
+
+class Delete {
+  final Comments model;
+
+  Delete(this.model);
 }

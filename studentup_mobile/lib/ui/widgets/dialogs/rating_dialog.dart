@@ -24,14 +24,10 @@ class StarRatingDialog {
           positiveComment: "We are so happy to hear :)", // optional
           negativeComment: "We're sad to hear :(", // optional
           accentColor: Colors.red, // optional
-          onSubmitPressed: (int rating) {
-            print("onSubmitPressed: rating = $rating");
-            // TODO: open the app's page on Google Play / Apple App Store
-          },
-          onAlternativePressed: () {
-            print("onAlternativePressed: do something");
-            // TODO: maybe you want the user to contact you instead of rating a bad review
-          },
+          onSubmitPressed: (int rating) =>
+              print("onSubmitPressed: rating = $rating"),
+          onAlternativePressed: () =>
+              print("onAlternativePressed: do something"),
         );
         return ratingDialog;
       },

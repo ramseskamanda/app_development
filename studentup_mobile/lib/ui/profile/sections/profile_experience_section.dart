@@ -4,7 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/theme.dart';
+import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
@@ -130,6 +133,10 @@ class ExperienceCard extends StatelessWidget {
             ListTile(
               title: Text(model.companyName),
               subtitle: Text('${model.periodStart} - ${model.periodEnd}'),
+              trailing: PopupMenuWithActions(
+                onDelete: () async =>
+                    await Locator.of<BaseAPIWriter>().removeExperience(model),
+              ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

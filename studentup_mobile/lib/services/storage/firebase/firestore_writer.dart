@@ -55,12 +55,12 @@ class FirestoreWriter implements BaseAPIWriter {
   }
 
   @override
-  Future postNewThinkTank(ThinkTanksModel model) async {
+  Future postNewThinkTank(ThinkTankModel model) async {
     await _firestore.collection(thinkTanksCollection).add(model.toJson());
   }
 
   @override
-  Future removeThinkTank(ThinkTanksModel model) async {
+  Future removeThinkTank(ThinkTankModel model) async {
     await _firestore
         .collection(thinkTanksCollection)
         .document(model.docId)
@@ -121,10 +121,12 @@ class FirestoreWriter implements BaseAPIWriter {
     await collection.document(docId).updateData(
           upvote
               ? {
-                  'upvotes': FieldValue.arrayRemove([uid])
+                  'upvotes': FieldValue.arrayRemove([uid]),
+                  'vote_count': FieldValue.increment(-1),
                 }
               : {
-                  'downvotes': FieldValue.arrayRemove([uid])
+                  'downvotes': FieldValue.arrayRemove([uid]),
+                  'vote_count': FieldValue.increment(-1),
                 },
         );
   }
@@ -140,10 +142,12 @@ class FirestoreWriter implements BaseAPIWriter {
     await collection.document(docId).updateData(
           upvote
               ? {
-                  'upvotes': FieldValue.arrayUnion([uid])
+                  'upvotes': FieldValue.arrayUnion([uid]),
+                  'vote_count': FieldValue.increment(1),
                 }
               : {
-                  'downvotes': FieldValue.arrayUnion([uid])
+                  'downvotes': FieldValue.arrayUnion([uid]),
+                  'vote_count': FieldValue.increment(1),
                 },
         );
   }
@@ -153,7 +157,6 @@ class FirestoreWriter implements BaseAPIWriter {
     ChatModel chat,
     MessageModel initialMessage,
   }) async {
-    //TODO: change this
     // QuerySnapshot preExistingDoc =
     //     await _firestore.collection(chatsCollection).where('').getDocuments();
     DocumentReference newDoc =
@@ -220,22 +223,42 @@ class FirestoreWriter implements BaseAPIWriter {
     String token,
     bool remove = false,
   }) async {
-    DocumentReference doc = _firestore.document(docPath);
-    _firestore.runTransaction((transaction) async {
-      final snap = await transaction.get(doc);
-      if (!snap.exists) throw 'Document does not exist.';
-      final List<String> _tokens = snap?.data['tokens']?.cast<String>() ?? [];
-      if (((!remove && !_tokens.contains(token)) ||
-          (remove && _tokens.contains(token)))) {
-        print('FIRESTORE ==> UPDATING TOKEN REGISTRY...');
-        print('FIRESTORE ==> CURRENT REGISTRY: $_tokens');
-        print('FIRESTORE ==> ADDING KEY: $token');
-        return await transaction.update(doc, {
-          'tokens': remove
-              ? FieldValue.arrayRemove([token])
-              : FieldValue.arrayUnion([token]),
-        });
-      }
-    });
+    final DocumentReference doc = _firestore.document(docPath);
+    final snap = await doc.get();
+    if (!snap.exists) throw 'Document does not exist.';
+    final List<String> _tokens = snap?.data['tokens']?.cast<String>() ?? [];
+    if (((!remove && !_tokens.contains(token)) ||
+        (remove && _tokens.contains(token)))) {
+      print('FIRESTORE ==> UPDATING TOKEN REGISTRY...');
+      print('FIRESTORE ==> CURRENT REGISTRY: $_tokens');
+      print('FIRESTORE ==> ADDING KEY: $token');
+      return await doc.updateData({
+        'tokens': remove
+            ? FieldValue.arrayRemove([token])
+            : FieldValue.arrayUnion([token]),
+      });
+    }
   }
+
+  @override
+  Future removeComment({ThinkTankModel tank, Comments comment}) async =>
+      await tank.comments.document(comment.docId).delete();
+
+  @override
+  Future removeEducation(EducationModel model) async => await _firestore
+      .collection(educationCollection)
+      .document(model.docId)
+      .delete();
+
+  @override
+  Future removeExperience(LaborExeprienceModel model) async => await _firestore
+      .collection(experienceCollection)
+      .document(model.docId)
+      .delete();
+
+  @override
+  Future removeSkill(SkillsModel model) async => await _firestore
+      .collection(skillsCollection)
+      .document(model.docId)
+      .delete();
 }

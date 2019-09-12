@@ -6,7 +6,6 @@ import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/util.dart';
 
 class NewEducationNotifier extends NetworkWriter {
-  //TODO: change these into blocs
   String _category;
   TextEditingController _university;
   TextEditingController _description;

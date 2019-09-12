@@ -114,16 +114,18 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
     return true;
   }
 
-  Future<void> downloadAttachmentsAndPreview() async {
+  Future<void> downloadAttachments() async {
     if (model.files.isEmpty) return;
     isReading = true;
     try {
       _downloadedFiles = await storage.download(filePaths: model.files);
-      if (_downloadedFiles.isNotEmpty)
-        await storage.showFile(file: File(_downloadedFiles[0]));
+      if (_downloadedFiles.isNotEmpty) showFile(_downloadedFiles.first);
     } catch (e) {
       readError = NetworkError(message: e.toString());
     }
     isReading = false;
   }
+
+  Future<void> showFile(String fileName) async =>
+      await storage.showFile(file: File(fileName));
 }

@@ -239,7 +239,7 @@ class ProjectInformation extends StatelessWidget {
                       ),
                       onPressed: notifier.isLoading
                           ? null
-                          : () => notifier.downloadAttachmentsAndPreview(),
+                          : () => notifier.downloadAttachments(),
                     ),
                   const SizedBox(height: 16.0),
                   Text(

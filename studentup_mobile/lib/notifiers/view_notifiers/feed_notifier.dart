@@ -5,16 +5,16 @@ import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 
 class FeedNotifier extends NetworkIO {
   List<StartupInfoModel> _startups;
-  List<ThinkTanksModel> _thinkTanks;
+  List<ThinkTankModel> _thinkTanks;
 
   FeedNotifier() {
     _startups = <StartupInfoModel>[];
-    _thinkTanks = <ThinkTanksModel>[];
+    _thinkTanks = <ThinkTankModel>[];
     fetchData();
   }
 
   List<StartupInfoModel> get startups => isLoading || hasError ? [] : _startups;
-  List<ThinkTanksModel> get thinkTanks =>
+  List<ThinkTankModel> get thinkTanks =>
       isLoading || hasError ? [] : _thinkTanks;
 
   @override
@@ -34,7 +34,7 @@ class FeedNotifier extends NetworkIO {
   @override
   Future<bool> sendData([dynamic model]) async {
     try {
-      await writer.removeThinkTank(model as ThinkTanksModel);
+      await writer.removeThinkTank(model as ThinkTankModel);
     } catch (e) {
       print(e);
       writeError = NetworkError(message: e.toString());

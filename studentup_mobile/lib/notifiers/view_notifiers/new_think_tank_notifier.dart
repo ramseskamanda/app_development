@@ -7,7 +7,6 @@ import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class NewThinkTankNotifier extends NetworkWriter {
-  //TODO: change these into blocs
   //name value
   //description value
   TextEditingController _name;
@@ -26,7 +25,7 @@ class NewThinkTankNotifier extends NetworkWriter {
     if (!canSend) return false;
     isLoading = true;
     final Preview user = Locator.of<ProfileNotifier>().info;
-    final model = ThinkTanksModel(
+    final model = ThinkTankModel(
       askerId: Locator.of<AuthService>().currentUser.uid,
       askerImage: user.imageUrl,
       premise: _description.text,

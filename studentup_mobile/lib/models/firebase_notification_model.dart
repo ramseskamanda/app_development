@@ -1,34 +1,29 @@
-import 'package:studentup_mobile/models/base_model.dart';
+import 'package:equatable/equatable.dart';
+import 'package:studentup_mobile/enum/notification_type.dart';
 
-class FirebaseNotificationModel extends BaseModel {
-  Map<dynamic, dynamic> _content;
-  String _type;
-  String _topic;
+class FirebaseNotificationModel extends Equatable {
+  final String _body;
+  final String _title;
+  final Map<dynamic, dynamic> _data;
 
-  FirebaseNotificationModel({
-    Map<dynamic, dynamic> content,
-    String type,
-    String userId,
-    String topic,
-  }) {
-    _content = content;
-    _type = type;
-    _topic = topic;
+  FirebaseNotificationModel(
+    this._body,
+    this._title,
+    this._data,
+  );
+
+  factory FirebaseNotificationModel.fromJson(Map<String, dynamic> json) {
+    return FirebaseNotificationModel(
+      json['body'],
+      json['title'],
+      Map<dynamic, dynamic>.from(json['data'] ?? {}),
+    );
   }
 
-  Map<dynamic, dynamic> get content => _content ?? '';
-  String get type => _type ?? '';
-
-  FirebaseNotificationModel.fromJson(Map<String, dynamic> json) {
-    _content = json['content'];
-    _type = json['type'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['content'] = _content;
-    data['type'] = _type;
-    data['topic'] = _topic;
-    return data;
-  }
+  String get body => _body ?? 'Notification';
+  String get title => _title ?? 'Studentup';
+  Map<dynamic, dynamic> get data => _data ?? {};
+  NotificationType get type => _data == null
+      ? NotificationType.DEFAULT
+      : notificationType[data['type'] ?? 'default'];
 }

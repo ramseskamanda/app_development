@@ -6,7 +6,6 @@ import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/util.dart';
 
 class NewExperienceNotifier extends NetworkWriter {
-  //TODO: change these into blocs
   TextEditingController _company;
   TextEditingController _position;
   TextEditingController _startDateController;

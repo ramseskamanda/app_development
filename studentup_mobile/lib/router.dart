@@ -145,6 +145,12 @@ class InnerRouter {
   PageController get homeView => _homeController;
   set profileTab(int value) => _profileTab = value;
 
+  void goToMessaging() {
+    _navBarController.index = 0;
+    _homeController.jumpToPage(1);
+  }
+
+  void goToNotifications() => _navBarController.index = 0;
   void resetRouter() => _navBarController.index = 0;
   void goToProfile() => _navBarController.index = _profileTab ?? 0;
   void resetHomePage() => _homeController.jumpToPage(0);

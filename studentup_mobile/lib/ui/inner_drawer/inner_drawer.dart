@@ -68,7 +68,7 @@ class InnerDrawerMenu extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.collections_bookmark),
-            title: const Text('Saved Profiles'),
+            title: const Text('My Saved Profiles'),
             onTap: () =>
                 Navigator.of(context).popAndPushNamed(Router.userSavedProfiles),
           ),

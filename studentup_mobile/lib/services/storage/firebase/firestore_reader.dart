@@ -109,7 +109,7 @@ class FirestoreReader implements BaseAPIReader {
         .orderBy('period_start', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.documents
-            .map((doc) => EducationModel.fromDoc(doc.data))
+            .map((doc) => EducationModel.fromDoc(doc))
             .toList());
   }
 
@@ -121,7 +121,7 @@ class FirestoreReader implements BaseAPIReader {
         .where('user_id', isEqualTo: uid)
         .snapshots()
         .map((snapshot) => snapshot.documents
-            .map((doc) => LaborExeprienceModel.fromDoc(doc.data))
+            .map((doc) => LaborExeprienceModel.fromDoc(doc))
             .toList());
   }
 
@@ -145,7 +145,7 @@ class FirestoreReader implements BaseAPIReader {
   }
 
   @override
-  Future<List<ThinkTanksModel>> fetchThinkTanks(QueryOrder order) async {
+  Future<List<ThinkTankModel>> fetchThinkTanks(QueryOrder order) async {
     try {
       String field =
           QueryOrder.newest == order ? 'lastActivity' : 'commentCount';
@@ -155,7 +155,7 @@ class FirestoreReader implements BaseAPIReader {
           // .limit(NUM_ITEM_PREVIEW)
           .getDocuments();
       return snapshot.documents
-          .map((doc) => ThinkTanksModel.fromDoc(doc))
+          .map((doc) => ThinkTankModel.fromDoc(doc))
           .toList();
     } on PlatformException catch (e) {
       print(e);
@@ -236,7 +236,7 @@ class FirestoreReader implements BaseAPIReader {
   Stream<List<Comments>> fetchComments(String collectionPath) {
     CollectionReference reference = _firestore.collection(collectionPath);
     return reference
-        .orderBy('upvotes', descending: true)
+        .orderBy('vote_count', descending: true)
         // .limit(10)
         .snapshots()
         .map((snapshot) =>

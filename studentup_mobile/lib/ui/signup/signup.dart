@@ -53,7 +53,6 @@ class _SignUpState extends State<SignupRoot> {
     setState(() {});
   }
 
-  //TODO: Add tutorialBegin and tutorialComplete analytics
   @override
   void initState() {
     super.initState();

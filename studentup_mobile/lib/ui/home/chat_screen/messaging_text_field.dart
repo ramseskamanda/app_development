@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/enum/messaging_action.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/messaging_notifier.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class MessagingTextField extends StatelessWidget {
   @override
@@ -35,8 +36,10 @@ class MessagingTextField extends StatelessWidget {
                     autofocus: true,
                     minLines: 1,
                     maxLines: 5,
-                    onSubmitted: (value) =>
-                        service.sendData(MessagingAction.SEND),
+                    onSubmitted: (value) async {
+                      if (!await service.sendData(MessagingAction.SEND))
+                        Dialogs.showNetworkErrorDialog(context);
+                    },
                     onChanged: (value) {
                       if (value.length > 0) service.canSend = true;
                       if (value.length > 1) return;
@@ -59,7 +62,10 @@ class MessagingTextField extends StatelessWidget {
                   child: IconButton(
                     icon: Icon(Icons.send),
                     onPressed: service.canSend
-                        ? () => service.sendData(MessagingAction.SEND)
+                        ? () async {
+                            if (!await service.sendData(MessagingAction.SEND))
+                              Dialogs.showNetworkErrorDialog(context);
+                          }
                         : null,
                     color: Theme.of(context).accentColor,
                   ),

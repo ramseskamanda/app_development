@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
 import 'package:studentup_mobile/util/util.dart';
 
-class ThinkTanksModel extends BaseModel {
+class ThinkTankModel extends BaseModel {
   CollectionReference _comments;
   String _askerId;
   String _askerImage;
@@ -11,7 +11,7 @@ class ThinkTanksModel extends BaseModel {
   String _premise;
   String _title;
 
-  ThinkTanksModel({
+  ThinkTankModel({
     CollectionReference comments,
     String askerId,
     String askerImage,
@@ -37,7 +37,7 @@ class ThinkTanksModel extends BaseModel {
   String get premise => _premise;
   String get title => _title;
 
-  ThinkTanksModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
+  ThinkTankModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;
     _comments = doc.reference.collection('comments');
     _askerId = json['asker_id'];
@@ -67,6 +67,7 @@ class Comments extends BaseModel {
   Timestamp _createdAt;
   List<String> _downvotes;
   List<String> _upvotes;
+  int _voteCount;
 
   Comments({
     String content,
@@ -78,12 +79,15 @@ class Comments extends BaseModel {
     _userId = userId;
     _upvotes = [];
     _downvotes = [];
+    _voteCount = 0;
   }
 
-  String get content => _content ?? 'Error 404';
+  String get userId => _userId ?? '';
+  String get content => _content ?? 'Error 404: Resource Not Found';
   DateTime get createdAt => _createdAt?.toDate() ?? DateTime.now();
   List<String> get upvotes => _upvotes ?? [];
   List<String> get downvotes => _downvotes ?? [];
+  int get voteCount => _voteCount ?? 0;
   String get upvotesCount =>
       Util.formatCount(_upvotes?.length) ?? (-1).toString();
   String get downvotesCount =>
@@ -91,10 +95,12 @@ class Comments extends BaseModel {
 
   Comments.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;
+    _userId = json['user_id'];
     _content = json['content'];
     _createdAt = json['created_at'];
     _downvotes = json['downvotes'].cast<String>();
     _upvotes = json['upvotes'].cast<String>();
+    _voteCount = json['vote_count'];
   }
 
   Map<String, dynamic> toJson() {
@@ -104,6 +110,7 @@ class Comments extends BaseModel {
     data['downvotes'] = _downvotes;
     data['upvotes'] = _upvotes;
     data['user_id'] = _userId;
+    data['vote_count'] = _voteCount;
     return data;
   }
 }

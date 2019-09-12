@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/mixins/notification_mixin.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
@@ -17,7 +18,8 @@ class Application extends StatefulWidget {
   _ApplicationState createState() => _ApplicationState();
 }
 
-class _ApplicationState extends State<Application> {
+class _ApplicationState extends State<Application>
+    with NotificationDisplayMixin {
   List<Widget> _tabs = <Widget>[
     Home(),
     SearchRoot(),
@@ -51,6 +53,7 @@ class _ApplicationState extends State<Application> {
   @override
   void initState() {
     super.initState();
+    initializeMixin(context);
     if (SchedulerBinding.instance.schedulerPhase ==
         SchedulerPhase.persistentCallbacks)
       SchedulerBinding.instance.addPostFrameCallback(
@@ -63,6 +66,12 @@ class _ApplicationState extends State<Application> {
             );
         },
       );
+  }
+
+  @override
+  void dispose() {
+    disposeMixin();
+    super.dispose();
   }
 
   @override

@@ -9,10 +9,11 @@ import 'package:studentup_mobile/notifiers/view_notifiers/think_tank_notifier.da
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class ThinkTank extends StatelessWidget {
-  final ThinkTanksModel model;
+  final ThinkTankModel model;
 
   const ThinkTank({Key key, @required this.model}) : super(key: key);
 
@@ -26,7 +27,7 @@ class ThinkTank extends StatelessWidget {
         elevation: 0.0,
       ),
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 24.0),
+        padding: const EdgeInsets.only(bottom: 16.0),
         child: FloatingActionButton.extended(
           icon: const Icon(
             Icons.add,
@@ -103,7 +104,7 @@ class ThinkTank extends StatelessWidget {
                       },
                     ),
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.1,
+                      height: MediaQuery.of(context).size.height * 0.12,
                     ),
                   ],
                 ),
@@ -145,57 +146,64 @@ class CommentWidget extends StatelessWidget {
         // whether the text overflowed or not
         var exceeded = tp.didExceedMaxLines;
 
-        return ExpandableNotifier(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              CommentHeaderWidget(model: model, uid: uid),
-              if (!exceeded) ...[
-                Text.rich(
-                  span,
-                  softWrap: true,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-              ] else ...[
-                Expandable(
-                  collapsed: ExpandableButton(
-                    child: Column(
-                      children: <Widget>[
-                        Text.rich(
-                          span,
-                          softWrap: true,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 2,
-                        ),
+        return InkWell(
+          onLongPress: () async {
+            if (!(uid == model.userId)) return;
+            if (await Dialogs.showDeletionDialog(context))
+              Provider.of<ThinkTankNotifier>(context).sendData(Delete(model));
+          },
+          child: ExpandableNotifier(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                CommentHeaderWidget(model: model, uid: uid),
+                if (!exceeded) ...[
+                  Text.rich(
+                    span,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                ] else ...[
+                  Expandable(
+                    collapsed: ExpandableButton(
+                      child: Column(
+                        children: <Widget>[
+                          Text.rich(
+                            span,
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                          Text(
+                            'more',
+                            style: TextStyle(
+                              color: CupertinoColors.activeBlue,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    expanded: Column(
+                      children: [
                         Text(
-                          'more',
-                          style: TextStyle(
-                            color: CupertinoColors.activeBlue,
+                          model.content,
+                          softWrap: true,
+                        ),
+                        ExpandableButton(
+                          child: Text(
+                            'collapse',
+                            style: TextStyle(
+                              color: CupertinoColors.activeBlue,
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
-                  expanded: Column(
-                    children: [
-                      Text(
-                        model.content,
-                        softWrap: true,
-                      ),
-                      ExpandableButton(
-                        child: Text(
-                          'collapse',
-                          style: TextStyle(
-                            color: CupertinoColors.activeBlue,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                ],
               ],
-            ],
+            ),
           ),
         );
       },
@@ -237,11 +245,17 @@ class _CommentHeaderWidgetState extends State<CommentHeaderWidget> {
           child: Row(
             children: <Widget>[
               Text(
-                'Random User #$randomUser',
-                style: Theme.of(context)
-                    .textTheme
-                    .subhead
-                    .apply(fontWeightDelta: 2),
+                widget.uid == widget.model.userId
+                    ? 'You'
+                    : 'Random User #$randomUser',
+                style: widget.uid == widget.model.userId
+                    ? Theme.of(context).textTheme.subhead.apply(
+                        fontWeightDelta: 2,
+                        color: Theme.of(context).accentColor)
+                    : Theme.of(context)
+                        .textTheme
+                        .subhead
+                        .apply(fontWeightDelta: 2),
               ),
               Spacer(),
               FlatButton.icon(

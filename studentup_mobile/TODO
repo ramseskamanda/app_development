@@ -69,40 +69,41 @@ v-0.0.2:
 
 v-0.0.3:
   ✔ ! Finish Notifications @done(19-09-11 06:06)
-  ☐ Test Firebase In-App Messaging (https://pub.dev/packages/firebase_in_app_messaging#-readme-tab-)
-  ☐ Add Terms and Conditions
+  ✔ Test Firebase In-App Messaging (https://pub.dev/packages/firebase_in_app_messaging#-readme-tab-) @done(19-09-12 03:13)
   ✔ Add Hidden Menu Drawer @done(19-09-09 19:07)
   ✔ Add AlertDialog before deleting object @done(19-09-11 06:32)
   ✔ Finish Skill Endorsement @done(19-09-09 18:59)
   ✔ Add Search to Project Page @done(19-09-08 21:25)
-  ☐ Add profile editor for startups and users
   ✔ Fix Connectivity bug where profile picture doesn't show up after network is back (+other connectivity-related bugs) @done(19-09-11 06:43)
-  ☐ ! Ability to delete anything from SeeAll, Projects, Chats, Messages, Think Tanks, Comments, Account, Skills, Experience, Education, etc.
-  ☐ Enable automatic email bug report sending through email
+  ✔ ! Ability to delete anything from SeeAll, Projects, Chats, Messages, Think Tanks, Comments, Account, Skills, Experience, Education, etc. @done(19-09-12 00:49)
   ✔ Allow posting custom pictures as backgrounds for projects @done(19-09-09 19:16)
   ✔ Implement chat messages read (just make last message seenAt??) @done(19-09-09 22:52)
-  ☐ Check for existing conversation when creating new conversation
   ✔ Fix ChatList issues @done(19-09-09 22:07)
   ✔ Fix bugs + Implement proper bug reporting routes @done(19-09-09 19:13)
   ✔ ! Add access to applications for the project creator @done(19-09-11 02:58)
-  ☐ Look at TODOs
+  ✔ Look at TODOs @done(19-09-12 03:13)
   ✔ ! Fix startup creation bug @done(19-09-11 01:53)
   ✔ Add reload button to the connectivity screen @done(19-09-11 06:43)
   ✔ Add permanent storage to attachment downloads @done(19-09-11 06:07)
-  ☐ Allow opening of downloaded files
-  ☐ Menu Drawer with 'My Projects' and 'My Think Tanks'
+  ✔ Allow opening of downloaded files @done(19-09-12 03:18)
+  ✔ Menu Drawer with 'My Projects' and 'My Think Tanks' @started(19-09-12 00:55) @done(19-09-12 00:55) @lasted(39s)
+  ✔ Think tanks not always in the right order @done(19-09-12 03:36)
+  ✔ Increase spacing below New Comment button @done(19-09-12 03:40)
 
 v-0.0.4:
+  ☐ Check for existing conversation when creating new conversation  
   ☐ Rewrite architecture with more abstraction and better sharing of Streams
   ☐ Implement WebView on tap for startup websites
+  ☐ Add Terms and Conditions as WebView
   ☐ Add notification icons for messaging
-  ☐ Add Setting for QueryOrder for Think Tanks etc.
+  ☐ Add Settings for QueryOrder for Think Tanks, Deleting account etc.
   ☐ Implement account switching
   ☐ Add download percentage indicator
   ☐ include a one-time pop-up (which can be permanently clicked away) telling people about what happens when you sign up for a project
   ☐ Fix blurriness of SplashScreen
+  ☐ Change default image
   ☐ Add Search Caching + Cache Cleaner (in Algolia Search)
-  ☐ Fix message read when user is in the conversation
+  ☐ Fix message read when user is in the conversation (probably have to look at QuerySnapshot.documentChanges)
   ☐ Add Saved Profiles
   ☐ Fix profile tap in conversation screen to work for startups as well
   ☐ Make think tank comments not anonymous
@@ -110,23 +111,29 @@ v-0.0.4:
   ☐ Do more research on in-app purchases
   ☐ Fix bug with new profile completion toast keeps appearing after a user was created even though the user is different or not new
   ☐ Add Notifications Screen
+  ☐ Add animation to posting a think tank
 
 v-0.0.5:
-  ☐ Implement other design for Think Tanks
+  ☐ Add profile editor for startups and users  
   ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, messaging, etc.
+  ☐ Add email verification, email reset, and account removal emails
+  ☐ Add user's profile to messaging notifications
+  ☐ Implement general queue so that only a certain number of downloads can be started at the same time
+  ☐ Migrate input field state management to BLoC (Search for TextEditingControllers in Notifiers)
+  ☐ add progress indicator on uploads and downloads
 
 
 Refactoring:
   ☐ Services:
     ✔ One big file containing all method definitions @done(19-09-08 19:31)
     ✔ Abstract class containing all methods @done(19-09-08 19:31)
-    ☐ Test database with Future.delayed and hardcoded data
+    ✔ Test database with Future.delayed and hardcoded data @done(19-09-12 03:42)
 
   ☐ Notifiers:
     ✔ Separate abstract classes for read, write, read & write @done(19-09-08 18:01)
 
   ☐ Bloc:
-    ☐ Make a basic abstract class for input blocs
+    ✔ Make a basic abstract class for input blocs @done(19-09-12 03:42)
 
   ☐ Navigation:
     ✔ Use named routes @done(19-09-08 20:54)

@@ -35,6 +35,7 @@ class PopupMenuWithActions extends StatelessWidget {
         color: color,
       ),
       child: PopupMenuButton(
+        icon: const Icon(Icons.more_horiz),
         elevation: 10.0,
         onSelected: (PopupAction ac) async => _runCommand(ac, context),
         itemBuilder: (context) {

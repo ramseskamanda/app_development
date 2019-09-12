@@ -22,7 +22,7 @@ class ThinkTankPreviewsList extends StatelessWidget {
           return Center(child: const Text('No think tanks here right now...'));
         return Column(
           children: <Widget>[
-            for (ThinkTanksModel model in feed.thinkTanks) ...[
+            for (ThinkTankModel model in feed.thinkTanks) ...[
               ThinkTankPreview(model: model),
               SizedBox(
                 height: 16.0,
@@ -36,7 +36,7 @@ class ThinkTankPreviewsList extends StatelessWidget {
 }
 
 class ThinkTankPreview extends StatelessWidget {
-  final ThinkTanksModel model;
+  final ThinkTankModel model;
 
   const ThinkTankPreview({Key key, @required this.model}) : super(key: key);
 

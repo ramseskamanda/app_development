@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:studentup_mobile/models/base_model.dart';
 import 'package:studentup_mobile/util/util.dart';
 
-class EducationModel {
+class EducationModel extends BaseModel {
   String _userId;
   String _university;
   String _faculty;
@@ -40,7 +41,8 @@ class EducationModel {
   String get periodEnd => Util.format(_periodEnd, allowNow: true);
   String get studyDescription => _studyDescription ?? '500 Error';
 
-  EducationModel.fromDoc(Map<String, dynamic> json) {
+  EducationModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
+    final Map<String, dynamic> json = doc.data;
     _userId = json['user_id'];
     _university = json['university'];
     _faculty = json['faculty'];

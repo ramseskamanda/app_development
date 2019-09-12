@@ -4,7 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/theme.dart';
+import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
@@ -124,7 +127,14 @@ class SkillCard extends StatelessWidget {
         child: ListTile(
           title: Text(model.name),
           subtitle: Text(model.description),
-          //TODO: fix this to only be available if user is NOT the owner and hasn't voted yet
+          trailing: Column(
+            children: <Widget>[
+              PopupMenuWithActions(
+                onDelete: () async =>
+                    await Locator.of<BaseAPIWriter>().removeSkill(model),
+              ),
+            ],
+          ),
           onTap: null,
           // () => Dialogs.showRatingFor(context, model.name, Icons.work),
           // trailing: Padding(
