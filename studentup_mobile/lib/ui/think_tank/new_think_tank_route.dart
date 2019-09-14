@@ -24,65 +24,69 @@ class NewThinkTankRoute extends StatelessWidget {
           title: const Text('New Think Tank'),
         ),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Center(
-              child: Container(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width * 0.85,
-                child: Consumer<NewThinkTankNotifier>(
-                  builder: (context, notifier, child) {
-                    return Stack(
-                      children: <Widget>[
-                        Column(
+          child: Center(
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width * 0.85,
+              child: Stack(
+                children: <Widget>[
+                  SingleChildScrollView(
+                    child: Consumer<NewThinkTankNotifier>(
+                      builder: (context, notifier, child) {
+                        return Stack(
                           children: <Widget>[
-                            const SizedBox(height: 24.0),
-                            TextField(
-                              controller: notifier.name,
-                              maxLength: 32,
-                              maxLengthEnforced: true,
-                              maxLines: 1,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'Title of your think tank?',
-                              ),
-                            ),
-                            const SizedBox(height: 24.0),
-                            TextField(
-                              controller: notifier.description,
-                              maxLength: 400,
-                              maxLengthEnforced: true,
-                              minLines: 10,
-                              maxLines: null,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText: 'What\'re your thinking about...',
-                              ),
+                            Column(
+                              children: <Widget>[
+                                const SizedBox(height: 24.0),
+                                TextField(
+                                  controller: notifier.name,
+                                  maxLength: 32,
+                                  maxLengthEnforced: true,
+                                  maxLines: 1,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'Title of your think tank?',
+                                  ),
+                                ),
+                                const SizedBox(height: 24.0),
+                                TextField(
+                                  controller: notifier.description,
+                                  maxLength: 400,
+                                  maxLengthEnforced: true,
+                                  minLines: 10,
+                                  maxLines: null,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: 'What\'re your thinking about...',
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
-                        ),
-                        Positioned(
-                          bottom: 24.0,
-                          left: 0,
-                          right: 0,
-                          child: Consumer<NewThinkTankNotifier>(
-                            builder: (context, notifier, child) {
-                              if (notifier.isLoading)
-                                return Center(
-                                    child: const CircularProgressIndicator());
-                              return StadiumButton(
-                                text: 'Post Think Tank',
-                                onPressed: () async {
-                                  final result = await notifier.sendData();
-                                  if (result) Navigator.of(context).pop(result);
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
+                        );
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 16.0,
+                    left: 0,
+                    right: 0,
+                    child: Consumer<NewThinkTankNotifier>(
+                      builder: (context, notifier, child) {
+                        if (notifier.isLoading)
+                          return Center(
+                              child: const CircularProgressIndicator());
+                        return StadiumButton(
+                          text: 'Post Think Tank',
+                          onPressed: () async {
+                            final result = await notifier.sendData();
+                            if (result) Navigator.of(context).pop(result);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ),

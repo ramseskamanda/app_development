@@ -156,9 +156,10 @@ class FirestoreWriter implements BaseAPIWriter {
     ChatModel chat,
     MessageModel initialMessage,
   }) async {
+    print(chat.participants.toJson());
     final QuerySnapshot previousChats = await _firestore
         .collection(chatsCollection)
-        .where('participants', isEqualTo: chat.participants.toJson())
+        .where('list_participants', isEqualTo: chat.participants.toList())
         .getDocuments();
 
     if (previousChats.documents.isNotEmpty) {

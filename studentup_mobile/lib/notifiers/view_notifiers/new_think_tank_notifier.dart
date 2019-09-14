@@ -25,6 +25,8 @@ class NewThinkTankNotifier extends NetworkWriter {
     if (!canSend) return false;
     isLoading = true;
     final Preview user = Locator.of<ProfileNotifier>().info;
+    print(Locator.of<ProfileNotifier>().hashCode);
+    print(user);
     final model = ThinkTankModel(
       askerId: Locator.of<AuthService>().currentUser.uid,
       askerImage: user.imageUrl,

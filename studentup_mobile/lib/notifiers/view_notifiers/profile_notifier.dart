@@ -43,6 +43,7 @@ class ProfileNotifier extends NetworkIO with UserProfileEditBloc, StorageIO {
       reader.fetchPastProjects(_userId);
 
   set preview(dynamic value) {
+    print(value.givenName ?? value.name);
     if (value is UserInfoModel)
       _preview = Preview(
         uid: value.docId,
@@ -66,8 +67,8 @@ class ProfileNotifier extends NetworkIO with UserProfileEditBloc, StorageIO {
 
   @override
   Future fetchData([dynamic data]) async {
-    if (Locator.of<AuthService>()?.currentUser?.uid == null) return;
     isReading = true;
+    print(hashCode);
     _userId ??= Locator.of<AuthService>().currentUser.uid;
     try {
       final Map<dynamic, bool> result = await reader.findUserDocument(_userId);

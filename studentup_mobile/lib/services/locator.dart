@@ -25,8 +25,6 @@ class Locator {
     print('Setting Up App Wide Providers...');
     return [
       ChangeNotifierProvider(builder: (_) => AuthNotifier()),
-      ChangeNotifierProvider<ProfileNotifier>(
-          builder: (_) => ProfileNotifier()..fetchData()),
       Provider(
         builder: (_) => InnerRouter(
             initialNavBarTab: _locator<NotificationService>().initialRoute),
@@ -49,6 +47,7 @@ class Locator {
     _locator.registerSingleton<BaseAPIWriter>(FirestoreWriter());
     _locator.registerSingleton<BaseFileStorageAPI>(FirebaseStorageService());
     _locator.registerSingleton<BaseSearchAPI>(AlgoliaService());
+    _locator.registerSingleton<ProfileNotifier>(ProfileNotifier());
   }
 
   static T of<T>() => _locator.get<T>();

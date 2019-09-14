@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         builder: (context, auth, child) {
           if (auth.userIsAuthenticated)
             return ChangeNotifierProvider<ProfileNotifier>(
-              builder: (_) => ProfileNotifier()..fetchData(),
+              builder: (_) => Locator.of<ProfileNotifier>()..fetchData(),
               child: MaterialApp(
                 debugShowCheckedModeBanner: false,
                 navigatorKey: Catcher.navigatorKey,

@@ -45,7 +45,7 @@ class NewCommentRoute extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    bottom: 24.0,
+                    bottom: 16.0,
                     left: 0,
                     right: 0,
                     child: Consumer<ThinkTankNotifier>(

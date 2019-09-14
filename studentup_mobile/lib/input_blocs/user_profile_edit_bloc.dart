@@ -71,7 +71,7 @@ mixin UserProfileEditBloc on ChangeNotifier {
     } else {
       if (_nameEditor.text.isNotEmpty) data['given_name'] = _nameEditor.text;
       if (_additionalInfoEditor.text.isNotEmpty)
-        data['additionalInfo'] = _additionalInfoEditor.text;
+        data['university'] = _additionalInfoEditor.text;
       if (_locationEditor.text.isNotEmpty)
         data['location'] = Util.locationToGeoPoint(_locationEditor.text);
       if (_bioEditor.text.isNotEmpty) data['bio'] = _bioEditor.text;

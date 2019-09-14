@@ -85,6 +85,8 @@ class Participants {
     return data;
   }
 
+  List<String> toList() => _previews.keys.toList();
+
   @override
   String toString() {
     return '${_previews.toString()}';

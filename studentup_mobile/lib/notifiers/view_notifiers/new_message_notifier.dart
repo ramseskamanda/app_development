@@ -37,7 +37,7 @@ class NewMessageNotifier extends NetworkWriter {
       seenAt: null,
       sentAt: DateTime.now(),
       text: _newMessage.text,
-      senderId: Locator.of<AuthService>().currentUser.uid,
+      senderId: user.uid,
     );
     final chat = ChatModel(
       lastMessage: message,
@@ -47,6 +47,7 @@ class NewMessageNotifier extends NetworkWriter {
           selectedUser.docId: Preview(
             givenName: selectedUser.givenName,
             imageUrl: selectedUser.mediaRef,
+            uid: selectedUser.docId,
           ),
         },
       ),
