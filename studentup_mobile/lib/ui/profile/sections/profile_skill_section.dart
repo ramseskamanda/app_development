@@ -9,7 +9,6 @@ import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
-import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
 class ProfileSkillSection extends StatelessWidget {
   final bool isUser;
@@ -50,23 +49,15 @@ class ProfileSkillSection extends StatelessWidget {
                         child: const Text('See all'),
                         textColor: Theme.of(context).accentColor,
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) {
-                                return SeeAll<SkillsModel>(
-                                  title: 'Skills',
-                                  objects: snapshot.data,
-                                  separator: const SizedBox(height: 16.0),
-                                  builder: (context, index) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0),
-                                    child: SkillCard(
-                                      model: snapshot.data[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                          Navigator.of(context).pushNamed(
+                            Router.seeAll,
+                            arguments: {
+                              'stream':
+                                  Provider.of<ProfileNotifier>(context).skills,
+                              'separator': const SizedBox(height: 16.0),
+                              'title': 'User Skills',
+                              'type': SkillsModel,
+                            },
                           );
                         },
                       ),
@@ -129,10 +120,11 @@ class SkillCard extends StatelessWidget {
           subtitle: Text(model.description),
           trailing: Column(
             children: <Widget>[
-              PopupMenuWithActions(
-                onDelete: () async =>
-                    await Locator.of<BaseAPIWriter>().removeSkill(model),
-              ),
+              if (model.canEdit)
+                PopupMenuWithActions(
+                  onDelete: () async =>
+                      await Locator.of<BaseAPIWriter>().removeSkill(model),
+                ),
             ],
           ),
           onTap: null,

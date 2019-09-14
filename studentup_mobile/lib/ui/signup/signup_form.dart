@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:studentup_mobile/ui/widgets/text_fields/email_text_form_field.dart';
 import 'package:studentup_mobile/ui/widgets/text_fields/name_text_form_field.dart';
 import 'package:studentup_mobile/ui/widgets/text_fields/password_text_form_field.dart';
-import 'package:studentup_mobile/util/config.dart';
 
 export './disclaimer.dart';
 
@@ -78,12 +77,9 @@ class _SignUpFormState extends State<SignUpForm> {
             child: Column(
               children: <Widget>[
                 Spacer(flex: 3),
-                Hero(
-                  tag: HEADER_LOGO_HERO_TAG,
-                  child: Image.asset(
-                    'assets/logo.png',
-                    width: MediaQuery.of(context).size.width * 0.7,
-                  ),
+                Image.asset(
+                  'assets/logo.png',
+                  width: MediaQuery.of(context).size.width * 0.7,
                 ),
                 Spacer(flex: 2),
                 Row(

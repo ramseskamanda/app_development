@@ -42,9 +42,8 @@ class FirestoreWriter implements BaseAPIWriter {
   }
 
   @override
-  Future updateProfileInfo(String uid, Map<String, dynamic> data) async {
-    DocumentReference doc =
-        _firestore.collection(studentsCollection).document(uid);
+  Future updateProfileInfo({String docPath, Map<String, dynamic> data}) async {
+    DocumentReference doc = _firestore.document(docPath);
 
     Map result = await _firestore.runTransaction(
       (transaction) async {
@@ -157,14 +156,21 @@ class FirestoreWriter implements BaseAPIWriter {
     ChatModel chat,
     MessageModel initialMessage,
   }) async {
-    // QuerySnapshot preExistingDoc =
-    //     await _firestore.collection(chatsCollection).where('').getDocuments();
-    DocumentReference newDoc =
-        await _firestore.collection(chatsCollection).add(chat.toJson());
-    final CollectionReference subcollectionRef = newDoc.collection('messages');
-    await subcollectionRef.add(initialMessage.toJson());
-    DocumentSnapshot snap = await newDoc.get();
-    return ChatModel.fromDoc(snap);
+    final QuerySnapshot previousChats = await _firestore
+        .collection(chatsCollection)
+        .where('participants', isEqualTo: chat.participants.toJson())
+        .getDocuments();
+
+    if (previousChats.documents.isNotEmpty) {
+      final DocumentReference ref = previousChats.documents.first.reference;
+      ref.collection('messages').add(initialMessage.toJson());
+      return ChatModel.fromDoc(previousChats.documents.first);
+    } else {
+      final DocumentReference newDoc =
+          await _firestore.collection(chatsCollection).add(chat.toJson());
+      await newDoc.collection('messages').add(initialMessage.toJson());
+      return ChatModel.fromDoc(await newDoc.get());
+    }
   }
 
   @override
@@ -191,13 +197,14 @@ class FirestoreWriter implements BaseAPIWriter {
   Future uploadSignUpDocument({
     ProjectSignupModel model,
     ProjectModel project,
-  }) async =>
-      await _firestore
-          .collection(projectCollection)
-          .document(project.docId)
-          .collection('applications')
-          .document(Locator.of<AuthService>().currentUser.uid)
-          .setData(model.toJson());
+  }) async {
+    await _firestore
+        .collection(projectCollection)
+        .document(project.docId)
+        .collection('applications')
+        .document(Locator.of<AuthService>().currentUser.uid)
+        .setData(model.toJson());
+  }
 
   @override
   Future removeApplicant(String projectId) async => await _firestore
@@ -229,9 +236,9 @@ class FirestoreWriter implements BaseAPIWriter {
     final List<String> _tokens = snap?.data['tokens']?.cast<String>() ?? [];
     if (((!remove && !_tokens.contains(token)) ||
         (remove && _tokens.contains(token)))) {
-      print('FIRESTORE ==> UPDATING TOKEN REGISTRY...');
-      print('FIRESTORE ==> CURRENT REGISTRY: $_tokens');
-      print('FIRESTORE ==> ADDING KEY: $token');
+      // print('FIRESTORE ==> UPDATING TOKEN REGISTRY...');
+      // print('FIRESTORE ==> CURRENT REGISTRY: $_tokens');
+      // print('FIRESTORE ==> ${remove ? 'REMOVING' : 'ADDING'} KEY: $token');
       return await doc.updateData({
         'tokens': remove
             ? FieldValue.arrayRemove([token])
@@ -261,4 +268,10 @@ class FirestoreWriter implements BaseAPIWriter {
       .collection(skillsCollection)
       .document(model.docId)
       .delete();
+
+  @override
+  Future editProfileEducation(String university) async => await _firestore
+      .collection(studentsCollection)
+      .document(Locator.of<AuthService>().currentUser.uid)
+      .updateData({'university': university});
 }

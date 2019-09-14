@@ -10,7 +10,6 @@ import 'package:studentup_mobile/notifiers/view_notifiers/startup_page_notifier.
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/startup_profile/team_member.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
-import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
 class StartUpPageRoot extends StatefulWidget {
@@ -83,7 +82,7 @@ class _StartUpPageRootState extends State<StartUpPageRoot> {
                         ),
                         const SizedBox(height: 12.0),
                         Text(
-                          widget.model.locationString,
+                          widget.model.location,
                           style: Theme.of(context)
                               .textTheme
                               .subhead
@@ -143,70 +142,17 @@ class _StartUpPageRootState extends State<StartUpPageRoot> {
                                                     .accentColor),
                                           ),
                                           onPressed: () {
-                                            Navigator.of(context).push(
-                                              MaterialPageRoute(
-                                                builder: (_) {
-                                                  final String name =
-                                                      widget.model.name;
-                                                  return SeeAll<Preview>(
-                                                    title:
-                                                        '$name${name.endsWith('s') ? '\'' : '\'s'} Team',
-                                                    objects: widget.model.team,
-                                                    separator: const SizedBox(
-                                                        height: 16.0),
-                                                    builder: (context, index) {
-                                                      Preview user = widget
-                                                          .model.team[index];
-                                                      return Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                    .symmetric(
-                                                                horizontal:
-                                                                    16.0),
-                                                        child: ListTile(
-                                                          title: Text(
-                                                              user.givenName),
-                                                          subtitle: Text(
-                                                              'Team Member of ${widget.model.name}'),
-                                                          leading:
-                                                              CachedNetworkImage(
-                                                            imageUrl:
-                                                                user.imageUrl,
-                                                            placeholder: (_,
-                                                                    url) =>
-                                                                CircleAvatar(
-                                                              radius: 25,
-                                                              backgroundColor:
-                                                                  CupertinoColors
-                                                                      .lightBackgroundGray,
-                                                            ),
-                                                            errorWidget: (_,
-                                                                    url,
-                                                                    error) =>
-                                                                CircleAvatar(
-                                                              radius: 25,
-                                                              backgroundColor:
-                                                                  CupertinoColors
-                                                                      .lightBackgroundGray,
-                                                              child: Icon(
-                                                                  Icons.error),
-                                                            ),
-                                                            imageBuilder:
-                                                                (context,
-                                                                    image) {
-                                                              return CircleAvatar(
-                                                                radius: 25,
-                                                                backgroundImage:
-                                                                    image,
-                                                              );
-                                                            },
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
-                                              ),
+                                            Navigator.of(context).pushNamed(
+                                              Router.seeAll,
+                                              arguments: {
+                                                'stream':
+                                                    notifier.startupStream,
+                                                'separator': const SizedBox(
+                                                    height: 16.0),
+                                                'title':
+                                                    '${widget.model.name}${widget.model.name.endsWith('s') ? '\'' : '\'s'} Team',
+                                                'type': StartupInfoModel,
+                                              },
                                             );
                                           },
                                         );

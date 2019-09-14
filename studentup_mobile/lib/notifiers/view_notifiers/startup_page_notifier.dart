@@ -17,6 +17,8 @@ class StartupPageNotifier extends NetworkReader {
     fetchData();
   }
 
+  Stream<StartupInfoModel> get startupStream =>
+      reader.fetchStartupInfoStream('/startups/${_model.docId}');
   List<Preview> get team => !(isLoading || hasError) ? _team : [];
   List<ProjectModel> get ongoingProjects => !(isLoading || hasError)
       ? _projects.where((m) => m.deadline.isAfter(DateTime.now())).toList()

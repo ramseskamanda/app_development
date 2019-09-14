@@ -2,6 +2,8 @@ import 'package:algolia/algolia.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/config.dart';
 import 'package:studentup_mobile/util/util.dart';
 
@@ -29,13 +31,13 @@ class StartupInfoModel extends BaseModel {
   }
 
   String get description => _description ?? 'No Description Provided';
-  GeoPoint get location => _location ?? GeoPoint(0, 0);
-  String get locationString => Util.geoPointToLocation(_location);
+  String get location => Util.geoPointToLocation(_location);
   String get name => _name ?? 'No Name Provided';
   String get website => _website ?? 'No Website';
   String get imageUrl => _imageUrl ?? defaultImageUrl;
   List<Preview> get team => _team ?? <String>[];
   DateTime get creationDate => _creationDate?.toDate() ?? DateTime.now();
+  bool get isUser => docId == Locator.of<AuthService>().currentUser.uid;
 
   StartupInfoModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;

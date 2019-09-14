@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
-import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/ui/profile/edit_profile.dart';
 import 'package:studentup_mobile/ui/profile/profile.dart';
 import 'package:studentup_mobile/ui/startup_profile/startup_profile.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
@@ -18,31 +19,28 @@ class ProfileRoot extends StatelessWidget {
         elevation: 0.0,
         //title: AccountSwitch(),
         title: const Text('Profile'),
-        // leading: FittedBox(
-        //   child: IconButton(
-        //     icon: Text(
-        //       'Edit',
-        //       softWrap: false,
-        //       style: Theme.of(context)
-        //           .textTheme
-        //           .button
-        //           .copyWith(color: CupertinoColors.activeBlue),
-        //     ),
-        //     onPressed: () {
-        //       final ProfileNotifier notifier =
-        //           Provider.of<ProfileNotifier>(context);
-        //       Navigator.of(context).push(
-        //         CupertinoPageRoute(
-        //           builder: (context) => ProfileEditor(notifier: notifier),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ),
+        leading: FittedBox(
+          child: IconButton(
+            icon: Text(
+              'Edit',
+              softWrap: false,
+              style: Theme.of(context)
+                  .textTheme
+                  .button
+                  .copyWith(color: CupertinoColors.activeBlue),
+            ),
+            onPressed: () => Navigator.of(context).push(
+              CupertinoPageRoute(
+                builder: (context) => ProfileEditor(),
+              ),
+            ),
+          ),
+        ),
         actions: <Widget>[
           PopupMenuWithActions(
             onLogout: () async {
-              await Locator.of<AuthService>().logout();
+              await Provider.of<ProfileNotifier>(context).logout();
+              await Provider.of<AuthNotifier>(context).logout();
               Provider.of<InnerRouter>(context).resetRouter();
             },
           ),

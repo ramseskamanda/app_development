@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 
@@ -21,7 +20,7 @@ class TeamMember extends StatelessWidget {
       onTap: () {
         if (isAdditional) return;
         Navigator.of(context).pushNamed(
-          Router.projectPage,
+          Router.otherProfile,
           arguments: {'infoModel': model},
         );
       },
@@ -69,41 +68,50 @@ class TeamMember extends StatelessWidget {
   }
 }
 
-class TeamMemberListTile extends StatelessWidget {
-  final Preview model;
+class TeamListTile extends StatelessWidget {
+  final Preview user;
   final String startupName;
-  final ProfileNotifier notifier;
+  final void Function() onDelete;
 
-  const TeamMemberListTile(
-      {Key key, this.model, this.startupName, this.notifier})
+  const TeamListTile({Key key, this.user, this.startupName, this.onDelete})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(model.givenName),
-      subtitle: Text('Team Member of $startupName'),
-      leading: CachedNetworkImage(
-        imageUrl: model.imageUrl,
-        placeholder: (_, url) => CircleAvatar(
-          radius: 25,
-          backgroundColor: CupertinoColors.lightBackgroundGray,
-        ),
-        errorWidget: (_, url, error) => CircleAvatar(
-          radius: 25,
-          backgroundColor: CupertinoColors.lightBackgroundGray,
-          child: Icon(Icons.error),
-        ),
-        imageBuilder: (context, image) {
-          return CircleAvatar(
-            radius: 25,
-            backgroundImage: image,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: ListTile(
+        onTap: () {
+          Navigator.of(context).pushNamed(
+            Router.otherProfile,
+            arguments: {'infoModel': user},
           );
         },
-      ),
-      trailing: PopupMenuWithActions(
-        onDelete: () async {
-          await notifier.sendData(model);
-        },
+        title: Text(user.givenName),
+        subtitle: Text('Team Member of $startupName'),
+        leading: CachedNetworkImage(
+          imageUrl: user.imageUrl,
+          placeholder: (_, url) => CircleAvatar(
+            radius: 25,
+            backgroundColor: CupertinoColors.lightBackgroundGray,
+          ),
+          errorWidget: (_, url, error) => CircleAvatar(
+            radius: 25,
+            backgroundColor: CupertinoColors.lightBackgroundGray,
+            child: Icon(Icons.error),
+          ),
+          imageBuilder: (context, image) {
+            return CircleAvatar(
+              radius: 25,
+              backgroundImage: image,
+            );
+          },
+        ),
+        trailing: onDelete == null
+            ? null
+            : PopupMenuWithActions(
+                onDelete: onDelete,
+              ),
       ),
     );
   }

@@ -26,7 +26,7 @@ class StartupProfileText extends StatelessWidget {
                 const SizedBox(height: 12.0),
                 Text(
                   snapshot.hasData
-                      ? snapshot.data.locationString
+                      ? snapshot.data.location
                       : snapshot.hasError ? 'Location Error' : 'Loading...',
                   style: Theme.of(context)
                       .textTheme

@@ -23,8 +23,12 @@ class StudentupTheme {
     400: Color(0xFF79e8a5),
     700: Color(0xFF4aa06d),
   });
-  static final ThemeData theme = ThemeData(
+  static final ThemeData lightTheme = ThemeData(
     primarySwatch: colorSwatch,
+  );
+  //TODO: Easter egg for dark theme in settings
+  static final ThemeData darkTheme = ThemeData.dark().copyWith(
+    primaryColor: colorSwatch,
   );
 
   static List<BoxShadow> getSimpleBoxShadow({Color color}) {

@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class InnerDrawerMenu extends StatelessWidget {
   @override
@@ -93,7 +94,16 @@ class InnerDrawerMenu extends StatelessWidget {
                       color: CupertinoColors.destructiveRed,
                     ),
                   ),
-                  onTap: () => Provider.of<AuthService>(context).logout(),
+                  onTap: () async {
+                    try {
+                      if (await Dialogs.showLogoutDialog(context)) {
+                        Navigator.of(context).pop();
+                        await Provider.of<ProfileNotifier>(context).logout();
+                        await Provider.of<AuthNotifier>(context).logout();
+                        Provider.of<InnerRouter>(context).resetRouter();
+                      }
+                    } catch (e) {}
+                  },
                 ),
               ],
             ),

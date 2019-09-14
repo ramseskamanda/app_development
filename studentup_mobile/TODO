@@ -91,7 +91,7 @@ v-0.0.4:
   ✔ Increase spacing below New Comment button @done(19-09-12 03:40)
 
 v-0.0.5:
-  ☐ Check for existing conversation when creating new conversation  
+  ✔ Check for existing conversation when creating new conversation @done(19-09-13 19:15)
   ☐ Rewrite architecture with more abstraction and better sharing of Streams
   ☐ Implement WebView on tap for startup websites
   ☐ Add Terms and Conditions as WebView

@@ -15,16 +15,18 @@ class PopupMenuWithActions extends StatelessWidget {
   }) : super(key: key);
 
   Future<void> _runCommand(PopupAction action, BuildContext context) async {
-    switch (action) {
-      case PopupAction.DELETE:
-        if (await Dialogs.showDeletionDialog(context)) onDelete();
-        break;
-      case PopupAction.LOGOUT:
-        if (await Dialogs.showLogoutDialog(context)) onLogout();
-        break;
-      default:
-        print('No actions matched for: $action');
-    }
+    try {
+      switch (action) {
+        case PopupAction.DELETE:
+          if (await Dialogs.showDeletionDialog(context)) onDelete();
+          break;
+        case PopupAction.LOGOUT:
+          if (await Dialogs.showLogoutDialog(context)) onLogout();
+          break;
+        default:
+          print('No actions matched for: $action');
+      }
+    } catch (e) {}
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/auth_notifier.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/analytics/analytics_service.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
@@ -9,7 +10,6 @@ import 'package:studentup_mobile/services/notifications/notification_service.dar
 import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/app.dart';
 import 'package:studentup_mobile/ui/signup/signup.dart';
-import 'package:studentup_mobile/util/dev_settings.dart';
 import 'package:studentup_mobile/util/system.dart';
 import 'package:catcher/catcher_plugin.dart';
 
@@ -38,18 +38,20 @@ class MyApp extends StatelessWidget {
       child: Consumer<AuthNotifier>(
         builder: (context, auth, child) {
           if (auth.userIsAuthenticated)
-            return MaterialApp(
-              navigatorKey: Catcher.navigatorKey,
-              theme: StudentupTheme.theme,
-              debugShowCheckedModeBanner: false,
-              home: Application(),
-              onGenerateRoute: Router.onGenerateRoute,
+            return ChangeNotifierProvider<ProfileNotifier>(
+              builder: (_) => ProfileNotifier()..fetchData(),
+              child: MaterialApp(
+                debugShowCheckedModeBanner: false,
+                navigatorKey: Catcher.navigatorKey,
+                home: Application(),
+                theme: StudentupTheme.lightTheme,
+                onGenerateRoute: Router.onGenerateRoute,
+              ),
             );
           return MaterialApp(
-            navigatorKey: Catcher.navigatorKey,
-            theme: StudentupTheme.theme,
             debugShowCheckedModeBanner: false,
             home: SignupRoot(login: auth.isRegistered),
+            theme: StudentupTheme.lightTheme,
           );
         },
       ),

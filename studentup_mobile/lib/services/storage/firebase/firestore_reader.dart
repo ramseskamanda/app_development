@@ -106,7 +106,7 @@ class FirestoreReader implements BaseAPIReader {
     return _firestore
         .collection(educationCollection)
         .where('user_id', isEqualTo: uid)
-        .orderBy('period_start', descending: true)
+        .orderBy('period_end', descending: true)
         .snapshots()
         .map((snapshot) => snapshot.documents
             .map((doc) => EducationModel.fromDoc(doc))

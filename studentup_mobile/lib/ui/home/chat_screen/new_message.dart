@@ -126,13 +126,15 @@ class NewMessage extends StatelessWidget {
                       text: 'Send',
                       onPressed: () async {
                         final bool result = await notifier.sendData();
-                        if (result) Navigator.of(context).pop();
-                        Navigator.of(context).pushNamed(
-                          Router.conversation,
-                          arguments: {
-                            'chat': notifier.newChat,
-                          },
-                        );
+                        if (result) {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pushNamed(
+                            Router.conversation,
+                            arguments: {
+                              'chat': notifier.newChat,
+                            },
+                          );
+                        }
                       },
                     );
                   },
@@ -246,7 +248,7 @@ class CustomSearchDelegate extends SearchDelegate {
                         ),
                       ),
                       title: Text(startup.name),
-                      subtitle: Text(startup.locationString),
+                      subtitle: Text(startup.location),
                       onTap: () => close(context, startup),
                     ),
                 ],

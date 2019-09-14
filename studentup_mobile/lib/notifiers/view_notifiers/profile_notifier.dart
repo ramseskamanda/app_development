@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:studentup_mobile/input_blocs/user_profile_edit_bloc.dart';
+import 'package:studentup_mobile/input_blocs/user_profile_edit_bloc.dart';
+import 'package:studentup_mobile/mixins/storage_io.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/education_model.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
@@ -11,24 +12,19 @@ import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/notifications/notification_service.dart';
+import 'package:studentup_mobile/services/storage/firebase/firebase_storage.dart';
 
-class ProfileNotifier extends NetworkIO {
+class ProfileNotifier extends NetworkIO with UserProfileEditBloc, StorageIO {
   String _userId;
-  // UserProfileEditBloc _userProfileEditBloc;
 
   DocumentReference _userDocument;
   bool _isStartup;
   Preview _preview;
 
-  ProfileNotifier([String uid]) {
-    _userId = uid;
-    // _userProfileEditBloc = UserProfileEditBloc();
-  }
+  ProfileNotifier([String uid]) : _userId = uid;
 
   bool get isStartup => _isStartup;
   Preview get info => _preview;
-
-  // UserProfileEditBloc get userBloc => _userProfileEditBloc;
 
   //USER INFORMATION
   Stream<UserInfoModel> get userInfoStream =>
@@ -40,10 +36,9 @@ class ProfileNotifier extends NetworkIO {
 
   //STARTUP INFORMATION
   Stream<StartupInfoModel> get startupInfoStream =>
-      reader.fetchStartupInfoStream(_userDocument.path).asBroadcastStream();
+      reader.fetchStartupInfoStream(_userDocument?.path).asBroadcastStream();
   Stream<List<ProjectModel>> get ongoingProjects =>
       reader.fetchOngoingProjects(_userId);
-
   Stream<List<ProjectModel>> get pastProjects =>
       reader.fetchPastProjects(_userId);
 
@@ -65,12 +60,13 @@ class ProfileNotifier extends NetworkIO {
 
   @override
   void dispose() {
-    // _userProfileEditBloc.dispose();
+    disposeMixin();
     super.dispose();
   }
 
   @override
   Future fetchData([dynamic data]) async {
+    if (Locator.of<AuthService>()?.currentUser?.uid == null) return;
     isReading = true;
     _userId ??= Locator.of<AuthService>().currentUser.uid;
     try {
@@ -83,6 +79,7 @@ class ProfileNotifier extends NetworkIO {
         startupInfoStream.listen((data) => preview = data);
       else
         userInfoStream.listen((data) => preview = data);
+      initializeMixin(isStartup: _isStartup);
       await sendData();
     } catch (e) {
       print(e);
@@ -93,16 +90,20 @@ class ProfileNotifier extends NetworkIO {
 
   @override
   Future<bool> sendData([data]) async {
+    if (_userId != Locator.of<AuthService>().currentUser.uid) return false;
     try {
       switch (data.runtimeType) {
         case UserInfoModel:
-          _addTeamMember(data);
+          await _addTeamMember(data);
           break;
         case Preview:
-          _removeTeamMember(data);
+          await _removeTeamMember(data);
+          break;
+        case bool:
+          await _editProfile(data);
           break;
         case Null:
-          _updateNotificationTokens();
+          await _updateNotificationTokens();
           break;
         default:
           throw 'No Action for Type: ${data.runtimeType}';
@@ -115,9 +116,9 @@ class ProfileNotifier extends NetworkIO {
     return true;
   }
 
-  void logout() {
+  Future<void> logout() async {
     _userId = null;
-    writer.updateNotificationTokens(
+    await writer.updateNotificationTokens(
       docPath: _userDocument.path,
       token: Locator.of<NotificationService>().deviceToken,
       remove: true,
@@ -142,9 +143,35 @@ class ProfileNotifier extends NetworkIO {
     isWriting = false;
   }
 
-  Future _updateNotificationTokens() async =>
+  Future _editProfile(bool isStudent) async {
+    isWriting = true;
+    if (image != null) {
+      print('started uploading');
+      final List<String> paths =
+          await storage.upload(files: [image], location: profilesFolder);
+      print('done uploading');
+      if (paths.isNotEmpty) {
+        await writer.updateProfileInfo(
+          docPath: _userDocument.path,
+          data: editorData
+            ..addAll(
+                {'${_isStartup ? 'image_url' : 'media_ref'}': paths.first}),
+        );
+      }
+    } else {
+      await writer.updateProfileInfo(
+        docPath: _userDocument.path,
+        data: editorData,
+      );
+    }
+    isWriting = false;
+  }
+
+  Future _updateNotificationTokens() async {
+    if (_userId == Locator.of<AuthService>().currentUser.uid)
       await writer.updateNotificationTokens(
         docPath: _userDocument.path,
         token: Locator.of<NotificationService>().deviceToken,
       );
+  }
 }

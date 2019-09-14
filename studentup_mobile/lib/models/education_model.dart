@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/util.dart';
 
 class EducationModel extends BaseModel {
@@ -26,20 +28,21 @@ class EducationModel extends BaseModel {
     _university = university;
     _faculty = faculty;
     _degree = degree;
-    _gradDate = Timestamp.fromDate(gradDate);
-    _periodStart = Timestamp.fromDate(periodStart);
-    _periodEnd = Timestamp.fromDate(periodEnd);
+    _periodStart = periodStart == null ? null : Timestamp.fromDate(periodStart);
+    _periodEnd = periodEnd == null ? null : Timestamp.fromDate(periodEnd);
+    _gradDate = periodEnd == null ? null : Timestamp.fromDate(gradDate);
     _studyDescription = studyDescription;
   }
 
-  String get userId => _userId ?? '500 Error';
-  String get university => _university ?? '500 Error';
-  String get faculty => _faculty ?? '500 Error';
-  String get degree => _degree ?? '500 Error';
+  String get userId => _userId ?? '';
+  String get university => _university ?? 'No University';
+  String get faculty => _faculty ?? 'No Faculty';
+  String get degree => _degree ?? '';
   String get gradDate => Util.format(_gradDate);
   String get periodStart => Util.format(_periodStart);
   String get periodEnd => Util.format(_periodEnd, allowNow: true);
-  String get studyDescription => _studyDescription ?? '500 Error';
+  String get studyDescription => _studyDescription ?? 'No Description';
+  bool get canEdit => _userId == Locator.of<AuthService>().currentUser.uid;
 
   EducationModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;

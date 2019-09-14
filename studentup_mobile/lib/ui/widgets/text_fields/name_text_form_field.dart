@@ -41,6 +41,8 @@ class _NameTextFormFieldState extends State<NameTextFormField> {
     return TextFormField(
       controller: _controller,
       validator: Validator.name,
+      maxLength: 32,
+      buildCounter: (context, {currentLength, maxLength, isFocused}) => null,
       onFieldSubmitted: (String data) =>
           FocusScope.of(context).requestFocus(widget.nextNode ?? FocusNode()),
       decoration: InputDecoration(

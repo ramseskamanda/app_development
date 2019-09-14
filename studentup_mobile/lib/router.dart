@@ -15,24 +15,27 @@ import 'package:studentup_mobile/ui/think_tank/new_think_tank_route.dart';
 import 'package:studentup_mobile/ui/user_content/user_projects.dart';
 import 'package:studentup_mobile/ui/user_content/user_saved_profiles.dart';
 import 'package:studentup_mobile/ui/user_content/user_think_tanks.dart';
+import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
 class Router {
   static const String home = '/';
-  static const String newMessage = '/newMessage';
-  static const String otherProfile = '/otherProfile';
-  static const String conversation = '/conversation';
-  static const String newThinkTank = '/newThinkTank';
-  static const String startupPage = '/startupPage';
-  static const String prizeScreen = '/prizeScreen';
-  static const String newEducation = '/newEducation';
-  static const String newExperience = '/newExperience';
-  static const String newSkill = '/newSkill';
-  static const String newProject = '/newProject';
-  static const String projectPage = '/projectPage';
-  static const String newCommentRoute = '/newCommentRoute';
-  static const String userProjects = '/userProjects';
-  static const String userThinkTanks = '/userThinkTanks';
-  static const String userSavedProfiles = '/userSavedProfiles';
+  static const String login = 'login';
+  static const String newMessage = 'newMessage';
+  static const String otherProfile = 'otherProfile';
+  static const String conversation = 'conversation';
+  static const String newThinkTank = 'newThinkTank';
+  static const String startupPage = 'startupPage';
+  static const String prizeScreen = 'prizeScreen';
+  static const String newEducation = 'newEducation';
+  static const String newExperience = 'newExperience';
+  static const String newSkill = 'newSkill';
+  static const String newProject = 'newProject';
+  static const String projectPage = 'projectPage';
+  static const String newCommentRoute = 'newCommentRoute';
+  static const String userProjects = 'userProjects';
+  static const String userThinkTanks = 'userThinkTanks';
+  static const String userSavedProfiles = 'userSavedProfiles';
+  static const String seeAll = 'seeAll';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     Map<String, dynamic> args = settings.arguments ?? {};
@@ -102,6 +105,15 @@ class Router {
       case userSavedProfiles:
         return MaterialPageRoute(
           builder: (_) => UserSavedProfiles(),
+        );
+      case seeAll:
+        return MaterialPageRoute(
+          builder: (_) => SeeAll(
+            separator: args['separator'],
+            stream: args['stream'],
+            title: args['title'],
+            type: args['type'],
+          ),
         );
       default:
         return MaterialPageRoute(

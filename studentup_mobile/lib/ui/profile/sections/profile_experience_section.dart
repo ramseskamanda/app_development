@@ -9,7 +9,6 @@ import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
-import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
 class ProfileExperienceSection extends StatelessWidget {
   final bool isUser;
@@ -50,23 +49,15 @@ class ProfileExperienceSection extends StatelessWidget {
                         child: const Text('See all'),
                         textColor: Theme.of(context).accentColor,
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) {
-                                return SeeAll<LaborExeprienceModel>(
-                                  title: 'Experience',
-                                  objects: snapshot.data,
-                                  separator: const SizedBox(height: 16.0),
-                                  builder: (context, index) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0),
-                                    child: ExperienceCard(
-                                      model: snapshot.data[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                          Navigator.of(context).pushNamed(
+                            Router.seeAll,
+                            arguments: {
+                              'stream': Provider.of<ProfileNotifier>(context)
+                                  .experience,
+                              'separator': const SizedBox(height: 16.0),
+                              'title': 'Experience',
+                              'type': LaborExeprienceModel,
+                            },
                           );
                         },
                       ),
@@ -133,10 +124,12 @@ class ExperienceCard extends StatelessWidget {
             ListTile(
               title: Text(model.companyName),
               subtitle: Text('${model.periodStart} - ${model.periodEnd}'),
-              trailing: PopupMenuWithActions(
-                onDelete: () async =>
-                    await Locator.of<BaseAPIWriter>().removeExperience(model),
-              ),
+              trailing: (!model.canEdit)
+                  ? null
+                  : PopupMenuWithActions(
+                      onDelete: () async => await Locator.of<BaseAPIWriter>()
+                          .removeExperience(model),
+                    ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

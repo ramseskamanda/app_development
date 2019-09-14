@@ -13,11 +13,8 @@ import 'package:studentup_mobile/util/config.dart';
 
 class AuthNotifier extends BaseNetworkNotifier {
   FirebaseUser _user;
-  StreamSubscription _stream;
 
-  AuthNotifier() : _user = Locator.of<AuthService>().currentUser {
-    _stream = Locator.of<AuthService>().isUserLoggedOut.listen(logout);
-  }
+  AuthNotifier() : _user = Locator.of<AuthService>().currentUser;
 
   FirebaseUser get user => _user;
   bool get userIsAuthenticated => _user != null;
@@ -29,12 +26,6 @@ class AuthNotifier extends BaseNetworkNotifier {
   set user(FirebaseUser value) {
     _user = value;
     notifyListeners();
-  }
-
-  @override
-  void dispose() {
-    _stream.cancel();
-    super.dispose();
   }
 
   Future signUpWithEmail({
@@ -121,7 +112,11 @@ class AuthNotifier extends BaseNetworkNotifier {
     }
   }
 
-  Future logout(bool loggedOut) async {
-    if (loggedOut) user = null;
+  Future logout() async {
+    try {
+      user = await Locator.of<AuthService>().logout();
+    } catch (e) {
+      return;
+    }
   }
 }

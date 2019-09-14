@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_villains/villain.dart';
 
-class UserProjects extends StatelessWidget {
+class UserProjects extends StatefulWidget {
+  @override
+  _UserProjectsState createState() => _UserProjectsState();
+}
+
+class _UserProjectsState extends State<UserProjects> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -11,7 +17,15 @@ class UserProjects extends StatelessWidget {
         title: const Text('My Projects'),
       ),
       body: Center(
-        child: const Text('Coming Soon!'),
+        child: Villain(
+          villainAnimation: VillainAnimation.fromBottom(
+            to: Duration(minutes: 1),
+          ),
+          secondaryVillainAnimation: VillainAnimation.fade(
+            to: Duration(minutes: 1),
+          ),
+          child: const Text('Coming Soon!'),
+        ),
       ),
     );
   }

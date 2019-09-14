@@ -5,10 +5,10 @@ import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/ui/startup_profile/team_member.dart';
 import 'package:studentup_mobile/ui/startup_profile/team_member_search.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
-import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
 class StartupTeam extends StatelessWidget {
   _addMember(BuildContext context, ProfileNotifier notifier) async {
@@ -63,30 +63,15 @@ class StartupTeam extends StatelessWidget {
                               TextStyle(color: Theme.of(context).accentColor),
                         ),
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) {
-                                final String name = snapshot.data.name;
-                                return SeeAll<Preview>(
-                                  title:
-                                      '$name${name.endsWith('s') ? '\'' : '\'s'} Team',
-                                  objects: snapshot.data.team,
-                                  separator: const SizedBox(height: 16.0),
-                                  builder: (context, index) {
-                                    Preview user = snapshot.data.team[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16.0),
-                                      child: TeamMemberListTile(
-                                        notifier: notifier,
-                                        model: user,
-                                        startupName: snapshot.data.name,
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            ),
+                          Navigator.of(context).pushNamed(
+                            Router.seeAll,
+                            arguments: {
+                              'stream': notifier.startupInfoStream,
+                              'separator': const SizedBox(height: 16.0),
+                              'title':
+                                  '${snapshot.data.name}${snapshot.data.name.endsWith('s') ? '\'' : '\'s'} Team',
+                              'type': StartupInfoModel,
+                            },
                           );
                         },
                       ),

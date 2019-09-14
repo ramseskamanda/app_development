@@ -43,7 +43,7 @@ abstract class BaseAPIWriter {
   Future createStartup(String uid, StartupInfoModel startup);
   Future updateNotificationTokens(
       {String docPath, String token, bool remove = false});
-  Future updateProfileInfo(String uid, Map<String, dynamic> data);
+  Future updateProfileInfo({String docPath, Map<String, dynamic> data});
   Future postNewThinkTank(ThinkTankModel model);
   Future removeThinkTank(ThinkTankModel model);
   Future removeComment({ThinkTankModel tank, Comments comment});
@@ -51,6 +51,7 @@ abstract class BaseAPIWriter {
   Future removeSkill(SkillsModel model);
   Future postNewEducation(EducationModel model);
   Future removeEducation(EducationModel model);
+  Future editProfileEducation(String university);
   Future postNewExperience(LaborExeprienceModel model);
   Future removeExperience(LaborExeprienceModel model);
   Future postNewTeamMember({UserInfoModel model, String docPath});

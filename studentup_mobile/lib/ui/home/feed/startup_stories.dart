@@ -11,14 +11,16 @@ class StartupStories extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<FeedNotifier>(
       builder: (context, feed, child) {
+        final int _length =
+            !(feed.isLoading || feed.hasError) ? feed.startups.length + 2 : 6;
         return ListView.separated(
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
-          itemCount:
-              !(feed.isLoading || feed.hasError) ? feed.startups.length + 1 : 6,
+          itemCount: _length,
           separatorBuilder: (context, index) => const SizedBox(width: 10.0),
           itemBuilder: (context, index) {
-            if (index == 0) return const SizedBox(width: 16.0);
+            if (index == 0 || index == _length - 1)
+              return const SizedBox(width: 16.0);
             if (feed.isLoading)
               return CircleAvatar(
                 radius: MediaQuery.of(context).size.width * 0.08,

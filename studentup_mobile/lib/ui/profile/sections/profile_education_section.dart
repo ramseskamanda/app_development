@@ -9,7 +9,6 @@ import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
-import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
 class ProfileEducationSection extends StatelessWidget {
   final bool isUser;
@@ -50,23 +49,15 @@ class ProfileEducationSection extends StatelessWidget {
                         child: const Text('See all'),
                         textColor: Theme.of(context).accentColor,
                         onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) {
-                                return SeeAll<EducationModel>(
-                                  title: 'Education',
-                                  objects: snapshot.data,
-                                  separator: const SizedBox(height: 16.0),
-                                  builder: (context, index) => Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16.0),
-                                    child: EducationCard(
-                                      model: snapshot.data[index],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                          Navigator.of(context).pushNamed(
+                            Router.seeAll,
+                            arguments: {
+                              'stream': Provider.of<ProfileNotifier>(context)
+                                  .education,
+                              'separator': const SizedBox(height: 16.0),
+                              'title': 'Education',
+                              'type': EducationModel,
+                            },
                           );
                         },
                       ),
@@ -133,10 +124,12 @@ class EducationCard extends StatelessWidget {
             ListTile(
               title: Text(model.university),
               subtitle: Text('${model.periodStart} - ${model.periodEnd}'),
-              trailing: PopupMenuWithActions(
-                onDelete: () async =>
-                    await Locator.of<BaseAPIWriter>().removeEducation(model),
-              ),
+              trailing: !model.canEdit
+                  ? null
+                  : PopupMenuWithActions(
+                      onDelete: () async => await Locator.of<BaseAPIWriter>()
+                          .removeEducation(model),
+                    ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

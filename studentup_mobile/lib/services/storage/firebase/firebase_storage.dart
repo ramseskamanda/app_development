@@ -4,6 +4,7 @@ import 'package:studentup_mobile/services/storage/base_file_storage_api.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 const String projectsFolder = 'projects_files';
+const String profilesFolder = 'profiles_pictures';
 
 class FirebaseStorageService extends BaseFileStorageAPI {
   FirebaseStorage _firebaseStorage;

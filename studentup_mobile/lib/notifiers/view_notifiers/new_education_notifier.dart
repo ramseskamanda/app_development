@@ -14,6 +14,7 @@ class NewEducationNotifier extends NetworkWriter {
   TextEditingController _gradDateController;
   DateTime _startDate;
   DateTime _gradDate;
+  bool _editProfile;
 
   NewEducationNotifier() {
     _university = TextEditingController();
@@ -22,6 +23,7 @@ class NewEducationNotifier extends NetworkWriter {
     _startDateController = TextEditingController();
     _gradDateController = TextEditingController();
     category = 'Select a degree...';
+    _editProfile = false;
   }
 
   TextEditingController get name => _university;
@@ -31,6 +33,7 @@ class NewEducationNotifier extends NetworkWriter {
   TextEditingController get startDateController => _startDateController;
   TextEditingController get gradDateController => _gradDateController;
   DateTime get gradDate => _gradDate;
+  bool get editProfile => _editProfile;
   bool get canSend =>
       _university.text.isNotEmpty &&
       _description.text.isNotEmpty &&
@@ -57,6 +60,11 @@ class NewEducationNotifier extends NetworkWriter {
     notifyListeners();
   }
 
+  set editProfile(bool value) {
+    _editProfile = value;
+    notifyListeners();
+  }
+
   @override
   Future<bool> sendData() async {
     if (!canSend) return false;
@@ -72,6 +80,7 @@ class NewEducationNotifier extends NetworkWriter {
         periodEnd: _gradDate,
         studyDescription: _description.text,
       );
+      if (_editProfile) await writer.editProfileEducation(_university.text);
       await writer.postNewEducation(model);
     } catch (e) {
       print(e);

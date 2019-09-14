@@ -78,13 +78,13 @@ class NewEducationRoute extends StatelessWidget {
                           const SizedBox(height: 24.0),
                           TextField(
                             controller: notifier.description,
-                            maxLength: 140,
+                            maxLength: 48,
                             maxLengthEnforced: true,
-                            minLines: 5,
+                            minLines: 3,
                             maxLines: null,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Study description goes here...',
+                              hintText: 'Major',
                             ),
                           ),
                           const SizedBox(height: 24.0),
@@ -100,6 +100,18 @@ class NewEducationRoute extends StatelessWidget {
                             hintText: '(Expected) Graduation Date',
                             onConfirm: (value, indices) =>
                                 notifier.gradDate = value,
+                          ),
+                          const SizedBox(height: 24.0),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              const Text('Show as main profile university'),
+                              Switch.adaptive(
+                                value: notifier.editProfile,
+                                onChanged: (value) =>
+                                    notifier.editProfile = value,
+                              ),
+                            ],
                           ),
                         ],
                       );
