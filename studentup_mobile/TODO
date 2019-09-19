@@ -92,7 +92,7 @@ v-0.0.4:
 
 v-0.0.5:
   ✔ Check for existing conversation when creating new conversation @done(19-09-13 19:15)
-  ☐ Rewrite architecture with more abstraction and better sharing of Streams
+  ✔ Rewrite architecture with more abstraction and better sharing of Streams @done(19-09-19 03:11)
   ✔ Implement WebView on tap for startup websites @done(19-09-18 22:49)
   ☐ Add Terms and Conditions as WebView
   ☐ Add notification icons for messaging
@@ -102,7 +102,7 @@ v-0.0.5:
   ☐ include a one-time pop-up (which can be permanently clicked away) telling people about what happens when you sign up for a project
   ☐ Fix blurriness of SplashScreen
   ☐ Change default image
-  ☐ Add Search Caching + Cache Cleaner (in Algolia Search)
+  ☐ Add Search Caching + Cache Cleaner (in Algolia Search) and check wtf is going on with Algolia!!!
   ☐ Fix message read when user is in the conversation (probably have to look at QuerySnapshot.documentChanges)
   ☐ Add Saved Profiles
   ✔ Fix profile tap in conversation screen to work for startups as well @done(19-09-18 23:43)

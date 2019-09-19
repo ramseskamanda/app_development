@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
+import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/think_tank_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
@@ -60,17 +61,40 @@ class ThinkTank extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          model.title,
-                          softWrap: true,
-                          style: Theme.of(context).textTheme.display1.copyWith(
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .display1
-                                  .color
-                                  .withAlpha(255),
-                              fontWeight: FontWeight.w600),
-                        ),
+                        StreamBuilder<List<Comments>>(
+                            stream: notifier.comments,
+                            builder: (context, snapshot) {
+                              return Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      model.title,
+                                      softWrap: true,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .display1
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .textTheme
+                                                  .display1
+                                                  .color
+                                                  .withAlpha(255),
+                                              fontWeight: FontWeight.w600),
+                                    ),
+                                  ),
+                                  if (notifier.model.askerId ==
+                                          Provider.of<AuthNotifier>(context)
+                                              .user
+                                              .uid &&
+                                      snapshot.hasData &&
+                                      snapshot.data.length == 0)
+                                    IconButton(
+                                      icon: Icon(Icons.edit),
+                                      onPressed: () {},
+                                    )
+                                ],
+                              );
+                            }),
                         const SizedBox(height: 8.0),
                         Text(
                           model.premise,
@@ -81,9 +105,8 @@ class ThinkTank extends StatelessWidget {
                     ),
                     const SizedBox(height: 24.0),
                     Divider(),
-                    StreamBuilder(
+                    StreamBuilder<List<Comments>>(
                       stream: notifier.comments,
-                      initialData: null,
                       builder: (BuildContext context, AsyncSnapshot snapshot) {
                         if (!snapshot.hasData) {
                           if (snapshot.connectionState ==

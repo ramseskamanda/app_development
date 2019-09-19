@@ -67,7 +67,7 @@ class OnaboardingScreen extends StatelessWidget {
                           .textTheme
                           .display1
                           .color
-                          .withAlpha(244)),
+                          .withAlpha(255)),
             ),
           ),
           const SizedBox(height: 16.0),

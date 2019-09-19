@@ -36,7 +36,7 @@ class NewMessage extends StatelessWidget {
           title: Text(
             'New Message',
             style: TextStyle(
-              color: Theme.of(context).textTheme.title.color.withAlpha(244),
+              color: Theme.of(context).textTheme.title.color.withAlpha(255),
             ),
           ),
         ),

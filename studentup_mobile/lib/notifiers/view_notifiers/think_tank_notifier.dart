@@ -14,7 +14,7 @@ class ThinkTankNotifier extends NetworkIO {
     fetchData();
   }
 
-  Stream<List<Comments>> get comments => _comments;
+  Stream<List<Comments>> get comments => _comments.asBroadcastStream();
   TextEditingController get newComment => _newComment;
 
   @override
