@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/ui/profile/account_switch.dart';
 import 'package:studentup_mobile/ui/profile/edit_profile.dart';
 import 'package:studentup_mobile/ui/profile/profile.dart';
 import 'package:studentup_mobile/ui/startup_profile/startup_profile.dart';
@@ -17,8 +18,7 @@ class ProfileRoot extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
-        // title: AccountSwitch(),
-        title: const Text('Profile'),
+        title: AccountSwitch(),
         leading: FittedBox(
           child: IconButton(
             icon: Text(

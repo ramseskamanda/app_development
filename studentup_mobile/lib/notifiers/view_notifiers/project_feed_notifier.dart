@@ -1,6 +1,9 @@
 import 'package:studentup_mobile/enum/query_order.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/storage/local_storage_service.dart';
+import 'package:studentup_mobile/util/user_config.dart';
 
 class ProjectFeedNotifier extends NetworkReader {
   List<ProjectModel> _projects;
@@ -18,7 +21,12 @@ class ProjectFeedNotifier extends NetworkReader {
     isLoading = true;
     try {
       //fetch projects data
-      _projects = await reader.fetchProjects(QueryOrder.newest);
+      QueryOrder _order = Locator.of<LocalStorageService>()
+                  .getFromUserDisk(PROJECTS_QUERY_ORDER) ??
+              false
+          ? QueryOrder.popularity
+          : QueryOrder.newest;
+      _projects = await reader.fetchProjects(_order);
     } catch (e) {
       print(e);
       error = NetworkError(message: e.toString());

@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/enum/connectivity_status.dart';
 import 'package:studentup_mobile/notifiers/auth_notifier.dart';
+import 'package:studentup_mobile/notifiers/theme_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/search/algolia_service.dart';
@@ -44,6 +45,7 @@ class Locator {
     return [
       ChangeNotifierProvider<ProfileNotifier>(
           builder: (_) => _locator<ProfileNotifier>()..fetchData()),
+      ChangeNotifierProvider<ThemeNotifier>(builder: (_) => ThemeNotifier()),
       // StreamProvider<SettingsModel>(
       //   builder: (_) => SettingsNotifier().settingsEditor,
       //   updateShouldNotify: (a, b) => true,

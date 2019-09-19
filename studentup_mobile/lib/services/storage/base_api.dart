@@ -22,6 +22,7 @@ abstract class BaseAPIReader {
   Stream<List<LaborExeprienceModel>> fetchExperience(String uid);
   Future<List<StartupInfoModel>> fetchStartups(QueryOrder order);
   Future<List<ThinkTankModel>> fetchThinkTanks(QueryOrder order);
+  Stream<ThinkTankModel> fetchThinkTankStream(String docId);
   Future<List<ProjectModel>> fetchProjects(QueryOrder order);
   Future<List<ProjectModel>> fetchProjectsByOwner(String uid,
       {QueryOrder order = QueryOrder.popularity});
@@ -45,6 +46,7 @@ abstract class BaseAPIWriter {
       {String docPath, String token, bool remove = false});
   Future updateProfileInfo({String docPath, Map<String, dynamic> data});
   Future postNewThinkTank(ThinkTankModel model);
+  Future editThinkTank({ThinkTankModel model, Map<String, dynamic> data});
   Future removeThinkTank(ThinkTankModel model);
   Future removeComment({ThinkTankModel tank, Comments comment});
   Future postNewSkill(SkillsModel model);

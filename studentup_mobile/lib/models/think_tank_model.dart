@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
+import 'package:studentup_mobile/util/config.dart';
 import 'package:studentup_mobile/util/util.dart';
 
 class ThinkTankModel extends BaseModel {
@@ -30,12 +31,12 @@ class ThinkTankModel extends BaseModel {
   }
 
   CollectionReference get comments => _comments;
-  String get askerId => _askerId;
-  String get askerImage => _askerImage;
-  int get commentCount => _commentCount;
+  String get askerId => _askerId ?? '';
+  String get askerImage => _askerImage ?? defaultImageUrl;
+  int get commentCount => _commentCount ?? 0;
   DateTime get lastActivity => _lastActivity?.toDate() ?? DateTime.now();
-  String get premise => _premise;
-  String get title => _title;
+  String get premise => _premise ?? 'No Premise';
+  String get title => _title ?? 'No Title';
 
   ThinkTankModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;

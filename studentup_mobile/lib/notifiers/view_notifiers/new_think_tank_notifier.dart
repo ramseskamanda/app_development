@@ -7,14 +7,15 @@ import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class NewThinkTankNotifier extends NetworkWriter {
-  //name value
-  //description value
   TextEditingController _name;
   TextEditingController _description;
+  ThinkTankModel _model;
 
-  NewThinkTankNotifier()
-      : _name = TextEditingController(),
-        _description = TextEditingController();
+  NewThinkTankNotifier({ThinkTankModel model})
+      : _model = model,
+        _name = TextEditingController(text: model != null ? model.title : null),
+        _description =
+            TextEditingController(text: model != null ? model.premise : null);
 
   TextEditingController get name => _name;
   TextEditingController get description => _description;
@@ -24,20 +25,32 @@ class NewThinkTankNotifier extends NetworkWriter {
   Future<bool> sendData() async {
     if (!canSend) return false;
     isLoading = true;
-    final Preview user = Locator.of<ProfileNotifier>().info;
-    print(Locator.of<ProfileNotifier>().hashCode);
-    print(user);
-    final model = ThinkTankModel(
-      askerId: Locator.of<AuthService>().currentUser.uid,
-      askerImage: user.imageUrl,
-      premise: _description.text,
-      title: _name.text,
-      lastActivity: DateTime.now(),
-      commentCount: 0,
-      comments: null,
-    );
     try {
-      await writer.postNewThinkTank(model);
+      if (_model == null) {
+        final Preview user = Locator.of<ProfileNotifier>().info;
+        print(Locator.of<ProfileNotifier>().hashCode);
+        print(user);
+        final model = ThinkTankModel(
+          askerId: Locator.of<AuthService>().currentUser.uid,
+          askerImage: user.imageUrl,
+          premise: _description.text,
+          title: _name.text,
+          lastActivity: DateTime.now(),
+          commentCount: 0,
+          comments: null,
+        );
+        await writer.postNewThinkTank(model);
+      } else {
+        Map<String, dynamic> _data = {
+          'premise': _description.text,
+          'title': _name.text,
+        };
+        _data.removeWhere((key, value) => value == null || value.isEmpty);
+        await writer.editThinkTank(
+          model: _model,
+          data: _data,
+        );
+      }
     } catch (e) {
       print(e);
       error = NetworkError(message: e.toString());

@@ -1,19 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/new_think_tank_notifier.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
-class NewThinkTankRoute extends StatelessWidget {
-  final ThinkTankModel model;
-
-  const NewThinkTankRoute({Key key, @required this.model}) : super(key: key);
-
+class ThinkTankEditor extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<NewThinkTankNotifier>(
-      builder: (_) => NewThinkTankNotifier(model: model),
+      builder: (_) => NewThinkTankNotifier(),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -23,7 +18,7 @@ class NewThinkTankRoute extends StatelessWidget {
             icon: const Icon(Icons.close),
             onPressed: () => Navigator.of(context).pop(false),
           ),
-          title: Text(model == null ? 'New Think Tank' : 'Edit Think Tank'),
+          title: const Text('New Think Tank'),
         ),
         body: SafeArea(
           child: Center(

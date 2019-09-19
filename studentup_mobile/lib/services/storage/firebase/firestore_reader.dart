@@ -166,12 +166,13 @@ class FirestoreReader implements BaseAPIReader {
   @override
   Future<List<ProjectModel>> fetchProjects(QueryOrder order) async {
     try {
+      //TODO: fix this to actually sort things by timestamp or signups_num
       String field = QueryOrder.newest == order ? 'timestamp' : 'signups_num';
       QuerySnapshot snapshot = await _firestore
           .collection(projectCollection)
           .where('deadline', isGreaterThan: Timestamp.now())
           .orderBy('deadline')
-          .orderBy(field)
+          .orderBy(field, descending: true)
           // .limit(NUM_ITEM_PREVIEW)
           .getDocuments();
       return snapshot.documents
@@ -329,5 +330,14 @@ class FirestoreReader implements BaseAPIReader {
         .map((snapshot) => snapshot.documents
             .map((doc) => ProjectSignupModel.fromDoc(doc))
             .toList());
+  }
+
+  @override
+  Stream<ThinkTankModel> fetchThinkTankStream(String docId) {
+    return _firestore
+        .collection(thinkTanksCollection)
+        .document(docId)
+        .snapshots()
+        .map((doc) => ThinkTankModel.fromDoc(doc));
   }
 }

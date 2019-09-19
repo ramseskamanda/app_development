@@ -2,6 +2,9 @@ import 'package:studentup_mobile/enum/query_order.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/storage/local_storage_service.dart';
+import 'package:studentup_mobile/util/user_config.dart';
 
 class FeedNotifier extends NetworkIO {
   List<StartupInfoModel> _startups;
@@ -22,9 +25,20 @@ class FeedNotifier extends NetworkIO {
     isReading = true;
     try {
       //fetch startup data
+      //TODO: Fix this to sort startups by a new metric of success
+      // QueryOrder _startupsOrder = Locator.of<LocalStorageService>()
+      //             .getFromUserDisk(STARTUP_BADGES_QUERY_ORDER) ??
+      //         false
+      //     ? QueryOrder.popularity
+      //     : QueryOrder.newest;
       _startups = await reader.fetchStartups(QueryOrder.newest);
       //fetch think tanks data
-      _thinkTanks = await reader.fetchThinkTanks(QueryOrder.newest);
+      QueryOrder _tanksOrder = Locator.of<LocalStorageService>()
+                  .getFromUserDisk(THINK_TANK_QUERY_ORDER) ??
+              false
+          ? QueryOrder.newest
+          : QueryOrder.popularity;
+      _thinkTanks = await reader.fetchThinkTanks(_tanksOrder);
     } catch (e) {
       readError = NetworkError(message: e.toString());
     }

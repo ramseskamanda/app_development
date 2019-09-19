@@ -276,4 +276,14 @@ class FirestoreWriter implements BaseAPIWriter {
       .collection(studentsCollection)
       .document(Locator.of<AuthService>().currentUser.uid)
       .updateData({'university': university});
+
+  @override
+  Future editThinkTank({
+    ThinkTankModel model,
+    Map<String, dynamic> data,
+  }) async =>
+      await _firestore
+          .collection(thinkTanksCollection)
+          .document(model.docId)
+          .updateData(data);
 }

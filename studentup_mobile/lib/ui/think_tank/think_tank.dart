@@ -10,6 +10,7 @@ import 'package:studentup_mobile/notifiers/view_notifiers/think_tank_notifier.da
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
@@ -20,12 +21,17 @@ class ThinkTank extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThinkTankNotifier notifier = ThinkTankNotifier(model);
+    final ThinkTankNotifier notifier = ThinkTankNotifier(model: model);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.transparent,
         elevation: 0.0,
+        actions: <Widget>[
+          PopupMenuWithActions(
+            onDelete: () => notifier.writer.removeThinkTank(model),
+          ),
+        ],
       ),
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 16.0),
@@ -58,50 +64,59 @@ class ThinkTank extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        StreamBuilder<List<Comments>>(
-                            stream: notifier.comments,
-                            builder: (context, snapshot) {
-                              return Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    child: Text(
-                                      model.title,
-                                      softWrap: true,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .display1
-                                          .copyWith(
-                                              color: Theme.of(context)
-                                                  .textTheme
-                                                  .display1
-                                                  .color
-                                                  .withAlpha(255),
-                                              fontWeight: FontWeight.w600),
-                                    ),
+                    StreamBuilder<ThinkTankModel>(
+                      stream: notifier.model,
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData)
+                          return Center(child: CircularProgressIndicator());
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  child: Text(
+                                    snapshot.data.title,
+                                    softWrap: true,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .display1
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .display1
+                                                .color
+                                                .withAlpha(255),
+                                            fontWeight: FontWeight.w600),
                                   ),
-                                  if (notifier.model.askerId ==
-                                          Provider.of<AuthNotifier>(context)
-                                              .user
-                                              .uid &&
-                                      snapshot.hasData &&
-                                      snapshot.data.length == 0)
-                                    IconButton(
-                                      icon: Icon(Icons.edit),
-                                      onPressed: () {},
-                                    )
-                                ],
-                              );
-                            }),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          model.premise,
-                          softWrap: true,
-                          style: Theme.of(context).textTheme.subhead,
-                        ),
-                      ],
+                                ),
+                                if (snapshot.data.askerId ==
+                                        Provider.of<AuthNotifier>(context)
+                                            .user
+                                            .uid &&
+                                    snapshot.hasData &&
+                                    snapshot.data.commentCount == 0)
+                                  IconButton(
+                                    icon: Icon(Icons.edit),
+                                    onPressed: () async {
+                                      await Navigator.of(context).pushNamed(
+                                        Router.newThinkTank,
+                                        arguments: {'model': model},
+                                      );
+                                      await notifier.fetchData();
+                                    },
+                                  )
+                              ],
+                            ),
+                            const SizedBox(height: 8.0),
+                            Text(
+                              snapshot.data.premise,
+                              softWrap: true,
+                              style: Theme.of(context).textTheme.subhead,
+                            ),
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 24.0),
                     Divider(),

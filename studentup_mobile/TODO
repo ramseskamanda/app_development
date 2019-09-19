@@ -96,7 +96,7 @@ v-0.0.5:
   ✔ Implement WebView on tap for startup websites @done(19-09-18 22:49)
   ☐ Add Terms and Conditions as WebView
   ☐ Add notification icons for messaging
-  ☐ Add Settings for QueryOrder for Think Tanks, Deleting account etc.
+  ✔ Add Settings for QueryOrder for Think Tanks, Deleting account etc. @done(19-09-19 20:09)
   ☐ Implement account switching
   ☐ Add download percentage indicator (make generic download button and maybe upload too)
   ☐ include a one-time pop-up (which can be permanently clicked away) telling people about what happens when you sign up for a project
@@ -106,7 +106,7 @@ v-0.0.5:
   ☐ Fix message read when user is in the conversation (probably have to look at QuerySnapshot.documentChanges)
   ☐ Add Saved Profiles
   ✔ Fix profile tap in conversation screen to work for startups as well @done(19-09-18 23:43)
-  ☐ Make think tank premises editable if there's no comments (just an if statement on the length of the comments list)
+  ✔ Make think tank premises editable if there's no comments (just an if statement on the length of the comments list) @done(19-09-19 16:40)
   ☐ Do more research on in-app purchases
   ☐ Fix bug with new profile completion toast keeps appearing after a user was created even though the user is different or not new
   ☐ Add Notifications Screen
@@ -125,6 +125,8 @@ v-0.0.6:
   ☐ add progress indicator on uploads and downloads
   ☐ Delete profiles with inactivity for 3 months
   ✔ Refactor profile pages to use the same code @done(19-09-19 01:56)
+  ☐ Refactor Think Tanks code to all use the same notifier
+  ☐ Fix think tanks edit refresh when going back to the feed
 
 
 Refactoring:

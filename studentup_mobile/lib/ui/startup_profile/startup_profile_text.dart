@@ -68,7 +68,8 @@ class StartupProfileText extends StatelessWidget {
                           final result = await Locator.of<WebService>()
                               .launchURLInDefaultBrowser(snapshot.data.website);
                           print(result);
-                          if (!result) Dialogs.showNetworkErrorDialog(context);
+                          if (!(result ?? false))
+                            Dialogs.showNetworkErrorDialog(context);
                         },
                   child: Text(
                     snapshot.hasData

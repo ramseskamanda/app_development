@@ -60,7 +60,7 @@ class Router {
         );
       case newThinkTank:
         return MaterialPageRoute<bool>(
-          builder: (_) => NewThinkTankRoute(),
+          builder: (_) => NewThinkTankRoute(model: args['model']),
         );
       case prizeScreen:
         return MaterialPageRoute(

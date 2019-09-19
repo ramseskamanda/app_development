@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 
 class AccountSwitch extends StatelessWidget {
   final int _isCurrentAccount = 0;
 
   void _showAccountSwitcher(BuildContext context) {
+    ProfileNotifier notifier = Provider.of<ProfileNotifier>(context);
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -19,9 +22,18 @@ class AccountSwitch extends StatelessWidget {
               SizedBox(height: 16.0),
               for (int i = 0; i < 2; i++)
                 ListTile(
-                  leading: CircleAvatar(
-                    backgroundImage: CachedNetworkImageProvider(
-                      'https://via.placeholder.com/150',
+                  //TODO: add account local storage
+                  leading: CachedNetworkImage(
+                    imageUrl: notifier.info.imageUrl,
+                    placeholder: (_, url) => const CircleAvatar(
+                      backgroundColor: CupertinoColors.lightBackgroundGray,
+                    ),
+                    errorWidget: (_, __, err) => const CircleAvatar(
+                      backgroundColor: CupertinoColors.lightBackgroundGray,
+                      child: const Icon(Icons.error),
+                    ),
+                    imageBuilder: (_, image) => CircleAvatar(
+                      backgroundImage: image,
                     ),
                   ),
                   title: const Text('Ramses Kamanda'),

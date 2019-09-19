@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class LocalStorageService {
@@ -25,7 +26,7 @@ class LocalStorageService {
   }
 
   dynamic getFromUserDisk(String key) {
-    final String fullKey = Locator.of<ProfileNotifier>().info.uid + key;
+    final String fullKey = Locator.of<AuthService>().currentUser.uid + key;
     return getFromDisk(fullKey);
   }
 

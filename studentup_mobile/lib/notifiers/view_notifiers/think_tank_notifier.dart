@@ -5,22 +5,26 @@ import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class ThinkTankNotifier extends NetworkIO {
-  final ThinkTankModel model;
+  ThinkTankModel _initial;
+  Stream<ThinkTankModel> _model;
   TextEditingController _newComment;
   Stream<List<Comments>> _comments;
 
-  ThinkTankNotifier(this.model) {
+  ThinkTankNotifier({ThinkTankModel model}) {
+    _initial = model;
     _newComment = TextEditingController();
     fetchData();
   }
 
+  Stream<ThinkTankModel> get model => _model.asBroadcastStream();
   Stream<List<Comments>> get comments => _comments.asBroadcastStream();
   TextEditingController get newComment => _newComment;
 
   @override
   Future fetchData() async {
     isReading = true;
-    _comments = reader.fetchComments(model.comments.path);
+    _model = reader.fetchThinkTankStream(_initial.docId);
+    _comments = reader.fetchComments(_initial.comments.path);
     isReading = false;
   }
 
@@ -32,7 +36,7 @@ class ThinkTankNotifier extends NetworkIO {
       createdAt: DateTime.now(),
       userId: Locator.of<AuthService>().currentUser.uid,
     );
-    writer.postComment(model: comment, collectionPath: model.comments.path);
+    writer.postComment(model: comment, collectionPath: _initial.comments.path);
     isWriting = false;
   }
 
@@ -40,14 +44,14 @@ class ThinkTankNotifier extends NetworkIO {
     if (vote.cancelVote)
       await writer.removeVoter(
         upvote: true,
-        collectionPath: model.comments.path,
+        collectionPath: _initial.comments.path,
         docId: vote.docId,
         uid: Locator.of<AuthService>().currentUser.uid,
       );
     else
       await writer.addVoter(
         upvote: true,
-        collectionPath: model.comments.path,
+        collectionPath: _initial.comments.path,
         docId: vote.docId,
         uid: Locator.of<AuthService>().currentUser.uid,
       );
@@ -57,21 +61,21 @@ class ThinkTankNotifier extends NetworkIO {
     if (vote.cancelVote)
       await writer.removeVoter(
         upvote: false,
-        collectionPath: model.comments.path,
+        collectionPath: _initial.comments.path,
         docId: vote.docId,
         uid: Locator.of<AuthService>().currentUser.uid,
       );
     else
       await writer.addVoter(
         upvote: false,
-        collectionPath: model.comments.path,
+        collectionPath: _initial.comments.path,
         docId: vote.docId,
         uid: Locator.of<AuthService>().currentUser.uid,
       );
   }
 
   Future _removeComment(Delete delete) async =>
-      await writer.removeComment(tank: model, comment: delete.model);
+      await writer.removeComment(tank: _initial, comment: delete.model);
 
   @override
   Future<bool> sendData([data]) async {
