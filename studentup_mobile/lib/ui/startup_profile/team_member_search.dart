@@ -9,6 +9,18 @@ class TeamMemberSearchDelegate extends SearchDelegate<UserInfoModel> {
   final BaseSearchAPI _algoliaService = Locator.of<BaseSearchAPI>();
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    return super.appBarTheme(context).copyWith(
+          primaryColor: Theme.of(context).scaffoldBackgroundColor,
+          iconTheme: Theme.of(context).iconTheme,
+          appBarTheme: AppBarTheme(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0.0,
+          ),
+        );
+  }
+
+  @override
   List<Widget> buildActions(BuildContext context) {
     if (query.isEmpty) return null;
     return <Widget>[

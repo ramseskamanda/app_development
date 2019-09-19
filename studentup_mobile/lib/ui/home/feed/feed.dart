@@ -64,9 +64,10 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).accentColor,
           child: Icon(
             Icons.add,
-            color: Theme.of(context).scaffoldBackgroundColor,
+            color: CupertinoColors.white,
           ),
           onPressed: () async {
             final result = await Navigator.of(context)

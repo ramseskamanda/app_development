@@ -27,15 +27,17 @@ class NewMessage extends StatelessWidget {
           elevation: 0.0,
           automaticallyImplyLeading: false,
           leading: IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.close,
-              color: CupertinoColors.black,
+              color: Theme.of(context).iconTheme.color,
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          title: const Text(
+          title: Text(
             'New Message',
-            style: TextStyle(color: CupertinoColors.black),
+            style: TextStyle(
+              color: Theme.of(context).textTheme.title.color.withAlpha(244),
+            ),
           ),
         ),
         body: SafeArea(
@@ -150,6 +152,18 @@ class NewMessage extends StatelessWidget {
 
 class CustomSearchDelegate extends SearchDelegate {
   final BaseSearchAPI _algoliaService = Locator.of<BaseSearchAPI>();
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return super.appBarTheme(context).copyWith(
+          primaryColor: Theme.of(context).scaffoldBackgroundColor,
+          iconTheme: Theme.of(context).iconTheme,
+          appBarTheme: AppBarTheme(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0.0,
+          ),
+        );
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {

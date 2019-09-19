@@ -52,7 +52,11 @@ class _NewProjectDeadlineState extends State<NewProjectDeadline> {
               child: Text(
                 'Deadline',
                 style: Theme.of(context).textTheme.display1.copyWith(
-                      color: CupertinoColors.black,
+                      color: Theme.of(context)
+                          .textTheme
+                          .display1
+                          .color
+                          .withAlpha(255),
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -99,6 +103,7 @@ class _NewProjectDeadlineState extends State<NewProjectDeadline> {
                       onChanged: (value) =>
                           service.numParticipants = value.toInt(),
                       label: service.numParticipants.toString(),
+                      activeColor: Theme.of(context).accentColor,
                     ),
                   ],
                 );

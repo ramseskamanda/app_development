@@ -29,6 +29,7 @@ class ThinkTank extends StatelessWidget {
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 16.0),
         child: FloatingActionButton.extended(
+          backgroundColor: Theme.of(context).accentColor,
           icon: const Icon(
             Icons.add,
             color: CupertinoColors.white,
@@ -63,7 +64,11 @@ class ThinkTank extends StatelessWidget {
                           model.title,
                           softWrap: true,
                           style: Theme.of(context).textTheme.display1.copyWith(
-                              color: CupertinoColors.black,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .display1
+                                  .color
+                                  .withAlpha(255),
                               fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 8.0),

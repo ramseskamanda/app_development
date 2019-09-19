@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/feed_notifier.dart';
 import 'package:studentup_mobile/router.dart';
@@ -39,8 +40,15 @@ class StartupStories extends StatelessWidget {
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).pushNamed(
-                  Router.startupPage,
-                  arguments: {'model': model},
+                  Router.otherProfile,
+                  arguments: {
+                    'infoModel': Preview(
+                      givenName: model.name,
+                      imageUrl: model.imageUrl,
+                      uid: model.docId,
+                      isStartup: true,
+                    ),
+                  },
                 );
               },
               child: Column(
@@ -66,14 +74,11 @@ class StartupStories extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 2.0),
-                  Text(
-                    model.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption
-                        .copyWith(fontWeight: FontWeight.bold)
-                        .apply(color: CupertinoColors.black),
-                  ),
+                  Text(model.name,
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          .copyWith(fontWeight: FontWeight.bold)),
                 ],
               ),
             );

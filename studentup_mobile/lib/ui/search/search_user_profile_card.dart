@@ -22,6 +22,7 @@ class UserProfileCard extends StatelessWidget {
               givenName: model.givenName,
               imageUrl: model.mediaRef,
               uid: model.docId,
+              isStartup: false,
             ),
           },
         );
@@ -65,7 +66,7 @@ class UserProfileCard extends StatelessWidget {
                 RaisedButton(
                   child: const Text('Contact'),
                   color: Theme.of(context).accentColor,
-                  textColor: Theme.of(context).scaffoldBackgroundColor,
+                  textColor: CupertinoColors.white,
                   onPressed: () {
                     Navigator.of(context).pushNamed(
                       Router.newMessage,

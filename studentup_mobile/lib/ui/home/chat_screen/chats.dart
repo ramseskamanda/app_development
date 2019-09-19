@@ -38,9 +38,10 @@ class _ChatsState extends State<Chats>
           body: NetworkSensitive(child: UserChats()),
           floatingActionButton: FloatingActionButton(
             heroTag: 'new_message',
+            backgroundColor: Theme.of(context).accentColor,
             child: Icon(
               Icons.add,
-              color: Theme.of(context).scaffoldBackgroundColor,
+              color: CupertinoColors.white,
             ),
             onPressed: () => Navigator.of(context).pushNamed(Router.newMessage),
           ),

@@ -11,7 +11,7 @@ import 'package:studentup_mobile/ui/startup_profile/startup_team.dart';
 class StartUpProfile extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _key;
 
-  StartUpProfile({Key key, String userId})
+  StartUpProfile({Key key})
       : _key = GlobalKey<RefreshIndicatorState>(),
         super(key: key);
 

@@ -62,7 +62,12 @@ class OnaboardingScreen extends StatelessWidget {
                   .textTheme
                   .display1
                   .copyWith(fontWeight: FontWeight.bold)
-                  .apply(color: CupertinoColors.black),
+                  .apply(
+                      color: Theme.of(context)
+                          .textTheme
+                          .display1
+                          .color
+                          .withAlpha(244)),
             ),
           ),
           const SizedBox(height: 16.0),

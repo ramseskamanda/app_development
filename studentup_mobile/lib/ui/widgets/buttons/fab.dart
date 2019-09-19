@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 typedef void FABCallBack();
@@ -22,18 +23,20 @@ class PaddedFAB extends StatelessWidget {
       ),
       child: text == null
           ? FloatingActionButton(
+              backgroundColor: Theme.of(context).accentColor,
               heroTag: 'padded',
               child: Icon(
                 icon,
-                color: Theme.of(context).scaffoldBackgroundColor,
+                color: CupertinoColors.white,
               ),
               onPressed: onPressed,
             )
           : FloatingActionButton.extended(
+              backgroundColor: Theme.of(context).accentColor,
               heroTag: 'padded',
               icon: Icon(
                 icon,
-                color: Theme.of(context).scaffoldBackgroundColor,
+                color: CupertinoColors.white,
               ),
               label: Text(text),
               onPressed: onPressed,

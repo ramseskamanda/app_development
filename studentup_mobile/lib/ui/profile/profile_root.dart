@@ -17,7 +17,7 @@ class ProfileRoot extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0.0,
-        //title: AccountSwitch(),
+        // title: AccountSwitch(),
         title: const Text('Profile'),
         leading: FittedBox(
           child: IconButton(
@@ -38,6 +38,8 @@ class ProfileRoot extends StatelessWidget {
         ),
         actions: <Widget>[
           PopupMenuWithActions(
+            onSettings: () =>
+                Navigator.of(context).pushNamed(Router.settingsPage),
             onLogout: () async {
               await Provider.of<ProfileNotifier>(context).logout();
               await Provider.of<AuthNotifier>(context).logout();

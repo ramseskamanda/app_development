@@ -2,13 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:studentup_mobile/ui/signup/onboarding/onboarding.dart';
 import 'package:studentup_mobile/ui/signup/signin.dart';
 import 'package:studentup_mobile/ui/signup/signup_form.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
-
-import 'onboarding/onboarding.dart';
-
-export './disclaimer.dart';
 
 class SignupRoot extends StatefulWidget {
   final bool login;

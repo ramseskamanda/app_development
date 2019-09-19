@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/web_service.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class StartupProfileText extends StatelessWidget {
   @override
@@ -20,7 +23,11 @@ class StartupProfileText extends StatelessWidget {
                       : snapshot.hasError ? 'Name Error' : 'Loading...',
                   style: Theme.of(context).textTheme.headline.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: CupertinoColors.black,
+                        color: Theme.of(context)
+                            .textTheme
+                            .headline
+                            .color
+                            .withAlpha(255),
                       ),
                 ),
                 const SizedBox(height: 12.0),
@@ -28,10 +35,12 @@ class StartupProfileText extends StatelessWidget {
                   snapshot.hasData
                       ? snapshot.data.location
                       : snapshot.hasError ? 'Location Error' : 'Loading...',
-                  style: Theme.of(context)
-                      .textTheme
-                      .subhead
-                      .copyWith(color: CupertinoColors.inactiveGray),
+                  style: Theme.of(context).textTheme.subhead.copyWith(
+                      color: Theme.of(context)
+                          .textTheme
+                          .subhead
+                          .color
+                          .withAlpha(200)),
                 ),
                 const SizedBox(height: 12.0),
                 Container(
@@ -43,19 +52,33 @@ class StartupProfileText extends StatelessWidget {
                     softWrap: true,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.subtitle.copyWith(
-                        color: CupertinoColors.black,
+                        color: Theme.of(context)
+                            .textTheme
+                            .subtitle
+                            .color
+                            .withAlpha(255),
                         fontStyle: FontStyle.italic),
                   ),
                 ),
                 const SizedBox(height: 12.0),
-                Text(
-                  snapshot.hasData
-                      ? snapshot.data.website
-                      : snapshot.hasError ? 'Location Error' : 'Loading...',
-                  style: Theme.of(context)
-                      .textTheme
-                      .subhead
-                      .copyWith(color: Theme.of(context).accentColor),
+                InkWell(
+                  onTap: !snapshot.hasData
+                      ? null
+                      : () async {
+                          final result = await Locator.of<WebService>()
+                              .launchURLInDefaultBrowser(snapshot.data.website);
+                          print(result);
+                          if (!result) Dialogs.showNetworkErrorDialog(context);
+                        },
+                  child: Text(
+                    snapshot.hasData
+                        ? snapshot.data.website
+                        : snapshot.hasError ? 'Location Error' : 'Loading...',
+                    style: Theme.of(context)
+                        .textTheme
+                        .subhead
+                        .copyWith(color: Theme.of(context).accentColor),
+                  ),
                 ),
               ],
             );

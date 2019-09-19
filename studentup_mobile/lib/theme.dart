@@ -26,9 +26,10 @@ class StudentupTheme {
   static final ThemeData lightTheme = ThemeData(
     primarySwatch: colorSwatch,
   );
-  //TODO: Easter egg for dark theme in settings
   static final ThemeData darkTheme = ThemeData.dark().copyWith(
     primaryColor: colorSwatch,
+    accentColor: colorSwatch,
+    primaryColorBrightness: Brightness.dark,
   );
 
   static List<BoxShadow> getSimpleBoxShadow({Color color}) {
@@ -40,29 +41,17 @@ class StudentupTheme {
         color: color,
       ),
       BoxShadow(
-        offset: Offset(0.0, 2.0),
+        offset: Offset(2.0, 2.0),
         blurRadius: 0,
         spreadRadius: 0.0,
         color: color,
       ),
       BoxShadow(
-        offset: Offset(0.0, 1.0),
-        blurRadius: 0,
+        offset: Offset(0.0, 0.0),
+        blurRadius: 0.0,
         spreadRadius: 0.0,
         color: color,
       ),
     ];
   }
-
-  // brightness: Brightness.light,
-  // primaryColor: mainColor,
-  // primaryColorBrightness: Brightness.light,
-  // primaryColorLight: mainColor,
-  // primaryColorDark: mainColor,
-  // accentColor: accentColorSwatch.shade400,
-  // accentColorBrightness: Brightness.light,
-  // dividerColor: dividerColor,
-  // splashColor: mainColor,
-  // selectedRowColor: mainColor,
-  // buttonColor: mainColor,
 }

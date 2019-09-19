@@ -14,7 +14,7 @@ class ProfileAboutCard extends StatelessWidget {
         height: MediaQuery.of(context).size.height * 0.3,
         padding: const EdgeInsets.all(16.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).scaffoldBackgroundColor,
           borderRadius: BorderRadius.circular(6.0),
           boxShadow: StudentupTheme.getSimpleBoxShadow(
             color: Theme.of(context).accentColor,

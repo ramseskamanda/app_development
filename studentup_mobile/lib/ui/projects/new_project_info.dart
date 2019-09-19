@@ -20,7 +20,11 @@ class NewProjectInformation extends StatelessWidget {
               child: Text(
                 'New Project',
                 style: Theme.of(context).textTheme.display1.copyWith(
-                      color: CupertinoColors.black,
+                      color: Theme.of(context)
+                          .textTheme
+                          .display1
+                          .color
+                          .withAlpha(255),
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -48,7 +52,7 @@ class ImageSelection extends StatelessWidget {
               width: double.infinity,
               height: MediaQuery.of(context).size.height * 0.25,
               decoration: BoxDecoration(
-                color: CupertinoColors.extraLightBackgroundGray,
+                color: Theme.of(context).disabledColor,
                 image: service.image != null
                     ? DecorationImage(
                         fit: BoxFit.cover,

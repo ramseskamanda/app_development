@@ -89,6 +89,7 @@ class FirestoreWriter implements BaseAPIWriter {
         givenName: model.givenName,
         imageUrl: model.mediaRef,
         uid: model.docId,
+        isStartup: false,
       ).toJson(),
     });
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/enum/connectivity_status.dart';
 import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
@@ -16,6 +17,7 @@ import 'package:studentup_mobile/services/storage/firebase/firestore_reader.dart
 import 'package:studentup_mobile/services/storage/firebase/firestore_writer.dart';
 import 'package:studentup_mobile/services/storage/local_storage_service.dart';
 import 'package:studentup_mobile/services/notifications/notification_service.dart';
+import 'package:studentup_mobile/services/web_service.dart';
 
 class Locator {
   @protected
@@ -30,10 +32,22 @@ class Locator {
             initialNavBarTab: _locator<NotificationService>().initialRoute),
         dispose: (_, InnerRouter instance) => instance.dispose(),
       ),
-      StreamProvider(
+      StreamProvider<ConnectivityStatus>(
         builder: (_) => ConnectivityService().connectionStatusController.stream,
         updateShouldNotify: (a, b) => true,
       ),
+    ];
+  }
+
+  static List<SingleChildCloneableWidget> get userProviders {
+    print('Setting Up User Specific Providers...');
+    return [
+      ChangeNotifierProvider<ProfileNotifier>(
+          builder: (_) => _locator<ProfileNotifier>()..fetchData()),
+      // StreamProvider<SettingsModel>(
+      //   builder: (_) => SettingsNotifier().settingsEditor,
+      //   updateShouldNotify: (a, b) => true,
+      // ),
     ];
   }
 
@@ -47,6 +61,8 @@ class Locator {
     _locator.registerSingleton<BaseAPIWriter>(FirestoreWriter());
     _locator.registerSingleton<BaseFileStorageAPI>(FirebaseStorageService());
     _locator.registerSingleton<BaseSearchAPI>(AlgoliaService());
+    _locator.registerSingleton<WebService>(WebService());
+    // _locator.registerSingleton<SettingsNotifier>(SettingsNotifier());
     _locator.registerSingleton<ProfileNotifier>(ProfileNotifier());
   }
 

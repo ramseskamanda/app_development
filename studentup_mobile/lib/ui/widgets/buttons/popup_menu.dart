@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/enum/popup_actions.dart';
 import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
@@ -5,12 +8,14 @@ import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 class PopupMenuWithActions extends StatelessWidget {
   final void Function() onDelete;
   final void Function() onLogout;
+  final void Function() onSettings;
   final Color color;
 
   const PopupMenuWithActions({
     Key key,
     this.onDelete,
     this.onLogout,
+    this.onSettings,
     this.color = Colors.transparent,
   }) : super(key: key);
 
@@ -22,6 +27,9 @@ class PopupMenuWithActions extends StatelessWidget {
           break;
         case PopupAction.LOGOUT:
           if (await Dialogs.showLogoutDialog(context)) onLogout();
+          break;
+        case PopupAction.SETTINGS:
+          onSettings();
           break;
         default:
           print('No actions matched for: $action');
@@ -42,6 +50,17 @@ class PopupMenuWithActions extends StatelessWidget {
         onSelected: (PopupAction ac) async => _runCommand(ac, context),
         itemBuilder: (context) {
           return [
+            if (onSettings != null)
+              PopupMenuItem(
+                value: PopupAction.SETTINGS,
+                enabled: true,
+                child: ListTile(
+                  title: const Text('Settings'),
+                  trailing: Icon(Platform.isIOS
+                      ? CupertinoIcons.settings
+                      : Icons.settings),
+                ),
+              ),
             if (onLogout != null)
               PopupMenuItem(
                 value: PopupAction.LOGOUT,
@@ -57,7 +76,8 @@ class PopupMenuWithActions extends StatelessWidget {
                 enabled: true,
                 child: ListTile(
                   title: const Text('Delete'),
-                  trailing: Icon(Icons.delete),
+                  trailing: Icon(
+                      Platform.isIOS ? CupertinoIcons.delete : Icons.delete),
                 ),
               ),
           ];

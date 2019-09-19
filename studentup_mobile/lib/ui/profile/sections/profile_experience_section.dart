@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
+import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/locator.dart';
@@ -11,14 +12,11 @@ import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 class ProfileExperienceSection extends StatelessWidget {
-  final bool isUser;
-
-  const ProfileExperienceSection({Key key, @required this.isUser})
-      : super(key: key);
   @override
   Widget build(BuildContext context) {
+    ProfileNotifier notifier = Provider.of<ProfileNotifier>(context);
     return StreamBuilder<List<LaborExeprienceModel>>(
-      stream: Provider.of<ProfileNotifier>(context).experience,
+      stream: notifier.experience,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           if (snapshot.connectionState == ConnectionState.waiting)
@@ -81,7 +79,8 @@ class ProfileExperienceSection extends StatelessWidget {
                   ],
                 ),
               const SizedBox(height: 12.0),
-              if (isUser)
+              if (notifier.info.uid ==
+                  Provider.of<AuthNotifier>(context).user.uid)
                 StadiumButton.icon(
                   text: 'Add Experience',
                   icon: Icons.add,
@@ -106,7 +105,7 @@ class ExperienceCard extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(6.0),
         boxShadow: StudentupTheme.getSimpleBoxShadow(
           color: Theme.of(context).accentColor,

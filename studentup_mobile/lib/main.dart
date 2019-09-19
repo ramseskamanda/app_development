@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/auth_notifier.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/analytics/analytics_service.dart';
 import 'package:studentup_mobile/services/authentication/auth_service.dart';
@@ -38,20 +37,20 @@ class MyApp extends StatelessWidget {
       child: Consumer<AuthNotifier>(
         builder: (context, auth, child) {
           if (auth.userIsAuthenticated)
-            return ChangeNotifierProvider<ProfileNotifier>(
-              builder: (_) => Locator.of<ProfileNotifier>()..fetchData(),
+            return MultiProvider(
+              providers: Locator.userProviders,
               child: MaterialApp(
                 debugShowCheckedModeBanner: false,
                 navigatorKey: Catcher.navigatorKey,
                 home: Application(),
-                theme: StudentupTheme.lightTheme,
+                theme: StudentupTheme.darkTheme,
                 onGenerateRoute: Router.onGenerateRoute,
               ),
             );
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             home: SignupRoot(login: auth.isRegistered),
-            theme: StudentupTheme.lightTheme,
+            theme: StudentupTheme.darkTheme,
           );
         },
       ),

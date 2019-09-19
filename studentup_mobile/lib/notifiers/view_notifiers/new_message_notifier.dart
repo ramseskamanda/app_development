@@ -4,7 +4,6 @@ import 'package:studentup_mobile/models/message_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class NewMessageNotifier extends NetworkWriter {
@@ -48,6 +47,7 @@ class NewMessageNotifier extends NetworkWriter {
             givenName: selectedUser.givenName,
             imageUrl: selectedUser.mediaRef,
             uid: selectedUser.docId,
+            isStartup: false,
           ),
         },
       ),

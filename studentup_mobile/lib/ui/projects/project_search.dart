@@ -4,10 +4,22 @@ import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/search/base_search_api.dart';
-import 'package:studentup_mobile/ui/startup_page/startup_page.dart';
+import 'package:studentup_mobile/ui/startup_profile/startup_project_section.dart';
 
 class ProjectSearchDelegate extends SearchDelegate {
   final BaseSearchAPI _algoliaService = Locator.of<BaseSearchAPI>();
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    return super.appBarTheme(context).copyWith(
+          primaryColor: Theme.of(context).scaffoldBackgroundColor,
+          iconTheme: Theme.of(context).iconTheme,
+          appBarTheme: AppBarTheme(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0.0,
+          ),
+        );
+  }
 
   @override
   List<Widget> buildActions(BuildContext context) {

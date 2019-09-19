@@ -15,10 +15,7 @@ class NewThinkTankRoute extends StatelessWidget {
           elevation: 0.0,
           automaticallyImplyLeading: false,
           leading: IconButton(
-            icon: const Icon(
-              Icons.close,
-              color: CupertinoColors.black,
-            ),
+            icon: const Icon(Icons.close),
             onPressed: () => Navigator.of(context).pop(false),
           ),
           title: const Text('New Think Tank'),

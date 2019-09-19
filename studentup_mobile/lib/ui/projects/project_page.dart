@@ -204,7 +204,11 @@ class ProjectInformation extends StatelessWidget {
                     softWrap: true,
                     textAlign: TextAlign.center,
                     style: Theme.of(context).textTheme.display1.copyWith(
-                        color: CupertinoColors.black,
+                        color: Theme.of(context)
+                            .textTheme
+                            .display1
+                            .color
+                            .withAlpha(255),
                         fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16.0),

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
+import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/locator.dart';
@@ -11,13 +12,11 @@ import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 class ProfileSkillSection extends StatelessWidget {
-  final bool isUser;
-
-  const ProfileSkillSection({Key key, @required this.isUser}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    ProfileNotifier notifier = Provider.of<ProfileNotifier>(context);
     return StreamBuilder<List<SkillsModel>>(
-      stream: Provider.of<ProfileNotifier>(context).skills,
+      stream: notifier.skills,
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           if (snapshot.connectionState == ConnectionState.waiting)
@@ -67,9 +66,7 @@ class ProfileSkillSection extends StatelessWidget {
               ),
               const SizedBox(height: 16.0),
               if (snapshot.data.length == 0)
-                Center(
-                  child: const Text('No Skills Added Yet!'),
-                )
+                Center(child: const Text('No Skills Added Yet!'))
               else
                 Column(
                   children: <Widget>[
@@ -82,7 +79,8 @@ class ProfileSkillSection extends StatelessWidget {
                   ],
                 ),
               const SizedBox(height: 12.0),
-              if (isUser)
+              if (notifier.info.uid ==
+                  Provider.of<AuthNotifier>(context).user.uid)
                 StadiumButton.icon(
                   text: 'Add Skill',
                   icon: Icons.add,
@@ -107,7 +105,7 @@ class SkillCard extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(6.0),
         boxShadow: StudentupTheme.getSimpleBoxShadow(
           color: Theme.of(context).accentColor,
@@ -127,26 +125,6 @@ class SkillCard extends StatelessWidget {
                 ),
             ],
           ),
-          onTap: null,
-          // () => Dialogs.showRatingFor(context, model.name, Icons.work),
-          // trailing: Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          //   child: Column(
-          //     mainAxisAlignment: MainAxisAlignment.center,
-          //     children: <Widget>[
-          //       Text(
-          //         'Rating:',
-          //         style: Theme.of(context).textTheme.caption,
-          //       ),
-          //       Text(
-          //         model.avgRating.toString(),
-          //         style: Theme.of(context).textTheme.display1.copyWith(
-          //               fontWeight: FontWeight.w600,
-          //             ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
         ),
       ),
     );

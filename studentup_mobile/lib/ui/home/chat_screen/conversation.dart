@@ -119,13 +119,15 @@ class _ConversationState extends State<Conversation> {
                 ),
               ],
             ),
-            onTap: () => Navigator.of(context).pushNamed(
-              Router.otherProfile,
-              arguments: {
-                'infoModel': widget.chat.otherProfile,
-                'fromMessaging': true,
-              },
-            ),
+            onTap: () {
+              Navigator.of(context).pushNamed(
+                Router.otherProfile,
+                arguments: {
+                  'infoModel': widget.chat.otherProfile,
+                  'fromMessaging': true,
+                },
+              );
+            },
           ),
           actions: <Widget>[
             Consumer<MessagingNotifier>(

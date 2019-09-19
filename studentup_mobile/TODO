@@ -93,34 +93,38 @@ v-0.0.4:
 v-0.0.5:
   ✔ Check for existing conversation when creating new conversation @done(19-09-13 19:15)
   ☐ Rewrite architecture with more abstraction and better sharing of Streams
-  ☐ Implement WebView on tap for startup websites
+  ✔ Implement WebView on tap for startup websites @done(19-09-18 22:49)
   ☐ Add Terms and Conditions as WebView
   ☐ Add notification icons for messaging
   ☐ Add Settings for QueryOrder for Think Tanks, Deleting account etc.
   ☐ Implement account switching
-  ☐ Add download percentage indicator
+  ☐ Add download percentage indicator (make generic download button and maybe upload too)
   ☐ include a one-time pop-up (which can be permanently clicked away) telling people about what happens when you sign up for a project
   ☐ Fix blurriness of SplashScreen
   ☐ Change default image
   ☐ Add Search Caching + Cache Cleaner (in Algolia Search)
   ☐ Fix message read when user is in the conversation (probably have to look at QuerySnapshot.documentChanges)
   ☐ Add Saved Profiles
-  ☐ Fix profile tap in conversation screen to work for startups as well
-  ☐ Make think tank comments not anonymous
-  ☐ Make think tank premises editable
+  ✔ Fix profile tap in conversation screen to work for startups as well @done(19-09-18 23:43)
+  ☐ Make think tank premises editable if there's no comments (just an if statement on the length of the comments list)
   ☐ Do more research on in-app purchases
   ☐ Fix bug with new profile completion toast keeps appearing after a user was created even though the user is different or not new
   ☐ Add Notifications Screen
-  ☐ Add animation to posting a think tank
+  ☐ Add animation to posting a think tank and comment in a think tank
+  ☐ New search screen
+  ✔ Fix renderbox overflow on startup page @done(19-09-18 23:21)
+  ☐ Make Edit fields edits not blanks with hints in background
 
 v-0.0.6:
-  ☐ Add profile editor for startups and users  
+  ✔ Add profile editor for startups and users @done(19-09-16 21:01)
   ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, messaging, etc.
   ☐ Add email verification, email reset, and account removal emails
   ☐ Add user's profile to messaging notifications
   ☐ Implement general queue so that only a certain number of downloads can be started at the same time
   ☐ Migrate input field state management to BLoC (Search for TextEditingControllers in Notifiers)
   ☐ add progress indicator on uploads and downloads
+  ☐ Delete profiles with inactivity for 3 months
+  ✔ Refactor profile pages to use the same code @done(19-09-19 01:56)
 
 
 Refactoring:

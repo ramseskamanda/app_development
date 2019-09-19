@@ -97,20 +97,24 @@ class Preview {
   String _givenName;
   String _imageUrl;
   String _uid;
+  bool _isStartup;
 
-  Preview({String givenName, String imageUrl, String uid}) {
+  Preview({String givenName, String imageUrl, String uid, bool isStartup}) {
     _givenName = givenName;
     _imageUrl = imageUrl;
     _uid = uid;
+    _isStartup = isStartup;
   }
 
   String get givenName => _givenName ?? 'No Name Provided';
   String get imageUrl => _imageUrl ?? defaultImageUrl;
   String get uid => _uid ?? '';
+  bool get isStartup => _isStartup;
 
   Preview.fromJson(Map<dynamic, dynamic> json, String uid) {
     _givenName = json['given_name'];
     _imageUrl = json['imageUrl'];
+    _isStartup = json['is_startup'];
     _uid = uid;
   }
 
@@ -118,6 +122,7 @@ class Preview {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['given_name'] = _givenName;
     data['imageUrl'] = _imageUrl;
+    data['is_startup'] = _isStartup;
     return data;
   }
 

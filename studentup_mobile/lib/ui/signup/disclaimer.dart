@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/enum/login_types.dart';
 import 'package:studentup_mobile/util/config.dart';
@@ -10,14 +11,16 @@ class Disclaimer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          color: Theme.of(context).scaffoldBackgroundColor,
+          color: Theme.of(context).iconTheme.color,
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           'Disclaimer',
-          style: TextStyle(color: Theme.of(context).scaffoldBackgroundColor),
+          style: TextStyle(color: Theme.of(context).textTheme.title.color),
         ),
       ),
       body: SingleChildScrollView(
@@ -44,7 +47,7 @@ class Disclaimer extends StatelessWidget {
                   RaisedButton(
                     shape: StadiumBorder(),
                     color: Theme.of(context).accentColor,
-                    textColor: Theme.of(context).scaffoldBackgroundColor,
+                    textColor: CupertinoColors.white,
                     child: const Text('Proceed'),
                     onPressed: () => Navigator.of(context, rootNavigator: true)
                         .pop<bool>(true),

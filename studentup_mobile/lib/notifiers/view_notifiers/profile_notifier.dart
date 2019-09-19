@@ -43,18 +43,19 @@ class ProfileNotifier extends NetworkIO with UserProfileEditBloc, StorageIO {
       reader.fetchPastProjects(_userId);
 
   set preview(dynamic value) {
-    print(value.givenName ?? value.name);
     if (value is UserInfoModel)
       _preview = Preview(
         uid: value.docId,
         givenName: value.givenName,
         imageUrl: value.mediaRef,
+        isStartup: _isStartup,
       );
     else if (value is StartupInfoModel)
       _preview = Preview(
         uid: value.docId,
         givenName: value.name,
         imageUrl: value.imageUrl,
+        isStartup: _isStartup,
       );
     notifyListeners();
   }

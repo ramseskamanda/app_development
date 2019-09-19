@@ -1,4 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/services/locator.dart';
 
 class LocalStorageService {
   static LocalStorageService _instance;
@@ -22,13 +24,23 @@ class LocalStorageService {
     return value;
   }
 
-  void saveToDisk(String key, dynamic content) {
+  dynamic getFromUserDisk(String key) {
+    final String fullKey = Locator.of<ProfileNotifier>().info.uid + key;
+    return getFromDisk(fullKey);
+  }
+
+  Future<void> saveToUserDisk(String key, dynamic content) async {
+    final String fullKey = Locator.of<ProfileNotifier>().info.uid + key;
+    await saveToDisk(fullKey, content);
+  }
+
+  Future<void> saveToDisk(String key, dynamic content) async {
     switch (content.runtimeType) {
       case String:
-        _preferences.setString(key, content);
+        await _preferences.setString(key, content);
         break;
       case bool:
-        _preferences.setBool(key, content);
+        await _preferences.setBool(key, content);
         break;
       default:
         print(

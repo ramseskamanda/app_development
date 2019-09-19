@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/conversation.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/new_message.dart';
 import 'package:studentup_mobile/ui/leaderboard/prize_screen.dart';
-import 'package:studentup_mobile/ui/profile/other_profile.dart';
+import 'package:studentup_mobile/ui/profile/other_profile_root.dart';
 import 'package:studentup_mobile/ui/profile/sections/new_education_route.dart';
 import 'package:studentup_mobile/ui/profile/sections/new_experience_route.dart';
 import 'package:studentup_mobile/ui/profile/sections/new_skill_route.dart';
 import 'package:studentup_mobile/ui/projects/new_project_root.dart';
 import 'package:studentup_mobile/ui/projects/project_page.dart';
-import 'package:studentup_mobile/ui/startup_page/startup_page.dart';
+import 'package:studentup_mobile/ui/settings_screen/settings.dart';
 import 'package:studentup_mobile/ui/think_tank/new_comment_route.dart';
 import 'package:studentup_mobile/ui/think_tank/new_think_tank_route.dart';
 import 'package:studentup_mobile/ui/user_content/user_projects.dart';
@@ -24,7 +24,6 @@ class Router {
   static const String otherProfile = 'otherProfile';
   static const String conversation = 'conversation';
   static const String newThinkTank = 'newThinkTank';
-  static const String startupPage = 'startupPage';
   static const String prizeScreen = 'prizeScreen';
   static const String newEducation = 'newEducation';
   static const String newExperience = 'newExperience';
@@ -35,6 +34,7 @@ class Router {
   static const String userProjects = 'userProjects';
   static const String userThinkTanks = 'userThinkTanks';
   static const String userSavedProfiles = 'userSavedProfiles';
+  static const String settingsPage = 'settingsPage';
   static const String seeAll = 'seeAll';
 
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -49,7 +49,7 @@ class Router {
         );
       case otherProfile:
         return MaterialPageRoute(
-          builder: (_) => OtherProfile(
+          builder: (_) => OtherProfileRoot(
             infoModel: args['infoModel'],
             fromMessaging: args['fromMessaging'] ?? false,
           ),
@@ -61,10 +61,6 @@ class Router {
       case newThinkTank:
         return MaterialPageRoute<bool>(
           builder: (_) => NewThinkTankRoute(),
-        );
-      case startupPage:
-        return MaterialPageRoute(
-          builder: (_) => StartUpPageRoot(model: args['model']),
         );
       case prizeScreen:
         return MaterialPageRoute(
@@ -105,6 +101,10 @@ class Router {
       case userSavedProfiles:
         return MaterialPageRoute(
           builder: (_) => UserSavedProfiles(),
+        );
+      case settingsPage:
+        return MaterialPageRoute(
+          builder: (_) => SettingsPage(),
         );
       case seeAll:
         return MaterialPageRoute(

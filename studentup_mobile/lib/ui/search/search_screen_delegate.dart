@@ -6,7 +6,7 @@ import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/search/base_search_api.dart';
-import 'package:studentup_mobile/ui/profile/other_profile.dart';
+import 'package:studentup_mobile/ui/profile/other_profile_root.dart';
 
 class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
   final BaseSearchAPI _algoliaService = Locator.of<BaseSearchAPI>();
@@ -15,8 +15,20 @@ class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
   SearchScreenDelegate(this.category);
 
   @override
+  ThemeData appBarTheme(BuildContext context) {
+    return super.appBarTheme(context).copyWith(
+          primaryColor: Theme.of(context).scaffoldBackgroundColor,
+          iconTheme: Theme.of(context).iconTheme,
+          appBarTheme: AppBarTheme(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            elevation: 0.0,
+          ),
+        );
+  }
+
+  @override
   List<Widget> buildActions(BuildContext context) {
-    //FIXME: There's something going on here after a search result is selected,
+    //TODO: There's something going on here after a search result is selected,
     // the field can't be cleared
     if (query.isEmpty) return null;
     return <Widget>[
@@ -86,11 +98,12 @@ class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
                 onTap: () {
                   Navigator.of(context).push(
                     CupertinoPageRoute(
-                      builder: (_) => OtherProfile(
+                      builder: (_) => OtherProfileRoot(
                         infoModel: Preview(
                           givenName: snapshot.data[index].givenName,
                           imageUrl: snapshot.data[index].mediaRef,
                           uid: snapshot.data[index].docId,
+                          isStartup: false,
                         ),
                       ),
                     ),

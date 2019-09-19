@@ -19,7 +19,11 @@ class NewProjectCategories extends StatelessWidget {
               child: Text(
                 'Categories',
                 style: Theme.of(context).textTheme.display1.copyWith(
-                      color: CupertinoColors.black,
+                      color: Theme.of(context)
+                          .textTheme
+                          .display1
+                          .color
+                          .withAlpha(255),
                       fontWeight: FontWeight.w600,
                     ),
               ),
@@ -65,7 +69,7 @@ class CategoryTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(8.0),
               color: selected
                   ? Theme.of(context).accentColor
-                  : CupertinoColors.lightBackgroundGray,
+                  : Theme.of(context).disabledColor,
             ),
             child: Center(
               child: Text(

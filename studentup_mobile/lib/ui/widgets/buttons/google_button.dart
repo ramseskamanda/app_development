@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/enum/login_types.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup_mobile/ui/signup/signup.dart';
+import 'package:studentup_mobile/ui/signup/disclaimer.dart';
 
 /// Button that takes care of all the signup logic related to Google Auth
 /// ⚠️ Row widget!!
