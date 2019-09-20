@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/models/base_model.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/config.dart';
 import 'package:studentup_mobile/util/util.dart';
@@ -75,7 +75,7 @@ class ProjectModel extends BaseModel {
       _signupsNum != null && _signupsNum > 0 ? _signupsNum : 0;
   double get percentSignedUp => signupsNum / maxUsersNum;
   bool get userIsOwner =>
-      creatorId == Locator.of<AuthService>().currentUser.uid ?? false;
+      creatorId == Locator.of<BaseAuth>().currentUserId ?? false;
   List<String> get files => _files ?? [];
 
   ProjectModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {

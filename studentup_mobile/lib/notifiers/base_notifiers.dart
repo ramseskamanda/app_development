@@ -10,7 +10,7 @@ class NetworkError extends Error {
 
   @override
   String toString() {
-    return 'NetworkError(message: $message)';
+    return message;
   }
 }
 

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
 import 'package:studentup_mobile/models/message_model.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/config.dart';
 
@@ -29,7 +29,7 @@ class ChatModel extends BaseModel {
 
   ChatModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;
-    _userId = Locator.of<AuthService>().currentUser.uid;
+    _userId = Locator.of<BaseAuth>().currentUserId;
     _messages = doc.reference.collection('messages');
     _lastMessage = json['latest_message'] != null
         ? MessageModel.fromJson(

@@ -1,7 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:studentup_mobile/notifiers/auth_notifier.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/util/validators.dart';
 
 class NameTextFormField extends StatefulWidget {

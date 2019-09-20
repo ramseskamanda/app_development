@@ -28,17 +28,17 @@ class ProfileText extends StatelessWidget {
                 //             mainAxisAlignment: MainAxisAlignment.center,
                 //             children: <Widget>[
                 //               Spacer(),
-                //               Text('Lvl. ${notifier.info.experienceOverall ~/ 25}'),
+                //               Text('Lvl. ${notifier.preview.experienceOverall ~/ 25}'),
                 //               Spacer(flex: 20),
-                //               Text('${notifier.info.experienceMonthly} XP this month'),
+                //               Text('${notifier.preview.experienceMonthly} XP this month'),
                 //               Spacer(),
                 //             ],
                 //           ),
                 //           const SizedBox(height: 4.0),
                 //           LinearPercentIndicator(
                 //             lineHeight: 8.0,
-                //             percent: notifier.info.experienceOverall /
-                //                 (notifier.info.experienceOverall / 25) /
+                //             percent: notifier.preview.experienceOverall /
+                //                 (notifier.preview.experienceOverall / 25) /
                 //                 100,
                 //             progressColor: Theme.of(context).accentColor,
                 //           ),

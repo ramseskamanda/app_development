@@ -26,12 +26,12 @@ class ProjectSignupModel extends BaseModel {
     _file = file;
   }
 
-  String get userId => _userId ?? 'Error 500';
+  String get userId => _userId ?? '';
   Preview get user => _user;
-  String get message => _message ?? 'Error 500';
-  String get projectId => _projectId ?? 'Error 500';
+  String get message => _message ?? '';
+  String get projectId => _projectId ?? '';
   DateTime get timestamps => _timestamps?.toDate() ?? DateTime.now();
-  String get file => _file ?? 'Error 500';
+  String get file => _file;
 
   ProjectSignupModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;

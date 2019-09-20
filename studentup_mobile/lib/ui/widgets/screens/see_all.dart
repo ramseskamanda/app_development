@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/education_model.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/profile/sections/profile_education_section.dart';
 import 'package:studentup_mobile/ui/profile/sections/profile_experience_section.dart';
 import 'package:studentup_mobile/ui/profile/sections/profile_skill_section.dart';
@@ -71,7 +71,7 @@ class SeeAll extends StatelessWidget {
               startupName: data.name,
               user: data.team[index],
               onDelete: data.isUser
-                  ? () async => await Locator.of<ProfileNotifier>()
+                  ? () async => await Provider.of<ProfileNotifier>(context)
                       .sendData(data.team[index])
                   : null,
             );

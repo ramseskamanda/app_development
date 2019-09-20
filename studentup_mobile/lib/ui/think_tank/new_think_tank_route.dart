@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/new_think_tank_notifier.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 
 class NewThinkTankRoute extends StatelessWidget {
@@ -13,7 +14,10 @@ class NewThinkTankRoute extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<NewThinkTankNotifier>(
-      builder: (_) => NewThinkTankNotifier(model: model),
+      builder: (_) => NewThinkTankNotifier(
+        model: model,
+        user: Provider.of<ProfileNotifier>(context).preview,
+      ),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,

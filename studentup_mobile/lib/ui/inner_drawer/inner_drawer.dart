@@ -2,9 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class InnerDrawerMenu extends StatelessWidget {
@@ -31,9 +32,9 @@ class InnerDrawerMenu extends StatelessWidget {
                               ? 'Startup Account'
                               : 'Student Account',
                         ),
-                        accountName: Text(notifier.info.givenName),
+                        accountName: Text(notifier.preview.givenName),
                         currentAccountPicture: CachedNetworkImage(
-                          imageUrl: notifier.info.imageUrl,
+                          imageUrl: notifier.preview.imageUrl,
                           placeholder: (_, __) => const CircleAvatar(
                             backgroundColor:
                                 CupertinoColors.lightBackgroundGray,
@@ -99,7 +100,7 @@ class InnerDrawerMenu extends StatelessWidget {
                       if (await Dialogs.showLogoutDialog(context)) {
                         Navigator.of(context).pop();
                         await Provider.of<ProfileNotifier>(context).logout();
-                        await Provider.of<AuthNotifier>(context).logout();
+                        await Locator.of<BaseAuth>().logout();
                         Provider.of<InnerRouter>(context).resetRouter();
                       }
                     } catch (e) {}

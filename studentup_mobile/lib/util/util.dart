@@ -12,7 +12,7 @@ class Util {
     return count.toString();
   }
 
-  static Future<GeoPoint> locationToGeoPoint(String location) async {
+  static GeoPoint locationToGeoPoint(String location) {
     // if (geoPoint == null) return null;
     // List<Placemark> placemark = await Geolocator()
     //     .placemarkFromCoordinates(geoPoint.latitude, geoPoint.longitude);

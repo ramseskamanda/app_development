@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const SIGNUP_STORAGE_KEY = '_signupKey';
 const HEADER_LOGO_HERO_TAG = '_heroLogo';
+const ACCOUNTS_LIST = 'user_accounts';
 const NUM_ITEM_PREVIEW = 8;
 const NUM_ITEM_LIST = 20;
 

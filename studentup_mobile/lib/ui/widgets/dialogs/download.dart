@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-class DeletionDialog {
+class DownloadDialog {
   Future<bool> show(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
       builder: (_) {
         return AlertDialog(
-          title: const Text('Delete this item?'),
+          title: const Text('Download this file?'),
           content: const Text(
-            'Once this item is deleted, you will not be able to get it back.\n Are you sure you want to delete it?',
+            'Are you sure you want to download this file? Keep in mind downloads are temporary, save important documents externally.',
           ),
           actions: <Widget>[
             FlatButton(
@@ -18,7 +18,7 @@ class DeletionDialog {
             RaisedButton(
               color: Theme.of(context).accentColor,
               textColor: Colors.white,
-              child: const Text('Delete'),
+              child: const Text('Start Download'),
               onPressed: () => Navigator.of(_).pop(true),
             ),
           ],

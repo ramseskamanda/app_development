@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/ui/signup/onboarding/onboarding.dart';
 import 'package:studentup_mobile/ui/signup/signin.dart';
 import 'package:studentup_mobile/ui/signup/signup_form.dart';
@@ -99,29 +101,32 @@ class _SignUpState extends State<SignupRoot> {
             ),
         ],
       ),
-      body: SafeArea(
-        child: Stack(
-          children: <Widget>[
-            PageView(
-              physics: NeverScrollableScrollPhysics(),
-              controller: _controller,
-              onPageChanged: _onPageChanged,
-              children: _pages,
-            ),
-            if (!_authPage)
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: StadiumButton(
-                  text: 'Next',
-                  onPressed: () {
-                    _controller.nextPage(
-                      duration: kTabScrollDuration,
-                      curve: Curves.easeInOutCirc,
-                    );
-                  },
-                ),
+      body: ChangeNotifierProvider<AuthNotifier>(
+        builder: (_) => AuthNotifier(),
+        child: SafeArea(
+          child: Stack(
+            children: <Widget>[
+              PageView(
+                physics: NeverScrollableScrollPhysics(),
+                controller: _controller,
+                onPageChanged: _onPageChanged,
+                children: _pages,
               ),
-          ],
+              if (!_authPage)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: StadiumButton(
+                    text: 'Next',
+                    onPressed: () {
+                      _controller.nextPage(
+                        duration: kTabScrollDuration,
+                        curve: Curves.easeInOutCirc,
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

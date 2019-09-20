@@ -16,6 +16,7 @@ abstract class BaseAPIReader {
   Future<UserInfoModel> fetchUser(String uid);
   Future<List<UserInfoModel>> fetchAllUsers(List<String> users);
   Stream<UserInfoModel> fetchUserInfoStream(String docPath);
+  Future<List<Preview>> fetchAllUserAccounts(List<String> users);
   Stream<StartupInfoModel> fetchStartupInfoStream(String docPath);
   Stream<List<SkillsModel>> fetchSkills(String uid);
   Stream<List<EducationModel>> fetchEducation(String uid);

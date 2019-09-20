@@ -4,7 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/mixins/notification_mixin.dart';
 import 'package:studentup_mobile/router.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/home/home.dart';
 import 'package:studentup_mobile/ui/profile/profile_root.dart';
@@ -59,7 +59,7 @@ class _ApplicationState extends State<Application>
         (_) {
           // Provider.of<ProfileNotifier>(context).fetchData();
 
-          if (Locator.of<AuthService>().currentUserisNew)
+          if (Locator.of<BaseAuth>().currentUserisNew)
             CompleteProfileToast.show(
               context: context,
               stateManagerCallback: () =>

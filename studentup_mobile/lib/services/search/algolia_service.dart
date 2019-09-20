@@ -39,7 +39,9 @@ class AlgoliaService extends BaseSearchAPI {
       if (cacheResult != null) return cacheResult;
       print('fetching from network');
 
-      String facet = category.toString().split('.')[1].toLowerCase();
+      String facet = category == SearchCategory.ALL
+          ? ''
+          : category.toString().split('.')[1].toLowerCase();
       AlgoliaQuery query = category == SearchCategory.ALL
           ? algolia.instance.index(skillsIndex).setLength(10)
           : algolia.instance

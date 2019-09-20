@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/feed_notifier.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/think_tank/think_tank.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
@@ -89,7 +89,7 @@ class ThinkTankPreview extends StatelessWidget {
             title: Text(model.title),
             subtitle: Text(model.premise),
             isThreeLine: true,
-            trailing: model.askerId == Locator.of<AuthService>().currentUser.uid
+            trailing: model.askerId == Locator.of<BaseAuth>().currentUserId
                 ? PopupMenuWithActions(
                     onDelete: () async {
                       FeedNotifier notifier =

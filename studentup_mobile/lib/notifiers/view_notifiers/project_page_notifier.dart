@@ -4,11 +4,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:studentup_mobile/enum/project_action.dart';
 import 'package:studentup_mobile/mixins/storage_io.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/project_signup_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/storage/firebase/firebase_storage.dart';
 
@@ -23,7 +23,9 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
   File _file;
   List<String> _downloadedFiles;
 
-  ProjectPageNotifier(this.model)
+  Preview user;
+
+  ProjectPageNotifier(this.model, this.user)
       : _messageController = TextEditingController(),
         _downloadedFiles = [] {
     fetchData();
@@ -45,7 +47,7 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
   Future fetchData() async {
     _signups = reader.fetchProjectSignups(model);
     _userSignups = reader.fetchProjectSignupById(
-      Locator.of<AuthService>().currentUser.uid,
+      Locator.of<BaseAuth>().currentUserId,
       model,
     );
   }
@@ -60,8 +62,8 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
       _filePath = paths.length > 0 ? paths.first : null;
     }
     final ProjectSignupModel _signupModel = ProjectSignupModel(
-      userId: Locator.of<AuthService>().currentUser.uid,
-      user: Locator.of<ProfileNotifier>().info,
+      userId: Locator.of<BaseAuth>().currentUserId,
+      user: user,
       message: _messageController.text,
       projectId: model.docId,
       timestamps: DateTime.now(),

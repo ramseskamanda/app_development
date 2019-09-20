@@ -28,7 +28,7 @@ class CategoryScreen extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             title: Text('${s[0].toUpperCase()}${s.substring(1)}'),
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Colors.transparent,
             elevation: 0.0,
             centerTitle: true,
             actions: <Widget>[
@@ -57,14 +57,15 @@ class CategoryScreen extends StatelessWidget {
               padding: const EdgeInsets.all(4.0),
               child: Consumer<SearchCategoryNotifier>(
                 builder: (context, notifier, child) {
-                  if (notifier.isLoading)
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
                   if (notifier.hasError)
                     return Center(
                       child: Text(notifier.error.message),
                     );
+                  if (notifier.isLoading)
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+
                   if (notifier.users.isEmpty)
                     return Center(
                       child: Text('Couldn\'t find a match for $s'),

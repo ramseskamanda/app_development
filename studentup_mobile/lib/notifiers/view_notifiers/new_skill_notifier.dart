@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class NewSkillNotifier extends NetworkWriter {
@@ -40,7 +40,7 @@ class NewSkillNotifier extends NetworkWriter {
         avgRating: 0,
         description: _description.text,
         name: _name.text,
-        userId: Locator.of<AuthService>().currentUser.uid,
+        userId: Locator.of<BaseAuth>().currentUserId,
         category: _category.toLowerCase(),
         ratings: null,
       );

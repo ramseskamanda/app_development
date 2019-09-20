@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/skills_model.dart';
-import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/theme.dart';
@@ -79,8 +79,7 @@ class ProfileSkillSection extends StatelessWidget {
                   ],
                 ),
               const SizedBox(height: 12.0),
-              if (notifier.info.uid ==
-                  Provider.of<AuthNotifier>(context).user.uid)
+              if (notifier.preview.uid == Locator.of<BaseAuth>().currentUserId)
                 StadiumButton.icon(
                   text: 'Add Skill',
                   icon: Icons.add,

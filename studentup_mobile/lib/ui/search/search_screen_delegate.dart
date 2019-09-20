@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,13 +56,15 @@ class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return FutureBuilder<List<UserInfoModel>>(
-      future: category != null
+    Completer<List<UserInfoModel>> completer = Completer()
+      ..complete(category != null
           ? _algoliaService.searchUsersWithFacets(
               category: category,
               queryString: query,
             )
-          : _algoliaService.searchUsers(query),
+          : _algoliaService.searchUsers(query));
+    return FutureBuilder<List<UserInfoModel>>(
+      future: completer.future,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           return Center(child: CircularProgressIndicator());

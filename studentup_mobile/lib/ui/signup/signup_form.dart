@@ -1,4 +1,5 @@
-import 'package:studentup_mobile/input_blocs/signup_form_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/ui/signup/signup_button.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/google_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,8 +19,6 @@ class SignUpForm extends StatefulWidget {
 }
 
 class _SignUpFormState extends State<SignUpForm> {
-  SignUpFormBloc _bloc;
-
   GlobalKey<FormState> _key;
 
   FocusNode _emailNode;
@@ -32,7 +31,6 @@ class _SignUpFormState extends State<SignUpForm> {
   void initState() {
     super.initState();
     _key = GlobalKey<FormState>();
-    _bloc = SignUpFormBloc();
     _emailNode = FocusNode();
     _passwordNode = FocusNode();
     _passwordConfirmNode = FocusNode();
@@ -44,7 +42,6 @@ class _SignUpFormState extends State<SignUpForm> {
     _emailNode.dispose();
     _passwordNode.dispose();
     _passwordConfirmNode.dispose();
-    _bloc.dispose();
     super.dispose();
   }
 
@@ -66,6 +63,7 @@ class _SignUpFormState extends State<SignUpForm> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthNotifier auth = Provider.of(context);
     return Center(
       child: SingleChildScrollView(
         child: SizedBox(
@@ -96,40 +94,36 @@ class _SignUpFormState extends State<SignUpForm> {
                     ),
                     Switch.adaptive(
                       value: _isStartup,
-                      onChanged: (value) {
-                        setState(() {
-                          _isStartup = value;
-                        });
-                      },
+                      onChanged: (value) => setState(() => _isStartup = value),
                     ),
                   ],
                 ),
                 Spacer(),
                 NameTextFormField(
                   hintText: _isStartup ? 'Startup Name' : 'Full Name',
-                  sink: _bloc.name,
+                  sink: auth.bloc.name,
                   nextNode: _emailNode,
                 ),
                 SizedBox(height: 16.0),
                 EmailTextFormField(
                   hintText: _isStartup ? 'Company Email' : 'Email',
-                  sink: _bloc.email,
+                  sink: auth.bloc.email,
                   nextNode: _passwordNode,
                 ),
                 SizedBox(height: 16.0),
                 PasswordTextFormField(
-                  sink: _bloc.password,
+                  sink: auth.bloc.password,
                   nextNode: _passwordConfirmNode,
                 ),
                 SizedBox(height: 16.0),
                 PasswordTextFormField(
                   confirm: true,
-                  sink: _bloc.confirm,
-                  validator: _bloc.passwordValidator,
+                  sink: auth.bloc.confirm,
+                  validator: auth.bloc.passwordValidator,
                 ),
                 Spacer(),
                 GoogleButton(isStartup: _isStartup),
-                SignUpButton(formKey: _key, bloc: _bloc, isStartup: _isStartup),
+                SignUpButton(formKey: _key, isStartup: _isStartup),
                 _buildAccountReminder(context),
                 Spacer(flex: 4),
               ],

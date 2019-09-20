@@ -1,18 +1,15 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/enum/login_types.dart';
-import 'package:studentup_mobile/input_blocs/signup_form_bloc.dart';
-import 'package:studentup_mobile/notifiers/auth_notifier.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/ui/signup/disclaimer.dart';
 
 class SignUpButton extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  final SignUpFormBloc bloc;
   final bool isStartup;
   SignUpButton({
     Key key,
     @required this.formKey,
-    @required this.bloc,
     this.isStartup,
   }) : super(key: key);
   @override
@@ -28,7 +25,7 @@ class _SignUpButtonState extends State<SignUpButton> {
           child: Consumer<AuthNotifier>(
             builder: (context, auth, child) {
               return StreamBuilder<bool>(
-                stream: widget.bloc.signup,
+                stream: auth.bloc.signup,
                 builder: (context, snapshot) {
                   return RaisedButton(
                     child: const Text('Register'),
@@ -44,11 +41,10 @@ class _SignUpButtonState extends State<SignUpButton> {
                                     false;
                             if (!_proceed) return;
                             if (!widget.formKey.currentState.validate()) return;
-                            await auth.signUpWithEmail(
+                            await auth.authenticate(
+                              AuthType.email,
+                              true,
                               isStartup: widget.isStartup,
-                              name: widget.bloc.nameValue,
-                              email: widget.bloc.emailValue,
-                              password: widget.bloc.passwordValue,
                             );
                           }
                         : null,

@@ -112,8 +112,7 @@ class TeamMemberSearchDelegate extends SearchDelegate<UserInfoModel> {
                           RaisedButton(
                             shape: const StadiumBorder(),
                             child: const Text('Accept'),
-                            textColor:
-                                Theme.of(context).scaffoldBackgroundColor,
+                            textColor: CupertinoColors.white,
                             onPressed: () {
                               Navigator.of(_).pop();
                               close(context, user);

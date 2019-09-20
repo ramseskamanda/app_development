@@ -5,10 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
-import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/think_tank_notifier.dart';
 import 'package:studentup_mobile/router.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
@@ -91,9 +90,7 @@ class ThinkTank extends StatelessWidget {
                                   ),
                                 ),
                                 if (snapshot.data.askerId ==
-                                        Provider.of<AuthNotifier>(context)
-                                            .user
-                                            .uid &&
+                                        Locator.of<BaseAuth>().currentUserId &&
                                     snapshot.hasData &&
                                     snapshot.data.commentCount == 0)
                                   IconButton(
@@ -133,7 +130,7 @@ class ThinkTank extends StatelessWidget {
                           return Center(
                               child: const Text('An Error Occured...'));
                         }
-                        String uid = Locator.of<AuthService>().currentUser.uid;
+                        String uid = Locator.of<BaseAuth>().currentUserId;
                         return Column(
                           children: <Widget>[
                             for (Comments comment in snapshot.data)

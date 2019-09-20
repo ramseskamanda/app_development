@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
 abstract class BaseFileStorageAPI {
@@ -51,4 +52,12 @@ abstract class BaseFileStorageAPI {
   Future<String> getFileDownloadUrl({String path});
   Future<List<String>> upload({List<File> files, String location});
   Future<List<String>> download({List<String> filePaths});
+  Future<Observable<DownloadEvent>> downloadTemp({String filePath});
+}
+
+class DownloadEvent {
+  final double percentageProgress;
+  final String uri;
+
+  DownloadEvent(this.percentageProgress, this.uri);
 }

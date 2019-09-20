@@ -3,16 +3,15 @@ import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/message_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/services/locator.dart';
 
 class NewMessageNotifier extends NetworkWriter {
   TextEditingController _newMessage;
   ChatModel _ref;
 
   UserInfoModel selectedUser;
+  Preview user;
 
-  NewMessageNotifier({this.selectedUser})
+  NewMessageNotifier({this.selectedUser, this.user})
       : _newMessage = TextEditingController();
 
   TextEditingController get newMessage => _newMessage;
@@ -31,7 +30,6 @@ class NewMessageNotifier extends NetworkWriter {
     if (canSend) print('sending');
     isLoading = true;
     //make models
-    final Preview user = Locator.of<ProfileNotifier>().info;
     final message = MessageModel(
       seenAt: null,
       sentAt: DateTime.now(),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:rxdart/rxdart.dart';
 import 'package:studentup_mobile/services/storage/base_file_storage_api.dart';
 
 import 'package:firebase_storage/firebase_storage.dart';
@@ -50,5 +51,34 @@ class FirebaseStorageService extends BaseFileStorageAPI {
       downloadUrls.add(await snap.ref.getDownloadURL());
     }
     return downloadUrls;
+  }
+
+  @override
+  Future<Observable<DownloadEvent>> downloadTemp({String filePath}) async {
+    final BehaviorSubject<DownloadEvent> download = BehaviorSubject();
+    if (filePath == null) return Stream.empty();
+    final List<String> uris =
+        await BaseFileStorageAPI.createLocalFilePaths(downloadUrls: [filePath]);
+    assert(uris.length == 1);
+    try {
+      dio.download(
+        filePath,
+        uris.first,
+        onReceiveProgress: (received, total) {
+          print('${(received / total) * 100}%');
+          download.sink.add(
+            DownloadEvent(
+              (received / total),
+              (received == total) ? uris.first : null,
+            ),
+          );
+          if (received == total) download.close();
+        },
+      );
+    } catch (e) {
+      download.close();
+    }
+
+    return download.stream;
   }
 }

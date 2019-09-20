@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/util.dart';
 
@@ -42,7 +42,7 @@ class EducationModel extends BaseModel {
   String get periodStart => Util.format(_periodStart);
   String get periodEnd => Util.format(_periodEnd, allowNow: true);
   String get studyDescription => _studyDescription ?? 'No Description';
-  bool get canEdit => _userId == Locator.of<AuthService>().currentUser.uid;
+  bool get canEdit => _userId == Locator.of<BaseAuth>().currentUserId;
 
   EducationModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;

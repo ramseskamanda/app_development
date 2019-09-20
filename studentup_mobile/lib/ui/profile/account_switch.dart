@@ -1,14 +1,19 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
+import 'package:studentup_mobile/services/locator.dart';
 
 class AccountSwitch extends StatelessWidget {
-  final int _isCurrentAccount = 0;
-
-  void _showAccountSwitcher(BuildContext context) {
-    ProfileNotifier notifier = Provider.of<ProfileNotifier>(context);
+  Future _showAccountSwitcher(BuildContext context) async {
+    Completer<List<Preview>> completer = Completer<List<Preview>>()
+      ..complete(Locator.of<BaseAuth>().getAccounts());
     showModalBottomSheet(
       context: context,
       shape: RoundedRectangleBorder(
@@ -16,42 +21,37 @@ class AccountSwitch extends StatelessWidget {
       ),
       builder: (context) {
         return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              SizedBox(height: 16.0),
-              for (int i = 0; i < 2; i++)
-                ListTile(
-                  //TODO: add account local storage
-                  leading: CachedNetworkImage(
-                    imageUrl: notifier.info.imageUrl,
-                    placeholder: (_, url) => const CircleAvatar(
-                      backgroundColor: CupertinoColors.lightBackgroundGray,
+          child: FutureBuilder<List<Preview>>(
+            future: completer.future,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData)
+                return ListTile(
+                  leading: CircularProgressIndicator(),
+                  title: const Text('Loading...'),
+                );
+              List<Preview> accounts = snapshot.data;
+              return ListView(
+                shrinkWrap: true,
+                children: <Widget>[
+                  SizedBox(height: 16.0),
+                  if (accounts.isEmpty)
+                    Center(
+                      child: Text(
+                        'An Error Occured...\nPlease sign in again to fix it.',
+                        textAlign: TextAlign.center,
+                      ),
                     ),
-                    errorWidget: (_, __, err) => const CircleAvatar(
-                      backgroundColor: CupertinoColors.lightBackgroundGray,
-                      child: const Icon(Icons.error),
-                    ),
-                    imageBuilder: (_, image) => CircleAvatar(
-                      backgroundImage: image,
-                    ),
+                  ...accounts
+                      .map((account) => AccountListTile(account: account))
+                      .toList(),
+                  ListTile(
+                    leading: const Icon(Icons.add),
+                    title: const Text('Add Account'),
+                    onTap: () {},
                   ),
-                  title: const Text('Ramses Kamanda'),
-                  trailing: _isCurrentAccount != i
-                      ? null
-                      : Icon(
-                          CupertinoIcons.check_mark_circled_solid,
-                          color: CupertinoColors.activeBlue,
-                        ),
-                  onTap: () {},
-                ),
-              const SizedBox(height: 16.0),
-              ListTile(
-                leading: const Icon(Icons.add),
-                title: const Text('Add Account'),
-                onTap: () {},
-              ),
-            ],
+                ],
+              );
+            },
           ),
         );
       },
@@ -65,7 +65,7 @@ class AccountSwitch extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            'ramseskamanda',
+            Provider.of<ProfileNotifier>(context).preview.givenName,
             style: Theme.of(context)
                 .textTheme
                 .subhead
@@ -75,6 +75,39 @@ class AccountSwitch extends StatelessWidget {
         ],
       ),
       onPressed: () => _showAccountSwitcher(context),
+    );
+  }
+}
+
+class AccountListTile extends StatelessWidget {
+  final Preview account;
+
+  const AccountListTile({Key key, @required this.account}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: CachedNetworkImage(
+        imageUrl: account.imageUrl,
+        placeholder: (_, url) => const CircleAvatar(
+          backgroundColor: CupertinoColors.lightBackgroundGray,
+        ),
+        errorWidget: (_, __, err) => const CircleAvatar(
+          backgroundColor: CupertinoColors.lightBackgroundGray,
+          child: const Icon(Icons.error),
+        ),
+        imageBuilder: (_, image) => CircleAvatar(
+          backgroundImage: image,
+        ),
+      ),
+      title: Text(account.givenName),
+      trailing: account.uid != Locator.of<BaseAuth>().currentUserId
+          ? null
+          : Icon(
+              CupertinoIcons.check_mark_circled_solid,
+              color: CupertinoColors.activeBlue,
+            ),
+      onTap: () {},
     );
   }
 }

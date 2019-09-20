@@ -23,7 +23,7 @@ class OtherProfileRoot extends StatelessWidget {
       value: notifier,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Colors.transparent,
           elevation: 0.0,
           title: const Text('Profile'),
         ),

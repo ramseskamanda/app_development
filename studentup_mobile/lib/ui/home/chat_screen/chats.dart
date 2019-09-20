@@ -29,7 +29,7 @@ class _ChatsState extends State<Chats>
           appBar: AppBar(
             elevation: 0.0,
             title: const Text('Direct Messaging'),
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Colors.transparent,
             leading: IconButton(
               icon: Icon(CupertinoIcons.back),
               onPressed: () => Provider.of<InnerRouter>(context).goToPage(0),

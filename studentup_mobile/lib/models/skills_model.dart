@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:studentup_mobile/models/base_model.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class SkillsModel extends BaseModel {
@@ -32,7 +32,7 @@ class SkillsModel extends BaseModel {
   String get userId => _userId ?? '';
   String get category => _category ?? 'No Category';
   CollectionReference get ratings => _ratings;
-  bool get canEdit => _userId == Locator.of<AuthService>().currentUser.uid;
+  bool get canEdit => _userId == Locator.of<BaseAuth>().currentUserId;
 
   SkillsModel.fromDoc(DocumentSnapshot doc) : super.fromDoc(doc) {
     final Map<String, dynamic> json = doc.data;

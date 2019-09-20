@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-class DeletionDialog {
+class ProjectDialog {
   Future<bool> show(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
       builder: (_) {
         return AlertDialog(
-          title: const Text('Delete this item?'),
+          title: const Text('Submit your application?'),
           content: const Text(
-            'Once this item is deleted, you will not be able to get it back.\n Are you sure you want to delete it?',
+            'Once your application has been submitted, the owner of the project will review it.\n'
+            'Stay on your toes, they can contact you or notify you any minute now!',
           ),
           actions: <Widget>[
             FlatButton(
@@ -18,7 +19,7 @@ class DeletionDialog {
             RaisedButton(
               color: Theme.of(context).accentColor,
               textColor: Colors.white,
-              child: const Text('Delete'),
+              child: const Text('Submit'),
               onPressed: () => Navigator.of(_).pop(true),
             ),
           ],

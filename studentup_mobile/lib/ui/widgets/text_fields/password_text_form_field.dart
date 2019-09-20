@@ -1,3 +1,5 @@
+import 'package:provider/provider.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/util/validators.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +42,7 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
 
   @override
   Widget build(BuildContext context) {
+    AuthNotifier _auth = Provider.of<AuthNotifier>(context);
     return TextFormField(
       autovalidate: false,
       validator: widget.confirm ? widget.validator : Validator.password,
@@ -53,6 +56,7 @@ class _PasswordTextFormFieldState extends State<PasswordTextFormField> {
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         hintText: widget.confirm ? 'Confirm Password' : 'Password',
+        errorText: _auth.hasError ? _auth.error.toString() : null,
         prefixIcon: Icon(
           widget.confirm
               ? CupertinoIcons.lab_flask_solid

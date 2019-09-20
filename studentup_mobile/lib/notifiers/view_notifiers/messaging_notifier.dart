@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:studentup_mobile/enum/messaging_action.dart';
 import 'package:studentup_mobile/models/message_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class MessagingNotifier extends NetworkIO {
@@ -45,7 +45,7 @@ class MessagingNotifier extends NetworkIO {
     if (_canSend) {
       MessageModel message = MessageModel(
         seenAt: null,
-        senderId: Locator.of<AuthService>().currentUser.uid,
+        senderId: Locator.of<BaseAuth>().currentUserId,
         text: _controller.text,
         sentAt: DateTime.now(),
       );

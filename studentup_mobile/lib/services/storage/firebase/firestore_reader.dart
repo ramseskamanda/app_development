@@ -340,4 +340,42 @@ class FirestoreReader implements BaseAPIReader {
         .snapshots()
         .map((doc) => ThinkTankModel.fromDoc(doc));
   }
+
+  @override
+  Future<List<Preview>> fetchAllUserAccounts(List<String> users) async {
+    final List<Preview> _previews = [];
+    for (String user in users) {
+      DocumentSnapshot student =
+          await _firestore.collection(studentsCollection).document(user).get();
+      if (student.exists) {
+        print('User is a student');
+        final UserInfoModel model = UserInfoModel.fromDoc(student);
+        _previews.add(
+          Preview(
+            givenName: model.givenName,
+            imageUrl: model.mediaRef,
+            uid: user,
+            isStartup: false,
+          ),
+        );
+      } else {
+        print('User is a startup');
+        DocumentSnapshot startup =
+            await _firestore.collection(startupCollection).document(user).get();
+        if (startup.exists) {
+          final StartupInfoModel model = StartupInfoModel.fromDoc(startup);
+          _previews.add(
+            Preview(
+              givenName: model.name,
+              imageUrl: model.imageUrl,
+              uid: user,
+              isStartup: true,
+            ),
+          );
+        }
+      }
+    }
+    print(_previews.length.toString() + ' users found');
+    return _previews;
+  }
 }

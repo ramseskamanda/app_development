@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class ThinkTankNotifier extends NetworkIO {
@@ -34,7 +34,7 @@ class ThinkTankNotifier extends NetworkIO {
     Comments comment = Comments(
       content: _newComment.text,
       createdAt: DateTime.now(),
-      userId: Locator.of<AuthService>().currentUser.uid,
+      userId: Locator.of<BaseAuth>().currentUserId,
     );
     writer.postComment(model: comment, collectionPath: _initial.comments.path);
     isWriting = false;
@@ -46,14 +46,14 @@ class ThinkTankNotifier extends NetworkIO {
         upvote: true,
         collectionPath: _initial.comments.path,
         docId: vote.docId,
-        uid: Locator.of<AuthService>().currentUser.uid,
+        uid: Locator.of<BaseAuth>().currentUserId,
       );
     else
       await writer.addVoter(
         upvote: true,
         collectionPath: _initial.comments.path,
         docId: vote.docId,
-        uid: Locator.of<AuthService>().currentUser.uid,
+        uid: Locator.of<BaseAuth>().currentUserId,
       );
   }
 
@@ -63,14 +63,14 @@ class ThinkTankNotifier extends NetworkIO {
         upvote: false,
         collectionPath: _initial.comments.path,
         docId: vote.docId,
-        uid: Locator.of<AuthService>().currentUser.uid,
+        uid: Locator.of<BaseAuth>().currentUserId,
       );
     else
       await writer.addVoter(
         upvote: false,
         collectionPath: _initial.comments.path,
         docId: vote.docId,
-        uid: Locator.of<AuthService>().currentUser.uid,
+        uid: Locator.of<BaseAuth>().currentUserId,
       );
   }
 

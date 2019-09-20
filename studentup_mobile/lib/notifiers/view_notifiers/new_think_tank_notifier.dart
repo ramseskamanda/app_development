@@ -2,17 +2,18 @@ import 'package:flutter/widgets.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
 class NewThinkTankNotifier extends NetworkWriter {
   TextEditingController _name;
   TextEditingController _description;
   ThinkTankModel _model;
+  Preview _user;
 
-  NewThinkTankNotifier({ThinkTankModel model})
+  NewThinkTankNotifier({ThinkTankModel model, Preview user})
       : _model = model,
+        _user = user,
         _name = TextEditingController(text: model != null ? model.title : null),
         _description =
             TextEditingController(text: model != null ? model.premise : null);
@@ -27,12 +28,9 @@ class NewThinkTankNotifier extends NetworkWriter {
     isLoading = true;
     try {
       if (_model == null) {
-        final Preview user = Locator.of<ProfileNotifier>().info;
-        print(Locator.of<ProfileNotifier>().hashCode);
-        print(user);
         final model = ThinkTankModel(
-          askerId: Locator.of<AuthService>().currentUser.uid,
-          askerImage: user.imageUrl,
+          askerId: Locator.of<BaseAuth>().currentUserId,
+          askerImage: _user.imageUrl,
           premise: _description.text,
           title: _name.text,
           lastActivity: DateTime.now(),

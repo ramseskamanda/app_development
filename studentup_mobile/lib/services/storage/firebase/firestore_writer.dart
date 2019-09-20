@@ -9,7 +9,7 @@ import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/think_tank_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/services/storage/firebase/env.dart';
@@ -204,7 +204,7 @@ class FirestoreWriter implements BaseAPIWriter {
         .collection(projectCollection)
         .document(project.docId)
         .collection('applications')
-        .document(Locator.of<AuthService>().currentUser.uid)
+        .document(Locator.of<BaseAuth>().currentUserId)
         .setData(model.toJson());
   }
 
@@ -213,7 +213,7 @@ class FirestoreWriter implements BaseAPIWriter {
       .collection(projectCollection)
       .document(projectId)
       .collection('applications')
-      .document(Locator.of<AuthService>().currentUser.uid)
+      .document(Locator.of<BaseAuth>().currentUserId)
       .delete();
 
   @override
@@ -274,7 +274,7 @@ class FirestoreWriter implements BaseAPIWriter {
   @override
   Future editProfileEducation(String university) async => await _firestore
       .collection(studentsCollection)
-      .document(Locator.of<AuthService>().currentUser.uid)
+      .document(Locator.of<BaseAuth>().currentUserId)
       .updateData({'university': university});
 
   @override

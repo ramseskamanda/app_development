@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/new_message_notifier.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/search/base_search_api.dart';
@@ -20,7 +21,10 @@ class NewMessage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider<NewMessageNotifier>(
-      builder: (_) => NewMessageNotifier(selectedUser: model),
+      builder: (_) => NewMessageNotifier(
+        selectedUser: model,
+        user: Provider.of<ProfileNotifier>(context).preview,
+      ),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.transparent,

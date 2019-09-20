@@ -1,5 +1,5 @@
 import 'package:provider/provider.dart';
-import 'package:studentup_mobile/notifiers/auth_notifier.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/util/validators.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +42,6 @@ class _EmailTextFormFieldState extends State<EmailTextFormField> {
       validator: Validator.email,
       onFieldSubmitted: (String data) =>
           FocusScope.of(context).requestFocus(widget.nextNode),
-      autocorrect: false,
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         hintText: widget.hintText,

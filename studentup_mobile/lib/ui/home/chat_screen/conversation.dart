@@ -8,7 +8,7 @@ import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/message_model.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/messaging_notifier.dart';
 import 'package:studentup_mobile/router.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/chat_bubble.dart';
 import 'package:studentup_mobile/ui/home/chat_screen/messaging_text_field.dart';
@@ -58,7 +58,7 @@ class _ConversationState extends State<Conversation> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          backgroundColor: Colors.transparent,
           leading: IconButton(
             icon: Icon(CupertinoIcons.back),
             onPressed: () => Navigator.pop(context),
@@ -166,7 +166,7 @@ class _ConversationState extends State<Conversation> {
                               key: ObjectKey(model),
                               model: model,
                               isUser: model.senderId ==
-                                  Locator.of<AuthService>().currentUser.uid,
+                                  Locator.of<BaseAuth>().currentUserId,
                               isLast: index == 0,
                             ),
                           );

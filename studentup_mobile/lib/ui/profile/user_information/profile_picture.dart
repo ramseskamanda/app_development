@@ -22,7 +22,7 @@ class ProfilePicture extends StatelessWidget {
               return Center(child: CircularProgressIndicator());
             if (notifier.hasError) return Center(child: Icon(Icons.error));
             return CachedNetworkImage(
-              imageUrl: notifier?.info?.imageUrl ?? defaultImageUrl,
+              imageUrl: notifier?.preview?.imageUrl ?? defaultImageUrl,
               placeholder: (context, url) =>
                   Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) {

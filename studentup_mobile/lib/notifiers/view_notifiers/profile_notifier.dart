@@ -9,7 +9,7 @@ import 'package:studentup_mobile/models/skills_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/notifications/notification_service.dart';
 import 'package:studentup_mobile/services/storage/firebase/firebase_storage.dart';
@@ -21,10 +21,10 @@ class ProfileNotifier extends NetworkIO with UserProfileEditBloc, StorageIO {
   bool _isStartup;
   Preview _preview;
 
-  ProfileNotifier([String uid]) : _userId = uid;
+  ProfileNotifier(String uid) : _userId = uid;
 
   bool get isStartup => _isStartup;
-  Preview get info => _preview;
+  Preview get preview => _preview;
 
   //USER INFORMATION
   Stream<UserInfoModel> get userInfoStream =>
@@ -67,10 +67,10 @@ class ProfileNotifier extends NetworkIO with UserProfileEditBloc, StorageIO {
   }
 
   @override
-  Future fetchData([dynamic data]) async {
+  Future fetchData() async {
     isReading = true;
     print(hashCode);
-    _userId ??= Locator.of<AuthService>().currentUser.uid;
+    _userId ??= Locator.of<BaseAuth>().currentUserId;
     try {
       final Map<dynamic, bool> result = await reader.findUserDocument(_userId);
       _userDocument = result.keys.length > 0
@@ -92,7 +92,7 @@ class ProfileNotifier extends NetworkIO with UserProfileEditBloc, StorageIO {
 
   @override
   Future<bool> sendData([data]) async {
-    if (_userId != Locator.of<AuthService>().currentUser.uid) return false;
+    if (_userId != Locator.of<BaseAuth>().currentUserId) return false;
     try {
       switch (data.runtimeType) {
         case UserInfoModel:
@@ -170,7 +170,7 @@ class ProfileNotifier extends NetworkIO with UserProfileEditBloc, StorageIO {
   }
 
   Future _updateNotificationTokens() async {
-    if (_userId == Locator.of<AuthService>().currentUser.uid)
+    if (_userId == Locator.of<BaseAuth>().currentUserId)
       await writer.updateNotificationTokens(
         docPath: _userDocument.path,
         token: Locator.of<NotificationService>().deviceToken,

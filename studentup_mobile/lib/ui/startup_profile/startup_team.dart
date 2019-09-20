@@ -4,9 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
-import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/startup_profile/team_member.dart';
 import 'package:studentup_mobile/ui/startup_profile/team_member_search.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
@@ -33,8 +34,7 @@ class StartupTeam extends StatelessWidget {
                 return Center(child: CircularProgressIndicator());
               return Center(child: const Text('An Error Occured.'));
             }
-            if (notifier.info.uid ==
-                    Provider.of<AuthNotifier>(context).user.uid &&
+            if (notifier.preview.uid == Locator.of<BaseAuth>().currentUserId &&
                 snapshot.data.team.isEmpty)
               return StadiumButton.icon(
                 icon: Icons.add,

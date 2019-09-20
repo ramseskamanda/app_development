@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:studentup_mobile/models/labor_experience_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/util/util.dart';
 
@@ -47,7 +47,7 @@ class NewExperienceNotifier extends NetworkWriter {
       if (!canSend) return false;
       isLoading = true;
       final model = LaborExeprienceModel(
-        userId: Locator.of<AuthService>().currentUser.uid,
+        userId: Locator.of<BaseAuth>().currentUserId,
         periodStart: _startDate,
         periodEnd: _endDate,
         companyName: _company.text,

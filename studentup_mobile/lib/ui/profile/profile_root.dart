@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentup_mobile/notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
+import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/profile/account_switch.dart';
 import 'package:studentup_mobile/ui/profile/edit_profile.dart';
 import 'package:studentup_mobile/ui/profile/profile.dart';
@@ -16,7 +17,7 @@ class ProfileRoot extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
         title: AccountSwitch(),
         leading: FittedBox(
@@ -42,7 +43,7 @@ class ProfileRoot extends StatelessWidget {
                 Navigator.of(context).pushNamed(Router.settingsPage),
             onLogout: () async {
               await Provider.of<ProfileNotifier>(context).logout();
-              await Provider.of<AuthNotifier>(context).logout();
+              await Locator.of<BaseAuth>().logout();
               Provider.of<InnerRouter>(context).resetRouter();
             },
           ),

@@ -1,6 +1,6 @@
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/services/locator.dart';
 
@@ -11,7 +11,7 @@ class ChatsNotifier extends NetworkIO {
 
   ChatsNotifier() {
     _firestoreReader = Locator.of<BaseAPIReader>();
-    _uid = Locator.of<AuthService>().currentUser.uid;
+    _uid = Locator.of<BaseAuth>().currentUserId;
     fetchData();
   }
 

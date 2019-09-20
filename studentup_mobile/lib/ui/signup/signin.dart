@@ -1,4 +1,5 @@
-import 'package:studentup_mobile/input_blocs/signup_form_bloc.dart';
+import 'package:provider/provider.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/ui/signup/signin_button.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/google_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,10 +19,7 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
-  SignUpFormBloc _bloc;
-
   GlobalKey<FormState> _key;
-
   FocusNode _emailNode;
   FocusNode _passwordNode;
 
@@ -29,7 +27,6 @@ class _SignInState extends State<SignIn> {
   void initState() {
     super.initState();
     _key = GlobalKey<FormState>();
-    _bloc = SignUpFormBloc();
     _emailNode = FocusNode();
     _passwordNode = FocusNode();
   }
@@ -38,7 +35,6 @@ class _SignInState extends State<SignIn> {
   void dispose() {
     _emailNode.dispose();
     _passwordNode.dispose();
-    _bloc.dispose();
     super.dispose();
   }
 
@@ -60,9 +56,13 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthNotifier auth = Provider.of(context);
+
     return Center(
       child: SingleChildScrollView(
         child: SizedBox(
+          // widthFactor: 0.86,
+          // heightFactor: 0.9,
           height: MediaQuery.of(context).size.height * 0.9,
           width: MediaQuery.of(context).size.width * 0.86,
           child: Form(
@@ -87,16 +87,16 @@ class _SignInState extends State<SignIn> {
                 ),
                 Spacer(),
                 EmailTextFormField(
-                  sink: _bloc.email,
+                  sink: auth.bloc.email,
                   nextNode: _passwordNode,
                 ),
                 SizedBox(height: 16.0),
                 PasswordTextFormField(
-                  sink: _bloc.password,
+                  sink: auth.bloc.password,
                 ),
                 Spacer(),
                 GoogleButton(),
-                SignInButton(formKey: _key, bloc: _bloc),
+                SignInButton(formKey: _key),
                 _buildAccountReminder(context),
                 Spacer(flex: 4),
               ],

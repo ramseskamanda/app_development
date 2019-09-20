@@ -5,11 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:studentup_mobile/enum/project_action.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/project_signup_model.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/project_page_notifier.dart';
 import 'package:studentup_mobile/router.dart';
-import 'package:studentup_mobile/services/authentication/auth_service.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/ui/projects/file_attachment.dart';
+import 'package:studentup_mobile/ui/widgets/buttons/download_button.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/popup_menu.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
 import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
@@ -27,7 +29,10 @@ class ProjectPage extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async => Navigator.of(context).canPop(),
       child: ChangeNotifierProvider(
-        builder: (_) => ProjectPageNotifier(model),
+        builder: (_) => ProjectPageNotifier(
+          model,
+          Provider.of<ProfileNotifier>(context).preview,
+        ),
         child: Scaffold(
           body: NetworkSensitive(
             child: SafeArea(
@@ -42,6 +47,7 @@ class ProjectPage extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
+                    //TODO: fix this button loading for no reason when attachments are being downloaded
                     child: Consumer<ProjectPageNotifier>(
                       builder: (context, notifier, child) {
                         if (notifier.model.userIsOwner)
@@ -63,11 +69,15 @@ class ProjectPage extends StatelessWidget {
                                   : 'Apply',
                               onPressed: notifier.isWriting
                                   ? null
-                                  : () => notifier.sendData(
+                                  : () async {
+                                      if (!await Dialogs.showProjectDialog(
+                                          context)) return;
+                                      notifier.sendData(
                                         snapshot.hasData
                                             ? ProjectAction.WITHDRAW
                                             : ProjectAction.SIGNUP,
-                                      ),
+                                      );
+                                    },
                             );
                           },
                         );
@@ -145,8 +155,7 @@ class ImageScrollbaleAppBar extends StatelessWidget {
             child: Consumer<ProjectPageNotifier>(
               builder: (context, service, child) {
                 if (service.model.creatorId !=
-                    Locator.of<AuthService>().currentUser.uid)
-                  return Container();
+                    Locator.of<BaseAuth>().currentUserId) return Container();
                 return PopupMenuWithActions(
                   color: Theme.of(context)
                       .scaffoldBackgroundColor
@@ -231,20 +240,9 @@ class ProjectInformation extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16.0),
-                  if (notifier.model.files.isNotEmpty)
-                    FlatButton.icon(
-                      textColor: Theme.of(context).accentColor,
-                      icon: notifier.isLoading
-                          ? CircularProgressIndicator()
-                          : Icon(Icons.file_download),
-                      label: Text(
-                        'Download attachement',
-                        style: Theme.of(context).textTheme.title,
-                      ),
-                      onPressed: notifier.isLoading
-                          ? null
-                          : () => notifier.downloadAttachments(),
-                    ),
+                  ...notifier.model.files
+                      .map((file) => DownloadableAttachment(fileUrl: file))
+                      .toList(),
                   const SizedBox(height: 16.0),
                   Text(
                     notifier.model.description,
@@ -320,6 +318,26 @@ class ProjectInformation extends StatelessWidget {
   }
 }
 
+class DownloadableAttachment extends StatelessWidget {
+  final String fileUrl;
+
+  const DownloadableAttachment({Key key, this.fileUrl}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      leading: Icon(Icons.folder_shared),
+      title: const Text('File attachment'),
+      // isThreeLine: true,
+      // subtitle: Text(signup.message),
+      //TODO: add file size here in the future
+      trailing: fileUrl == null ? null : DownloadButton(file: fileUrl),
+      onTap: null,
+      //TODO: show file preview in popup here
+    );
+  }
+}
+
 class UserSignupTile extends StatelessWidget {
   final ProjectSignupModel signup;
 
@@ -341,11 +359,7 @@ class UserSignupTile extends StatelessWidget {
       title: Text(signup.user.givenName),
       isThreeLine: true,
       subtitle: Text(signup.message),
-      trailing: IconButton(
-        icon: const Icon(Icons.file_download),
-        color: Theme.of(context).accentColor,
-        onPressed: () => Dialogs.showComingSoon(context),
-      ),
+      trailing: signup.file == null ? null : DownloadButton(file: signup.file),
       onTap: () => Navigator.of(context).pushNamed(
         Router.otherProfile,
         arguments: {'infoModel': signup.user},

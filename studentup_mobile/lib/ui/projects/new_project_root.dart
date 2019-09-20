@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/project_creation_notifier.dart';
 import 'package:studentup_mobile/ui/projects/new_project_uploader.dart';
 import 'package:studentup_mobile/ui/projects/new_project_categories.dart';
@@ -131,7 +132,8 @@ class BottomButton extends StatelessWidget {
       };
     if (service.isLoading) return null;
     if (!service.formIsValid) return () => print('Form is not valid');
-    return () => service.sendData();
+    return () =>
+        service.sendData(Provider.of<ProfileNotifier>(context).preview);
   }
 
   @override

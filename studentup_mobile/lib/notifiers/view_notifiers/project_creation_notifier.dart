@@ -6,11 +6,10 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/mixins/storage_io.dart';
+import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/notifiers/base_notifiers.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/services/storage/firebase/firebase_storage.dart';
-import 'package:studentup_mobile/services/locator.dart';
 
 const int MINIMUM_LENGTH_PROJECT = 3;
 const int MAXIMUM_LENGTH_PROJECT = 75;
@@ -95,11 +94,11 @@ class ProjectCreationNotifier extends NetworkIO with StorageIO {
 
       _paths.forEach(print);
 
-      ProfileNotifier notifier = Locator.of<ProfileNotifier>();
+      final Preview preview = data as Preview;
       ProjectModel _model = ProjectModel(
-        creatorId: notifier.info.uid,
-        creatorMedia: notifier.info.imageUrl,
-        creator: notifier.info.givenName,
+        creatorId: preview.uid,
+        creatorMedia: preview.imageUrl,
+        creator: preview.givenName,
         timestamp: DateTime.now(),
         categories: categories,
         maxUsersNum: numParticipants,

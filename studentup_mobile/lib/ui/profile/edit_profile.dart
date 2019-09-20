@@ -146,12 +146,12 @@ class StudentProfileEditor extends StatelessWidget {
             builder: (context, user, child) {
               if (user == null) return Container();
               return TextField(
-                controller: profile.nameEditor,
+                controller: profile.nameEditor..text = user.givenName,
                 minLines: 1,
                 maxLines: 1,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: Provider.of<UserInfoModel>(context).givenName,
+                  hintText: 'Name',
                 ),
               );
             },
@@ -161,12 +161,13 @@ class StudentProfileEditor extends StatelessWidget {
             builder: (context, user, child) {
               if (user == null) return Container();
               return TextField(
-                controller: profile.additionalInfoEditor,
+                controller: profile.additionalInfoEditor
+                  ..text = user.university,
                 minLines: 1,
                 maxLines: 1,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: Provider.of<UserInfoModel>(context).university,
+                  hintText: 'University',
                 ),
               );
             },
@@ -176,12 +177,12 @@ class StudentProfileEditor extends StatelessWidget {
             builder: (context, user, child) {
               if (user == null) return Container();
               return TextField(
-                controller: profile.locationEditor,
+                controller: profile.locationEditor..text = user.location,
                 minLines: 1,
                 maxLines: 1,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: Provider.of<UserInfoModel>(context).location,
+                  hintText: 'Location',
                 ),
               );
             },
@@ -191,13 +192,13 @@ class StudentProfileEditor extends StatelessWidget {
             builder: (context, user, child) {
               if (user == null) return Container();
               return TextField(
-                controller: profile.bioEditor,
+                controller: profile.bioEditor..text = user.bio,
                 minLines: 5,
                 maxLines: null,
                 maxLength: 140,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: Provider.of<UserInfoModel>(context).bio,
+                  hintText: 'Bio',
                 ),
               );
             },
@@ -282,12 +283,12 @@ class StartupProfileEditor extends StatelessWidget {
             builder: (context, startup, child) {
               if (startup == null) return Container();
               return TextField(
-                controller: profile.nameEditor,
+                controller: profile.nameEditor..text = startup.name,
                 minLines: 1,
                 maxLines: 1,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: startup.name,
+                  hintText: 'Name',
                 ),
               );
             },
@@ -297,12 +298,13 @@ class StartupProfileEditor extends StatelessWidget {
             builder: (context, startup, child) {
               if (startup == null) return Container();
               return TextField(
-                controller: profile.additionalInfoEditor,
+                controller: profile.additionalInfoEditor
+                  ..text = startup.website,
                 minLines: 1,
                 maxLines: 1,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: Provider.of<StartupInfoModel>(context).website,
+                  hintText: 'Website',
                 ),
               );
             },
@@ -312,12 +314,12 @@ class StartupProfileEditor extends StatelessWidget {
             builder: (context, startup, child) {
               if (startup == null) return Container();
               return TextField(
-                controller: profile.locationEditor,
+                controller: profile.locationEditor..text = startup.location,
                 minLines: 1,
                 maxLines: 1,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: Provider.of<StartupInfoModel>(context).location,
+                  hintText: 'Location',
                 ),
               );
             },
@@ -327,13 +329,13 @@ class StartupProfileEditor extends StatelessWidget {
             builder: (context, startup, child) {
               if (startup == null) return Container();
               return TextField(
-                controller: profile.bioEditor,
+                controller: profile.bioEditor..text = startup.description,
                 minLines: 5,
                 maxLines: null,
                 maxLength: 140,
                 decoration: InputDecoration(
                   border: InputBorder.none,
-                  hintText: Provider.of<StartupInfoModel>(context).description,
+                  hintText: 'Vision',
                   hintMaxLines: 5,
                 ),
               );

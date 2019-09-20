@@ -19,7 +19,7 @@ class LogoutDialog {
             ),
             RaisedButton(
               color: CupertinoColors.destructiveRed,
-              textColor: Theme.of(context).scaffoldBackgroundColor,
+              textColor: Colors.white,
               child: const Text('Logout'),
               onPressed: () => Navigator.of(_).pop(true),
             ),
