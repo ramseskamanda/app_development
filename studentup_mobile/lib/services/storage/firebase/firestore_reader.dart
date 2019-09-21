@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:studentup_mobile/enum/query_order.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/education_model.dart';
@@ -69,41 +70,44 @@ class FirestoreReader implements BaseAPIReader {
   }
 
   @override
-  Stream<UserInfoModel> fetchUserInfoStream(String docPath) {
+  Observable<UserInfoModel> fetchUserInfoStream(String docPath) {
     try {
-      DocumentReference doc = _firestore.document(docPath);
-      return doc.snapshots().map((snapshot) => UserInfoModel.fromDoc(snapshot));
+      final DocumentReference doc = _firestore.document(docPath);
+      final Stream<UserInfoModel> stream =
+          doc.snapshots().map((snapshot) => UserInfoModel.fromDoc(snapshot));
+      return Observable<UserInfoModel>(stream).shareReplay(maxSize: 1);
     } catch (e) {
-      return Stream.empty();
+      return Observable<UserInfoModel>.empty();
     }
   }
 
   @override
-  Stream<StartupInfoModel> fetchStartupInfoStream(String docPath) {
+  Observable<StartupInfoModel> fetchStartupInfoStream(String docPath) {
     try {
-      DocumentReference doc = _firestore.document(docPath);
-      return doc
-          .snapshots()
-          .map((snapshot) => StartupInfoModel.fromDoc(snapshot));
+      final DocumentReference doc = _firestore.document(docPath);
+      final Stream<StartupInfoModel> stream =
+          doc.snapshots().map((snapshot) => StartupInfoModel.fromDoc(snapshot));
+      return Observable<StartupInfoModel>(stream).shareReplay(maxSize: 1);
     } catch (e) {
-      return Stream.empty();
+      return Observable<StartupInfoModel>.empty();
     }
   }
 
   @override
-  Stream<List<SkillsModel>> fetchSkills(String uid) {
-    return _firestore
+  Observable<List<SkillsModel>> fetchSkills(String uid) {
+    final Stream<List<SkillsModel>> stream = _firestore
         .collection(skillsCollection)
         .where('user_id', isEqualTo: uid)
         .orderBy('avg_rating', descending: true)
         .snapshots()
         .map((snapshot) =>
             snapshot.documents.map((doc) => SkillsModel.fromDoc(doc)).toList());
+    return Observable<List<SkillsModel>>(stream).shareReplay(maxSize: 1);
   }
 
   @override
-  Stream<List<EducationModel>> fetchEducation(String uid) {
-    return _firestore
+  Observable<List<EducationModel>> fetchEducation(String uid) {
+    final Stream<List<EducationModel>> stream = _firestore
         .collection(educationCollection)
         .where('user_id', isEqualTo: uid)
         .orderBy('period_end', descending: true)
@@ -111,11 +115,12 @@ class FirestoreReader implements BaseAPIReader {
         .map((snapshot) => snapshot.documents
             .map((doc) => EducationModel.fromDoc(doc))
             .toList());
+    return Observable<List<EducationModel>>(stream).shareReplay(maxSize: 1);
   }
 
   @override
-  Stream<List<LaborExeprienceModel>> fetchExperience(String uid) {
-    return _firestore
+  Observable<List<LaborExeprienceModel>> fetchExperience(String uid) {
+    final Stream<List<LaborExeprienceModel>> stream = _firestore
         .collection(experienceCollection)
         .orderBy('period_start', descending: true)
         .where('user_id', isEqualTo: uid)
@@ -123,6 +128,9 @@ class FirestoreReader implements BaseAPIReader {
         .map((snapshot) => snapshot.documents
             .map((doc) => LaborExeprienceModel.fromDoc(doc))
             .toList());
+
+    return Observable<List<LaborExeprienceModel>>(stream)
+        .shareReplay(maxSize: 1);
   }
 
   @override
@@ -205,10 +213,32 @@ class FirestoreReader implements BaseAPIReader {
   }
 
   @override
-  Stream<List<ProjectModel>> fetchOngoingProjects(String uid,
+  Observable<List<ProjectModel>> fetchProjectsByOwnerStream(String uid,
       {QueryOrder order = QueryOrder.popularity}) {
-    String field = QueryOrder.newest == order ? 'timestamp' : 'signups_num';
-    return _firestore
+    try {
+      String field = QueryOrder.newest == order ? 'timestamp' : 'signups_num';
+      final Stream<List<ProjectModel>> stream = _firestore
+          .collection(projectCollection)
+          .where('creator_id', isEqualTo: uid)
+          .orderBy(field, descending: true)
+          // .limit(NUM_ITEM_PREVIEW)
+          .snapshots()
+          .map((snapshot) => snapshot.documents
+              .map((doc) => ProjectModel.fromDoc(doc))
+              .toList());
+      return Observable<List<ProjectModel>>(stream).shareReplay(maxSize: 1);
+    } on PlatformException catch (e) {
+      print(e);
+      throw NetworkError(message: 'Resources requested unavailable');
+    }
+  }
+
+  @override
+  Observable<List<ProjectModel>> fetchOngoingProjects(String uid,
+      {QueryOrder order = QueryOrder.popularity}) {
+    final String field =
+        QueryOrder.newest == order ? 'timestamp' : 'signups_num';
+    final Stream<List<ProjectModel>> stream = _firestore
         .collection(projectCollection)
         .where('creator_id', isEqualTo: uid)
         .where('deadline',
@@ -219,11 +249,12 @@ class FirestoreReader implements BaseAPIReader {
         .snapshots()
         .map((snap) =>
             snap.documents.map((doc) => ProjectModel.fromDoc(doc)).toList());
+    return Observable<List<ProjectModel>>(stream).shareReplay(maxSize: 1);
   }
 
   @override
-  Stream<List<ProjectModel>> fetchPastProjects(String uid) {
-    return _firestore
+  Observable<List<ProjectModel>> fetchPastProjects(String uid) {
+    final Stream<List<ProjectModel>> stream = _firestore
         .collection(projectCollection)
         .where('creator_id', isEqualTo: uid)
         .where('deadline', isLessThan: DateTime.now())
@@ -231,22 +262,24 @@ class FirestoreReader implements BaseAPIReader {
         .snapshots()
         .map((snap) =>
             snap.documents.map((doc) => ProjectModel.fromDoc(doc)).toList());
+    return Observable<List<ProjectModel>>(stream).shareReplay(maxSize: 1);
   }
 
   @override
-  Stream<List<Comments>> fetchComments(String collectionPath) {
-    CollectionReference reference = _firestore.collection(collectionPath);
-    return reference
+  Observable<List<Comments>> fetchComments(String collectionPath) {
+    final CollectionReference reference = _firestore.collection(collectionPath);
+    final Stream<List<Comments>> stream = reference
         .orderBy('vote_count', descending: true)
         // .limit(10)
         .snapshots()
         .map((snapshot) =>
             snapshot.documents.map((doc) => Comments.fromDoc(doc)).toList());
+    return Observable<List<Comments>>(stream).shareReplay(maxSize: 1);
   }
 
   @override
-  Stream<List<ChatModel>> fetchChatPreviews(String uid) {
-    return _firestore
+  Observable<List<ChatModel>> fetchChatPreviews(String uid) {
+    final Stream<List<ChatModel>> stream = _firestore
         .collection(chatsCollection)
         .where('list_participants', arrayContains: uid)
         .orderBy('latest_message.sentAt', descending: true)
@@ -254,15 +287,17 @@ class FirestoreReader implements BaseAPIReader {
         .snapshots(includeMetadataChanges: true)
         .map((snap) =>
             snap.documents.map((doc) => ChatModel.fromDoc(doc)).toList());
+    return Observable<List<ChatModel>>(stream).shareReplay(maxSize: 1);
   }
 
   @override
-  Stream<QuerySnapshot> fetchMessages(String collectionPath) {
-    CollectionReference reference = _firestore.collection(collectionPath);
-    return reference
+  Observable<QuerySnapshot> fetchMessages(String collectionPath) {
+    final CollectionReference reference = _firestore.collection(collectionPath);
+    final Stream<QuerySnapshot> stream = reference
         .orderBy('sentAt', descending: true)
         // .limit(numLoaded)
         .snapshots();
+    return Observable<QuerySnapshot>(stream).shareReplay(maxSize: 1);
   }
 
   @override
@@ -306,11 +341,11 @@ class FirestoreReader implements BaseAPIReader {
   }
 
   @override
-  Stream<ProjectSignupModel> fetchProjectSignupById(
+  Observable<ProjectSignupModel> fetchProjectSignupById(
     String userId,
     ProjectModel project,
   ) {
-    return _firestore
+    final Stream<ProjectSignupModel> stream = _firestore
         .collection(projectCollection)
         .document(project.docId)
         .collection('applications')
@@ -318,11 +353,13 @@ class FirestoreReader implements BaseAPIReader {
         .snapshots()
         .map((snapshot) =>
             snapshot.exists ? ProjectSignupModel.fromDoc(snapshot) : null);
+    return Observable<ProjectSignupModel>(stream).shareReplay(maxSize: 1);
   }
 
   @override
-  Stream<List<ProjectSignupModel>> fetchProjectSignups(ProjectModel project) {
-    return _firestore
+  Observable<List<ProjectSignupModel>> fetchProjectSignups(
+      ProjectModel project) {
+    final Stream<List<ProjectSignupModel>> stream = _firestore
         .collection(projectCollection)
         .document(project.docId)
         .collection('applications')
@@ -330,15 +367,17 @@ class FirestoreReader implements BaseAPIReader {
         .map((snapshot) => snapshot.documents
             .map((doc) => ProjectSignupModel.fromDoc(doc))
             .toList());
+    return Observable<List<ProjectSignupModel>>(stream).shareReplay(maxSize: 1);
   }
 
   @override
-  Stream<ThinkTankModel> fetchThinkTankStream(String docId) {
-    return _firestore
+  Observable<ThinkTankModel> fetchThinkTankStream(String docId) {
+    final Stream<ThinkTankModel> stream = _firestore
         .collection(thinkTanksCollection)
         .document(docId)
         .snapshots()
         .map((doc) => ThinkTankModel.fromDoc(doc));
+    return Observable<ThinkTankModel>(stream).shareReplay(maxSize: 1);
   }
 
   @override
@@ -377,5 +416,26 @@ class FirestoreReader implements BaseAPIReader {
     }
     print(_previews.length.toString() + ' users found');
     return _previews;
+  }
+
+  @override
+  Observable<List<ThinkTankModel>> fetchThinkTanksByOwnerStream(String uid,
+      {QueryOrder order = QueryOrder.newest}) {
+    final String field =
+        order == QueryOrder.newest ? 'lastActivity' : 'commentCount';
+    _firestore
+        .collection(thinkTanksCollection)
+        .where('askerId', isEqualTo: uid)
+        .orderBy(field)
+        .getDocuments()
+        .then((v) => print(v.documents.length));
+    final Stream<List<ThinkTankModel>> stream = _firestore
+        .collection(thinkTanksCollection)
+        .where('askerId', isEqualTo: uid)
+        .orderBy(field)
+        .snapshots()
+        .map((snap) =>
+            snap.documents.map((doc) => ThinkTankModel.fromDoc(doc)).toList());
+    return Observable<List<ThinkTankModel>>(stream).shareReplay(maxSize: 1);
   }
 }

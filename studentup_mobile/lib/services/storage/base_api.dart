@@ -1,3 +1,4 @@
+import 'package:rxdart/rxdart.dart';
 import 'package:studentup_mobile/enum/query_order.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
 import 'package:studentup_mobile/models/education_model.dart';
@@ -15,28 +16,33 @@ abstract class BaseAPIReader {
   Future<Map<dynamic, bool>> findUserDocument(String uid);
   Future<UserInfoModel> fetchUser(String uid);
   Future<List<UserInfoModel>> fetchAllUsers(List<String> users);
-  Stream<UserInfoModel> fetchUserInfoStream(String docPath);
+  Observable<UserInfoModel> fetchUserInfoStream(String docPath);
   Future<List<Preview>> fetchAllUserAccounts(List<String> users);
-  Stream<StartupInfoModel> fetchStartupInfoStream(String docPath);
-  Stream<List<SkillsModel>> fetchSkills(String uid);
-  Stream<List<EducationModel>> fetchEducation(String uid);
-  Stream<List<LaborExeprienceModel>> fetchExperience(String uid);
+  Observable<StartupInfoModel> fetchStartupInfoStream(String docPath);
+  Observable<List<SkillsModel>> fetchSkills(String uid);
+  Observable<List<EducationModel>> fetchEducation(String uid);
+  Observable<List<LaborExeprienceModel>> fetchExperience(String uid);
   Future<List<StartupInfoModel>> fetchStartups(QueryOrder order);
   Future<List<ThinkTankModel>> fetchThinkTanks(QueryOrder order);
-  Stream<ThinkTankModel> fetchThinkTankStream(String docId);
+  Observable<ThinkTankModel> fetchThinkTankStream(String docId);
+  Observable<List<ThinkTankModel>> fetchThinkTanksByOwnerStream(String uid,
+      {QueryOrder order = QueryOrder.newest});
   Future<List<ProjectModel>> fetchProjects(QueryOrder order);
   Future<List<ProjectModel>> fetchProjectsByOwner(String uid,
       {QueryOrder order = QueryOrder.popularity});
-  Stream<List<ProjectModel>> fetchOngoingProjects(String uid,
+  Observable<List<ProjectModel>> fetchProjectsByOwnerStream(String uid,
       {QueryOrder order = QueryOrder.popularity});
-  Stream<List<ProjectModel>> fetchPastProjects(String uid);
-  Stream<List<Comments>> fetchComments(String collectionPath);
-  Stream<List<ChatModel>> fetchChatPreviews(String uid);
-  Stream<dynamic> fetchMessages(String collectionPath);
+  Observable<List<ProjectModel>> fetchOngoingProjects(String uid,
+      {QueryOrder order = QueryOrder.popularity});
+  Observable<List<ProjectModel>> fetchPastProjects(String uid);
+  Observable<List<Comments>> fetchComments(String collectionPath);
+  Observable<List<ChatModel>> fetchChatPreviews(String uid);
+  Observable<dynamic> fetchMessages(String collectionPath);
   Future<List<UserInfoModel>> fetchRankings({bool monthly = true});
   Future<List<PrizeModel>> fetchPrizesRanking();
-  Stream<List<ProjectSignupModel>> fetchProjectSignups(ProjectModel project);
-  Stream<ProjectSignupModel> fetchProjectSignupById(
+  Observable<List<ProjectSignupModel>> fetchProjectSignups(
+      ProjectModel project);
+  Observable<ProjectSignupModel> fetchProjectSignupById(
       String userId, ProjectModel project);
 }
 

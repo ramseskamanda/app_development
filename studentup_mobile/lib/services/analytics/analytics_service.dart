@@ -3,9 +3,10 @@ import 'package:studentup_mobile/enum/analytics_types.dart';
 
 class AnalyticsService {
   final FirebaseAnalytics _analytics = FirebaseAnalytics();
-  AnalyticsService() {
-    _analytics.logAppOpen();
-    toggleDebug(true);
+
+  Future<void> initialize() async {
+    await _analytics.logAppOpen();
+    await toggleDebug(true);
   }
 
   FirebaseAnalytics get logger => _analytics;

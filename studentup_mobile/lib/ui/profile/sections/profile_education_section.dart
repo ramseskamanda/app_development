@@ -55,6 +55,9 @@ class ProfileEducationSection extends StatelessWidget {
                               'separator': const SizedBox(height: 16.0),
                               'title': 'Education',
                               'type': EducationModel,
+                              'emptyBuilder': Center(
+                                child: const Text('No Education Added Yet!'),
+                              ),
                             },
                           );
                         },

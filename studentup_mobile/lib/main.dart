@@ -12,24 +12,25 @@ import 'package:studentup_mobile/theme.dart';
 import 'package:studentup_mobile/ui/app.dart';
 import 'package:studentup_mobile/ui/signup/signup.dart';
 import 'package:studentup_mobile/util/config.dart';
+import 'package:studentup_mobile/util/dev_settings.dart';
 import 'package:studentup_mobile/util/system.dart';
 import 'package:catcher/catcher_plugin.dart';
 
 Future<void> main() async {
-  await SystemPreferences.initialize();
   await Locator.setup();
+  await SystemPreferences.initialize();
   await Locator.of<BaseAuth>().initialize();
-  await Locator.of<AnalyticsService>().logger.logAppOpen();
+  await Locator.of<AnalyticsService>().initialize();
   await Locator.of<NotificationService>().initialize();
-  await Locator.of<NotificationService>().test();
-  runApp(MyApp());
-  // Catcher(
-  //   MyApp(),
-  //   debugConfig: DevSettings.debugOptions,
-  //   releaseConfig: DevSettings.releaseOptions,
-  //   profileConfig: DevSettings.profileOptions,
-  //   enableLogger: false,
-  // );
+  // await Locator.of<NotificationService>().test();
+  // runApp(MyApp());
+  Catcher(
+    MyApp(),
+    debugConfig: DevSettings.debugOptions,
+    releaseConfig: DevSettings.releaseOptions,
+    profileConfig: DevSettings.profileOptions,
+    enableLogger: false,
+  );
 }
 
 class MyApp extends StatelessWidget {

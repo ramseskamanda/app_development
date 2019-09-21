@@ -212,7 +212,7 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `.symlinks/flutter/ios-release`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_mailer (from `.symlinks/plugins/flutter_mailer/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
@@ -275,7 +275,7 @@ EXTERNAL SOURCES:
   firebase_storage:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: ".symlinks/flutter/ios-release"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_mailer:
@@ -304,15 +304,15 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   BoringSSL-GRPC: db8764df3204ccea016e1c8dd15d9a9ad63ff318
   catcher: e5585ed31458c849f4fd9c3719b2fcb0188b8918
-  cloud_firestore: 51fb4d22b59e6f59b3931a10c5d1df64bd8c373f
+  cloud_firestore: 0ac494d23db743f104b95d3291946afec187b74c
   connectivity: c72716e202a1225ec4810740d5cb56b8ae3bf4cc
   device_info: 3ebad48f726348f69abd802f3334a8d1ed795fbd
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
   Firebase: dedc9e48ea3f3649ad5f6b982f8a0c73508a14b5
-  firebase_analytics: 32e04b548ece5c04c9798cbf393a7884f0b21951
+  firebase_analytics: 045e7ebe7b8a4d27357168072868ff082dca15a6
   firebase_auth: 1e3b7bdd37b9fbd4ef75ba1d985b00be09e02d3d
   firebase_core: ae55ea92448ec8675d325da4db22cf3b4d58a54d
-  firebase_messaging: 74e9d76acfbdff96a3f9f570f463a2b2bc784bf5
+  firebase_messaging: 0d5c04cc40f58bd4bf7f2992c91050f9bc01bec3
   firebase_storage: 52b0c06e27af628b627be28d32b4b540f6b67cf7
   FirebaseAnalytics: 3fb375bc9d13779add4039716f868d233a473fad
   FirebaseAnalyticsInterop: efbe45c8385ec626e29f9525e5ebd38520dfb6c1

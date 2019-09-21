@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/models/chat_model.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';

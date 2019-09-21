@@ -3,6 +3,7 @@ import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/models/startup_info_model.dart';
 import 'package:studentup_mobile/models/user_info_model.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/search/base_search_api.dart';
 import 'package:studentup_mobile/services/storage/base_api.dart';
 import 'package:studentup_mobile/services/locator.dart';
@@ -57,6 +58,9 @@ class AlgoliaService extends BaseSearchAPI {
         property: 'user_id',
       );
 
+      final String uid = Locator.of<BaseAuth>().currentUserId;
+      _results.removeWhere((result) => result.data['user_id'] == uid);
+
       print(_results.length);
 
       List<UserInfoModel> _mappedResults = await _reader.fetchAllUsers(
@@ -87,6 +91,9 @@ class AlgoliaService extends BaseSearchAPI {
 
       List<AlgoliaObjectSnapshot> _results = _objects.hits;
 
+      final String uid = Locator.of<BaseAuth>().currentUserId;
+      _results.removeWhere((result) => result.data['user_id'] == uid);
+
       List<UserInfoModel> _mappedResults = _results
           .map((snapshot) => UserInfoModel.fromIndex(snapshot))
           .toList();
@@ -115,6 +122,9 @@ class AlgoliaService extends BaseSearchAPI {
       AlgoliaQuerySnapshot _objects = await query.getObjects();
 
       List<AlgoliaObjectSnapshot> _results = _objects.hits;
+
+      final String uid = Locator.of<BaseAuth>().currentUserId;
+      _results.removeWhere((result) => result.data['user_id'] == uid);
 
       List<StartupInfoModel> _mappedResults = _results
           .map((snapshot) => StartupInfoModel.fromIndex(snapshot))

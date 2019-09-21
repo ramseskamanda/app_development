@@ -55,6 +55,10 @@ class ProfileExperienceSection extends StatelessWidget {
                               'separator': const SizedBox(height: 16.0),
                               'title': 'Experience',
                               'type': LaborExeprienceModel,
+                              'emptyBuilder': Center(
+                                child:
+                                    const Text('No Work Experience Added Yet!'),
+                              ),
                             },
                           );
                         },

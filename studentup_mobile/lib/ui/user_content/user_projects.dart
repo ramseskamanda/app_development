@@ -1,5 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_villains/villain.dart';
+import 'package:studentup_mobile/enum/query_order.dart';
+import 'package:studentup_mobile/models/project_model.dart';
+import 'package:studentup_mobile/router.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/storage/base_api.dart';
+import 'package:studentup_mobile/ui/widgets/screens/see_all.dart';
 
 class UserProjects extends StatefulWidget {
   @override
@@ -9,23 +16,26 @@ class UserProjects extends StatefulWidget {
 class _UserProjectsState extends State<UserProjects> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: true,
-        title: const Text('My Projects'),
+    final String uid = Locator.of<BaseAuth>().currentUserId;
+    final Stream<List<ProjectModel>> projectsStream =
+        Locator.of<BaseAPIReader>().fetchProjectsByOwnerStream(
+      uid,
+      order: QueryOrder.newest,
+    );
+    return SeeAll(
+      separator: const SizedBox(height: 16.0),
+      stream: projectsStream,
+      title: 'My Projects',
+      type: ProjectModel,
+      emptyBuilder: Center(
+        child: const Text('You have no projects yet!'),
       ),
-      body: Center(
-        child: Villain(
-          villainAnimation: VillainAnimation.fromBottom(
-            to: Duration(minutes: 1),
-          ),
-          secondaryVillainAnimation: VillainAnimation.fade(
-            to: Duration(minutes: 1),
-          ),
-          child: const Text('Coming Soon!'),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(
+          Icons.add,
+          color: CupertinoColors.white,
         ),
+        onPressed: () => Navigator.of(context).pushNamed(Router.newProject),
       ),
     );
   }

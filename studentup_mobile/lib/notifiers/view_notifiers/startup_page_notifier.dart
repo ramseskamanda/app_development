@@ -32,6 +32,7 @@ class StartupPageNotifier extends NetworkReader {
     isLoading = true;
     try {
       _team = _model.team;
+      //TODO: Change this to use a stream
       _projects = await reader.fetchProjectsByOwner(_model.docId);
     } catch (e) {
       print(e);

@@ -76,6 +76,10 @@ class StartupTeam extends StatelessWidget {
                                   'title':
                                       '${snapshot.data.name}${snapshot.data.name.endsWith('s') ? '\'' : '\'s'} Team',
                                   'type': StartupInfoModel,
+                                  'emptyBuilder': Center(
+                                    child: const Text(
+                                        'No Team Members Added Yet!'),
+                                  ),
                                 },
                               );
                             },

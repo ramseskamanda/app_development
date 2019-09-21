@@ -113,6 +113,7 @@ class Router {
             stream: args['stream'],
             title: args['title'],
             type: args['type'],
+            emptyBuilder: args['emptyBuilder'],
           ),
         );
       default:

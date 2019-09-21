@@ -27,9 +27,10 @@ class ThinkTank extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0.0,
         actions: <Widget>[
-          PopupMenuWithActions(
-            onDelete: () => notifier.writer.removeThinkTank(model),
-          ),
+          if (model.askerId == Locator.of<BaseAuth>().currentUserId)
+            PopupMenuWithActions(
+              onDelete: () => notifier.writer.removeThinkTank(model),
+            ),
         ],
       ),
       floatingActionButton: Padding(

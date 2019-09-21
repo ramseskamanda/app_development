@@ -56,6 +56,9 @@ class ProfileSkillSection extends StatelessWidget {
                               'separator': const SizedBox(height: 16.0),
                               'title': 'User Skills',
                               'type': SkillsModel,
+                              'emptyBuilder': Center(
+                                child: const Text('No Skills Added Yet!'),
+                              ),
                             },
                           );
                         },

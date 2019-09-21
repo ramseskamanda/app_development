@@ -4,7 +4,7 @@ import 'package:studentup_mobile/enum/search_enum.dart';
 import 'package:studentup_mobile/models/project_model.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/search/base_search_api.dart';
-import 'package:studentup_mobile/ui/startup_profile/startup_project_section.dart';
+import 'package:studentup_mobile/ui/projects/projects_root.dart';
 
 class ProjectSearchDelegate extends SearchDelegate {
   final BaseSearchAPI _algoliaService = Locator.of<BaseSearchAPI>();

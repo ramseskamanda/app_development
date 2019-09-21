@@ -1,5 +1,18 @@
 enum DegreeType {
+  AA,
+  AAS,
+  AS,
+  BA,
+  BAS,
+  BFA,
   BSc,
+  MA,
+  MBA,
+  MFA,
+  MiM,
   MSc,
+  DDS,
+  JD,
+  MD,
   PhD,
 }
