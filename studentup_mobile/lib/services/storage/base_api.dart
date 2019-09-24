@@ -28,6 +28,7 @@ abstract class BaseAPIReader {
   Observable<List<ThinkTankModel>> fetchThinkTanksByOwnerStream(String uid,
       {QueryOrder order = QueryOrder.newest});
   Future<List<ProjectModel>> fetchProjects(QueryOrder order);
+  Future<ProjectModel> fetchProjectInfo(String docId);
   Future<List<ProjectModel>> fetchProjectsByOwner(String uid,
       {QueryOrder order = QueryOrder.popularity});
   Observable<List<ProjectModel>> fetchProjectsByOwnerStream(String uid,
@@ -77,5 +78,6 @@ abstract class BaseAPIWriter {
   Future uploadSignUpDocument({ProjectSignupModel model, ProjectModel project});
   Future removeApplicant(String projectId);
   Future removeProject({String id});
+  Future editProjectInfo(ProjectModel model, Map<String, dynamic> data);
   Future markAsRead({String docId});
 }

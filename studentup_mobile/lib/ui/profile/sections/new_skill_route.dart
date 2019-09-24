@@ -61,6 +61,7 @@ class NewSkillRoute extends StatelessWidget {
                           ),
                           const SizedBox(height: 24.0),
                           TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: notifier.name,
                             maxLength: 32,
                             maxLengthEnforced: true,
@@ -72,6 +73,7 @@ class NewSkillRoute extends StatelessWidget {
                           ),
                           const SizedBox(height: 24.0),
                           TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: notifier.description,
                             maxLength: 140,
                             maxLengthEnforced: true,

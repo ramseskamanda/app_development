@@ -39,6 +39,7 @@ class _NameTextFormFieldState extends State<NameTextFormField> {
   Widget build(BuildContext context) {
     AuthNotifier _auth = Provider.of<AuthNotifier>(context);
     return TextFormField(
+      textCapitalization: TextCapitalization.sentences,
       controller: _controller,
       validator: Validator.name,
       maxLength: 32,

@@ -39,17 +39,18 @@ class StartupStories extends StatelessWidget {
             StartupInfoModel model = feed.startups[index - 1];
             return GestureDetector(
               onTap: () {
-                Navigator.of(context).pushNamed(
-                  Router.otherProfile,
-                  arguments: {
-                    'infoModel': Preview(
-                      givenName: model.name,
-                      imageUrl: model.imageUrl,
-                      uid: model.docId,
-                      isStartup: true,
-                    ),
-                  },
-                );
+                if (model != null)
+                  Navigator.of(context).pushNamed(
+                    Router.otherProfile,
+                    arguments: {
+                      'infoModel': Preview(
+                        givenName: model.name,
+                        imageUrl: model.imageUrl,
+                        uid: model.docId,
+                        isStartup: true,
+                      ),
+                    },
+                  );
               },
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

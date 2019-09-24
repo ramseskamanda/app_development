@@ -14,8 +14,9 @@ import 'package:studentup_mobile/ui/profile/user_information/profile_text.dart';
 class Profile extends StatelessWidget {
   final GlobalKey<RefreshIndicatorState> _key;
   final bool fromMessaging;
+  final bool isUser;
 
-  Profile({Key key, this.fromMessaging = false})
+  Profile({Key key, this.fromMessaging = false, this.isUser = false})
       : _key = GlobalKey<RefreshIndicatorState>(),
         super(key: key);
 
@@ -39,7 +40,7 @@ class Profile extends StatelessWidget {
             const SizedBox(height: 16.0),
             ProfileText(),
             const SizedBox(height: 16.0),
-            if (!fromMessaging) ContactOptions(),
+            if (!fromMessaging && !isUser) ContactOptions(),
             const SizedBox(height: 16.0),
             ProfileAboutCard(),
             const SizedBox(height: 32.0),

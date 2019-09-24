@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/mixins/notification_mixin.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
@@ -57,13 +58,14 @@ class _ApplicationState extends State<Application>
         SchedulerPhase.persistentCallbacks)
       SchedulerBinding.instance.addPostFrameCallback(
         (_) {
-          // Provider.of<ProfileNotifier>(context).fetchData();
-
           if (Locator.of<BaseAuth>().currentUserisNew)
             CompleteProfileToast.show(
               context: context,
               stateManagerCallback: () =>
-                  Provider.of<InnerRouter>(context).goToProfile(),
+                  Provider.of<InnerRouter>(context, listen: false)
+                      .goToProfile(),
+              isStartup: Provider.of<ProfileNotifier>(context, listen: false)
+                  .isStartup,
             );
         },
       );
@@ -77,9 +79,6 @@ class _ApplicationState extends State<Application>
 
   @override
   Widget build(BuildContext context) {
-    print('[TRACE] :: BUILDING MAIN APPLICATION');
-    // Provider.of<ProfileNotifier>(context).fetchData();
-
     assert(_navigationBar.length == _tabs.length);
     InnerRouter router = Provider.of<InnerRouter>(context);
     router.profileTab = _tabs.length - 1;
@@ -89,6 +88,7 @@ class _ApplicationState extends State<Application>
         controller: router.navBar,
         tabBuilder: (BuildContext context, int index) => _tabs[index],
         tabBar: CupertinoTabBar(
+          activeColor: Theme.of(context).accentColor,
           items: _navigationBar,
           onTap: (int index) {
             if (index == 0) router.resetHomePage();

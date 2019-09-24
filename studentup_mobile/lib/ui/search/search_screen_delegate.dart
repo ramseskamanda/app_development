@@ -30,8 +30,6 @@ class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
 
   @override
   List<Widget> buildActions(BuildContext context) {
-    //TODO: There's something going on here after a search result is selected,
-    // the field can't be cleared
     if (query.isEmpty) return null;
     return <Widget>[
       IconButton(
@@ -131,7 +129,7 @@ class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
             ListTile(
               title: Text('$query $typeahead'),
               onTap: () {
-                query = '$query $typeahead';
+                query = query != null ? '$query $typeahead' : typeahead;
                 showResults(context);
               },
             ),

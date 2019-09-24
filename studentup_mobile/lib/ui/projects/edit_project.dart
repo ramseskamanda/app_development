@@ -1,33 +1,45 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:studentup_mobile/models/think_tank_model.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/new_think_tank_notifier.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
+import 'package:studentup_mobile/notifiers/view_notifiers/project_page_notifier.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/stadium_button.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
-class NewThinkTankRoute extends StatelessWidget {
-  final ThinkTankModel model;
+class EditProjectPage extends StatefulWidget {
+  final ProjectPageNotifier notifier;
+  const EditProjectPage({Key key, @required this.notifier}) : super(key: key);
 
-  const NewThinkTankRoute({Key key, @required this.model}) : super(key: key);
+  @override
+  _EditProjectPageState createState() => _EditProjectPageState();
+}
+
+class _EditProjectPageState extends State<EditProjectPage> {
+  TextEditingController _title;
+  TextEditingController _desc;
+
+  @override
+  void initState() {
+    super.initState();
+    _title = TextEditingController(text: widget.notifier.model.title);
+    _desc = TextEditingController(text: widget.notifier.model.description);
+  }
+
+  @override
+  void dispose() {
+    _title.dispose();
+    _desc.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<NewThinkTankNotifier>(
-      builder: (_) => NewThinkTankNotifier(
-        model: model,
-        user: Provider.of<ProfileNotifier>(context).preview,
-      ),
+    return ChangeNotifierProvider.value(
+      value: widget.notifier,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.transparent,
           elevation: 0.0,
-          automaticallyImplyLeading: false,
-          leading: IconButton(
-            icon: const Icon(Icons.close),
-            onPressed: () => Navigator.of(context).pop(false),
-          ),
-          title: Text(model == null ? 'New Think Tank' : 'Edit Think Tank'),
+          backgroundColor: Colors.transparent,
+          title: const Text('Edit Project'),
         ),
         body: SafeArea(
           child: Center(
@@ -37,7 +49,7 @@ class NewThinkTankRoute extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   SingleChildScrollView(
-                    child: Consumer<NewThinkTankNotifier>(
+                    child: Consumer<ProjectPageNotifier>(
                       builder: (context, notifier, child) {
                         return Stack(
                           children: <Widget>[
@@ -47,27 +59,29 @@ class NewThinkTankRoute extends StatelessWidget {
                                 TextField(
                                   textCapitalization:
                                       TextCapitalization.sentences,
-                                  controller: notifier.name,
+                                  controller: _title,
                                   maxLength: 32,
                                   maxLengthEnforced: true,
                                   maxLines: 1,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'Title of your think tank?',
+                                    hintText: 'Title of your project?',
                                   ),
                                 ),
                                 const SizedBox(height: 24.0),
                                 TextField(
                                   textCapitalization:
                                       TextCapitalization.sentences,
-                                  controller: notifier.description,
+                                  controller: TextEditingController(
+                                    text: notifier.model.description,
+                                  ),
                                   maxLength: 400,
                                   maxLengthEnforced: true,
                                   minLines: 10,
                                   maxLines: null,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText: 'What\'re your thinking about...',
+                                    hintText: 'What is your project about?',
                                   ),
                                 ),
                               ],
@@ -81,16 +95,26 @@ class NewThinkTankRoute extends StatelessWidget {
                     bottom: 16.0,
                     left: 0,
                     right: 0,
-                    child: Consumer<NewThinkTankNotifier>(
+                    child: Consumer<ProjectPageNotifier>(
                       builder: (context, notifier, child) {
                         if (notifier.isLoading)
                           return Center(
                               child: const CircularProgressIndicator());
                         return StadiumButton(
-                          text: 'Post Think Tank',
+                          text: 'Post Project',
                           onPressed: () async {
-                            final result = await notifier.sendData();
-                            if (result) Navigator.of(context).pop(result);
+                            //FIXME: write this better
+                            final result = await notifier.editProject(
+                                data: {
+                              'title': _title.text,
+                              'description': _desc.text,
+                            }..removeWhere(
+                                    (k, v) => v == v.toString().isEmpty));
+                            if (result) {
+                              Navigator.of(context).pop(result);
+                              notifier.fetchData();
+                            } else
+                              Dialogs.showNetworkErrorDialog(context);
                           },
                         );
                       },

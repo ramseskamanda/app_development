@@ -37,6 +37,7 @@ class NewEducationRoute extends StatelessWidget {
                       return Column(
                         children: <Widget>[
                           TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: notifier.name,
                             maxLength: 32,
                             maxLengthEnforced: true,
@@ -66,6 +67,7 @@ class NewEducationRoute extends StatelessWidget {
                           ),
                           const SizedBox(height: 24.0),
                           TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: notifier.faculty,
                             maxLength: 32,
                             maxLengthEnforced: true,
@@ -77,6 +79,7 @@ class NewEducationRoute extends StatelessWidget {
                           ),
                           const SizedBox(height: 24.0),
                           TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: notifier.description,
                             maxLength: 48,
                             maxLengthEnforced: true,

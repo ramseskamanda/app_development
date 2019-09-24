@@ -57,7 +57,7 @@ class ProfileRoot extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             if (notifier.isStartup) return StartUpProfile();
-            return Profile();
+            return Profile(isUser: true);
           },
         ),
       ),

@@ -45,11 +45,15 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
 
   @override
   Future fetchData() async {
+    isReading = true;
+    model = await reader.fetchProjectInfo(model.docId);
+    print(model.docId);
     _signups = reader.fetchProjectSignups(model);
     _userSignups = reader.fetchProjectSignupById(
       Locator.of<BaseAuth>().currentUserId,
       model,
     );
+    isReading = false;
   }
 
   Future _signUp() async {
@@ -113,6 +117,20 @@ class ProjectPageNotifier extends NetworkIO with StorageIO {
       writeError = NetworkError(message: e.toString());
       return false;
     }
+    return true;
+  }
+
+  Future<bool> editProject({Map<String, dynamic> data}) async {
+    isWriting = true;
+
+    try {
+      await writer.editProjectInfo(model, data);
+    } catch (e) {
+      print(e);
+      isWriting = false;
+      return true;
+    }
+    isWriting = false;
     return true;
   }
 

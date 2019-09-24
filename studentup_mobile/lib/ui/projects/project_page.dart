@@ -47,7 +47,6 @@ class ProjectPage extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    //TODO: fix this button loading for no reason when attachments are being downloaded
                     child: Consumer<ProjectPageNotifier>(
                       builder: (context, notifier, child) {
                         if (notifier.model.userIsOwner)
@@ -60,9 +59,9 @@ class ProjectPage extends StatelessWidget {
                           stream: notifier.userSignUpStream,
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
-                                    ConnectionState.waiting ||
-                                notifier.isLoading)
+                                ConnectionState.waiting)
                               return const CircularProgressIndicator();
+
                             return StadiumButton(
                               text: snapshot.hasData
                                   ? 'Withdraw Application'
@@ -70,13 +69,15 @@ class ProjectPage extends StatelessWidget {
                               onPressed: notifier.isWriting
                                   ? null
                                   : () async {
-                                      if (!await Dialogs.showProjectDialog(
-                                          context)) return;
-                                      notifier.sendData(
-                                        snapshot.hasData
-                                            ? ProjectAction.WITHDRAW
-                                            : ProjectAction.SIGNUP,
-                                      );
+                                      if (snapshot.hasData &&
+                                          await Dialogs
+                                              .showProjectWithdrawalDialog(
+                                                  context))
+                                        notifier
+                                            .sendData(ProjectAction.WITHDRAW);
+                                      else if (await Dialogs
+                                          .showProjectSignupDialog(context))
+                                        notifier.sendData(ProjectAction.SIGNUP);
                                     },
                             );
                           },
@@ -164,6 +165,10 @@ class ImageScrollbaleAppBar extends StatelessWidget {
                     await service.sendData(ProjectAction.DELETE);
                     Navigator.of(context).pop(true);
                   },
+                  onEdit: () async => Navigator.of(context).pushNamed(
+                    Router.editProject,
+                    arguments: {'notifier': service},
+                  ),
                 );
               },
             ),
@@ -244,10 +249,15 @@ class ProjectInformation extends StatelessWidget {
                       .map((file) => DownloadableAttachment(fileUrl: file))
                       .toList(),
                   const SizedBox(height: 16.0),
-                  Text(
-                    notifier.model.description,
-                    textAlign: TextAlign.center,
-                    softWrap: true,
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.8,
+                    ),
+                    child: Text(
+                      notifier.model.description,
+                      textAlign: TextAlign.center,
+                      softWrap: true,
+                    ),
                   ),
                   if (notifier.model.userIsOwner) ...[
                     const SizedBox(height: 32.0),
@@ -284,6 +294,8 @@ class ProjectInformation extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 16.0, vertical: 8.0),
                               child: TextField(
+                                textCapitalization:
+                                    TextCapitalization.sentences,
                                 controller: notifier.message,
                                 maxLines: null,
                                 minLines: 5,

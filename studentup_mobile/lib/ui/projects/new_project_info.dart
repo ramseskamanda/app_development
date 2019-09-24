@@ -116,6 +116,7 @@ class InputTextFields extends StatelessWidget {
             children: <Widget>[
               Card(
                 child: TextField(
+                  textCapitalization: TextCapitalization.sentences,
                   controller: service.name,
                   maxLines: 1,
                   inputFormatters: [LengthLimitingTextInputFormatter(32)],
@@ -130,6 +131,7 @@ class InputTextFields extends StatelessWidget {
               const SizedBox(height: 8.0),
               Card(
                 child: TextField(
+                  textCapitalization: TextCapitalization.sentences,
                   controller: service.description,
                   maxLines: null,
                   minLines: 5,

@@ -18,8 +18,10 @@ class Dialogs {
       ComingSoon().show(context);
   static Future<bool> showDownloadDialog(BuildContext context) async =>
       await DownloadDialog().show(context);
-  static Future<bool> showProjectDialog(BuildContext context) async =>
+  static Future<bool> showProjectSignupDialog(BuildContext context) async =>
       await ProjectDialog().show(context);
+  static Future<bool> showProjectWithdrawalDialog(BuildContext context) async =>
+      await ProjectDialog().show(context, withdraw: true);
   static void showRatingFor(
     BuildContext context,
     String premise,

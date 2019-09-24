@@ -15,9 +15,6 @@ class CategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final s =
-        category.toString().split('.')[1].toLowerCase().replaceAll('_', ' ');
-
     return WillPopScope(
       onWillPop: () async {
         print('object');
@@ -27,7 +24,7 @@ class CategoryScreen extends StatelessWidget {
         builder: (_) => SearchCategoryNotifier(category),
         child: Scaffold(
           appBar: AppBar(
-            title: Text('${s[0].toUpperCase()}${s.substring(1)}'),
+            title: Text(toString(category)),
             backgroundColor: Colors.transparent,
             elevation: 0.0,
             centerTitle: true,
@@ -68,7 +65,8 @@ class CategoryScreen extends StatelessWidget {
 
                   if (notifier.users.isEmpty)
                     return Center(
-                      child: Text('Couldn\'t find a match for $s'),
+                      child: Text(
+                          'Couldn\'t find a match for ${toString(category)}'),
                     );
                   return GridView.builder(
                     itemCount: notifier.users.length,

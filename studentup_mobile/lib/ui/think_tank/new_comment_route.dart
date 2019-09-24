@@ -34,6 +34,7 @@ class NewCommentRoute extends StatelessWidget {
               child: Stack(
                 children: <Widget>[
                   TextField(
+                    textCapitalization: TextCapitalization.sentences,
                     controller: notifier.newComment,
                     maxLength: 1000,
                     maxLengthEnforced: true,

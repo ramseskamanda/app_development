@@ -36,17 +36,19 @@ class NewExperienceRoute extends StatelessWidget {
                       return Column(
                         children: <Widget>[
                           TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: notifier.company,
                             maxLength: 32,
                             maxLengthEnforced: true,
                             maxLines: 1,
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Company Name',
+                              hintText: 'Company/Organization/Workplace',
                             ),
                           ),
                           const SizedBox(height: 24.0),
                           TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: notifier.position,
                             maxLength: 32,
                             maxLengthEnforced: true,

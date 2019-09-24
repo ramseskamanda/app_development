@@ -101,12 +101,13 @@ v-0.0.5:
   ✔ Make think tank premises editable if there's no comments (just an if statement on the length of the comments list) @done(19-09-19 16:40)
   ✔ Do more research on in-app purchases @done(19-09-21 22:16)
   ✔ Fix bug with new profile completion toast keeps appearing after a user was created even though the user is different or not new @done(19-09-20 02:49)
-  ☐ Add my profile and my think tanks to the drawer
+  ✔ Add my profile and my think tanks to the drawer @done(19-09-22 00:12)
   ✔ Check think tank delete bug @done(19-09-21 22:14)
   ✔ Fix renderbox overflow on startup page @done(19-09-18 23:21)
   ✔ Make Edit fields edits not blanks with hints in background @done(19-09-20 00:44)
   ✔ Maybe try to change authentication to be based on FutureBuilder and Completer @done(19-09-20 19:25)
   ✔ Maybe refactor the search feature to be like that too @done(19-09-20 00:59)
+
 
 v-0.0.6:
   ✔ Add profile editor for startups and users @done(19-09-16 21:01)
@@ -136,18 +137,10 @@ v-0.0.6:
   ☐ Add Search Caching + Cache Cleaner (in Algolia Search)
   ☐ Add notification icons for messaging
   ☐ Add upload button
+  ☐ Change text bubbles to have onLongPress show copy thingy
+  ☐ Add support for CupertinoTextFields
 
-Refactoring:
-  ☐ Services:
-    ✔ One big file containing all method definitions @done(19-09-08 19:31)
-    ✔ Abstract class containing all methods @done(19-09-08 19:31)
-    ✔ Test database with Future.delayed and hardcoded data @done(19-09-12 03:42)
-
-  ☐ Notifiers:
-    ✔ Separate abstract classes for read, write, read & write @done(19-09-08 18:01)
-
-  ☐ Bloc:
-    ✔ Make a basic abstract class for input blocs @done(19-09-12 03:42)
-
-  ☐ Navigation:
-    ✔ Use named routes @done(19-09-08 20:54)
+Alpha Release:
+  ✔ allow users to edit projects @done(19-09-24 15:44)
+  ✔ fix startup bug @done(19-09-24 15:51)
+  ✔ artificial intelligence @done(19-09-24 15:59)

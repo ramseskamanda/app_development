@@ -9,6 +9,7 @@ class PopupMenuWithActions extends StatelessWidget {
   final void Function() onDelete;
   final void Function() onLogout;
   final void Function() onSettings;
+  final void Function() onEdit;
   final Color color;
 
   const PopupMenuWithActions({
@@ -16,6 +17,7 @@ class PopupMenuWithActions extends StatelessWidget {
     this.onDelete,
     this.onLogout,
     this.onSettings,
+    this.onEdit,
     this.color = Colors.transparent,
   }) : super(key: key);
 
@@ -30,6 +32,9 @@ class PopupMenuWithActions extends StatelessWidget {
           break;
         case PopupAction.SETTINGS:
           onSettings();
+          break;
+        case PopupAction.EDIT:
+          onEdit();
           break;
         default:
           print('No actions matched for: $action');
@@ -62,12 +67,21 @@ class PopupMenuWithActions extends StatelessWidget {
                 ),
               ),
             if (onLogout != null)
-              PopupMenuItem(
+              const PopupMenuItem(
                 value: PopupAction.LOGOUT,
                 enabled: true,
-                child: ListTile(
+                child: const ListTile(
                   title: const Text('Logout'),
-                  trailing: Icon(Icons.power_settings_new),
+                  trailing: const Icon(Icons.power_settings_new),
+                ),
+              ),
+            if (onEdit != null)
+              const PopupMenuItem(
+                value: PopupAction.EDIT,
+                enabled: true,
+                child: const ListTile(
+                  title: const Text('Edit'),
+                  trailing: const Icon(Icons.edit),
                 ),
               ),
             if (onDelete != null)

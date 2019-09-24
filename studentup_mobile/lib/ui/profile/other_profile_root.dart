@@ -34,7 +34,7 @@ class OtherProfileRoot extends StatelessWidget {
                 return Center(
                   child: CircularProgressIndicator(),
                 );
-              if (notifier.isStartup) return StartUpProfile();
+              if (infoModel.isStartup) return StartUpProfile();
               return Profile(fromMessaging: fromMessaging);
             },
           ),

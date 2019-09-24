@@ -4,6 +4,7 @@ class DownloadDialog {
   Future<bool> show(BuildContext context) async {
     return await showDialog<bool>(
       context: context,
+      barrierDismissible: false,
       builder: (_) {
         return AlertDialog(
           title: const Text('Download this file?'),

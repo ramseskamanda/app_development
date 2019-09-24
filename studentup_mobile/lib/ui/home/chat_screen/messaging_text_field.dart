@@ -33,6 +33,7 @@ class MessagingTextField extends StatelessWidget {
                 child: Container(
                   child: TextField(
                     controller: service.controller,
+                    textCapitalization: TextCapitalization.sentences,
                     autofocus: true,
                     minLines: 1,
                     maxLines: 5,

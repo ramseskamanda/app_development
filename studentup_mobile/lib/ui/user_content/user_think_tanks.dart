@@ -22,6 +22,7 @@ class UserThinkTanks extends StatelessWidget {
         child: const Text('You have no think tanks yet!'),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).accentColor,
         child: const Icon(
           Icons.add,
           color: CupertinoColors.white,

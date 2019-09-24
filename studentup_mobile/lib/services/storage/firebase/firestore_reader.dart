@@ -438,4 +438,11 @@ class FirestoreReader implements BaseAPIReader {
             snap.documents.map((doc) => ThinkTankModel.fromDoc(doc)).toList());
     return Observable<List<ThinkTankModel>>(stream).shareReplay(maxSize: 1);
   }
+
+  @override
+  Future<ProjectModel> fetchProjectInfo(String docId) async {
+    final doc =
+        await _firestore.collection(projectCollection).document(docId).get();
+    return ProjectModel.fromDoc(doc);
+  }
 }

@@ -9,6 +9,7 @@ class CompleteProfileToast {
     BuildContext context,
     @required void Function() stateManagerCallback,
     int percentage = 20,
+    @required isStartup,
   }) {
     if (percentage == 100) return;
     showFlash(
@@ -28,7 +29,10 @@ class CompleteProfileToast {
               style: TextStyle(fontWeight: FontWeight.w600),
             ),
             message: Text(
-              'Your Profile is $percentage% complete. The more information we have, the better for you!',
+              'Your Profile is $percentage% complete. The more information we have, the better for you!' +
+                  (isStartup
+                      ? ''
+                      : 'Make sure to add some skills so Startups can find you!'),
             ),
             primaryAction: FlatButton(
               textColor: Platform.isIOS

@@ -54,13 +54,7 @@ class SearchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String s = SearchCategory.values[index]
-        .toString()
-        .split('.')[1]
-        .toLowerCase()
-        .replaceAll('_', ' ');
-    final String categoryName = '${s[0].toUpperCase()}${s.substring(1)}';
-
+    final String _categoryString = toString(SearchCategory.values[index]);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -71,6 +65,7 @@ class SearchCard extends StatelessWidget {
         );
       },
       child: Stack(
+        alignment: Alignment.center,
         children: <Widget>[
           Container(
             decoration: BoxDecoration(
@@ -78,9 +73,12 @@ class SearchCard extends StatelessWidget {
               color: Util.getRandomColor(),
             ),
           ),
-          Center(
+          FractionallySizedBox(
+            widthFactor: 0.8,
+            alignment: Alignment.center,
             child: Text(
-              categoryName.toString(),
+              _categoryString,
+              textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
                   .title

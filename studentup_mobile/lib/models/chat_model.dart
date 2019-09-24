@@ -109,7 +109,7 @@ class Preview {
   String get givenName => _givenName ?? 'No Name Provided';
   String get imageUrl => _imageUrl ?? defaultImageUrl;
   String get uid => _uid ?? '';
-  bool get isStartup => _isStartup;
+  bool get isStartup => _isStartup ?? false;
 
   Preview.fromJson(Map<dynamic, dynamic> json, String uid) {
     _givenName = json['given_name'];

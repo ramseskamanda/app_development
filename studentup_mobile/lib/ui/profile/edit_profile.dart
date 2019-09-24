@@ -146,6 +146,7 @@ class StudentProfileEditor extends StatelessWidget {
             builder: (context, user, child) {
               if (user == null) return Container();
               return TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: profile.nameEditor..text = user.givenName,
                 minLines: 1,
                 maxLines: 1,
@@ -161,6 +162,7 @@ class StudentProfileEditor extends StatelessWidget {
             builder: (context, user, child) {
               if (user == null) return Container();
               return TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: profile.additionalInfoEditor
                   ..text = user.university,
                 minLines: 1,
@@ -177,6 +179,7 @@ class StudentProfileEditor extends StatelessWidget {
             builder: (context, user, child) {
               if (user == null) return Container();
               return TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: profile.locationEditor..text = user.location,
                 minLines: 1,
                 maxLines: 1,
@@ -192,6 +195,7 @@ class StudentProfileEditor extends StatelessWidget {
             builder: (context, user, child) {
               if (user == null) return Container();
               return TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: profile.bioEditor..text = user.bio,
                 minLines: 5,
                 maxLines: null,
@@ -283,6 +287,7 @@ class StartupProfileEditor extends StatelessWidget {
             builder: (context, startup, child) {
               if (startup == null) return Container();
               return TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: profile.nameEditor..text = startup.name,
                 minLines: 1,
                 maxLines: 1,
@@ -298,6 +303,7 @@ class StartupProfileEditor extends StatelessWidget {
             builder: (context, startup, child) {
               if (startup == null) return Container();
               return TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: profile.additionalInfoEditor
                   ..text = startup.website,
                 minLines: 1,
@@ -314,6 +320,7 @@ class StartupProfileEditor extends StatelessWidget {
             builder: (context, startup, child) {
               if (startup == null) return Container();
               return TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: profile.locationEditor..text = startup.location,
                 minLines: 1,
                 maxLines: 1,
@@ -329,6 +336,7 @@ class StartupProfileEditor extends StatelessWidget {
             builder: (context, startup, child) {
               if (startup == null) return Container();
               return TextField(
+                textCapitalization: TextCapitalization.sentences,
                 controller: profile.bioEditor..text = startup.description,
                 minLines: 5,
                 maxLines: null,

@@ -40,6 +40,7 @@ class _InlineDatePickerFormFieldState extends State<InlineDatePickerFormField> {
       children: <Widget>[
         Expanded(
           child: TextField(
+            textCapitalization: TextCapitalization.sentences,
             controller: widget.controller,
             readOnly: true,
             maxLines: 1,

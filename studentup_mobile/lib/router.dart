@@ -7,6 +7,7 @@ import 'package:studentup_mobile/ui/profile/other_profile_root.dart';
 import 'package:studentup_mobile/ui/profile/sections/new_education_route.dart';
 import 'package:studentup_mobile/ui/profile/sections/new_experience_route.dart';
 import 'package:studentup_mobile/ui/profile/sections/new_skill_route.dart';
+import 'package:studentup_mobile/ui/projects/edit_project.dart';
 import 'package:studentup_mobile/ui/projects/new_project_root.dart';
 import 'package:studentup_mobile/ui/projects/project_page.dart';
 import 'package:studentup_mobile/ui/settings_screen/settings.dart';
@@ -30,6 +31,7 @@ class Router {
   static const String newSkill = 'newSkill';
   static const String newProject = 'newProject';
   static const String projectPage = 'projectPage';
+  static const String editProject = 'editProject';
   static const String newCommentRoute = 'newCommentRoute';
   static const String userProjects = 'userProjects';
   static const String userThinkTanks = 'userThinkTanks';
@@ -85,6 +87,10 @@ class Router {
       case projectPage:
         return MaterialPageRoute<bool>(
           builder: (_) => ProjectPage(model: args['model']),
+        );
+      case editProject:
+        return MaterialPageRoute(
+          builder: (_) => EditProjectPage(notifier: args['notifier']),
         );
       case newCommentRoute:
         return MaterialPageRoute(

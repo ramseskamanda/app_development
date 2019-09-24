@@ -31,6 +31,7 @@ class _UserProjectsState extends State<UserProjects> {
         child: const Text('You have no projects yet!'),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).accentColor,
         child: const Icon(
           Icons.add,
           color: CupertinoColors.white,

@@ -54,10 +54,11 @@ class ChatBubble extends StatelessWidget {
               const SizedBox(width: 2),
               Padding(
                 padding: const EdgeInsets.all(5.0),
-                child: Text(
+                child: SelectableText(
                   model.text,
                   style: TextStyle(
-                    color: isUser ? Colors.white : Colors.black,
+                    color:
+                        isUser ? CupertinoColors.white : CupertinoColors.black,
                   ),
                 ),
               ),
@@ -67,7 +68,11 @@ class ChatBubble extends StatelessWidget {
                   child: Text(
                     timeSent,
                     textAlign: TextAlign.end,
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.caption.apply(
+                          color: isUser
+                              ? CupertinoColors.white
+                              : CupertinoColors.black,
+                        ),
                   ),
                 ),
               ),
@@ -87,10 +92,7 @@ class ChatBubble extends StatelessWidget {
                   ),
             child: Text(
               timeSeenAgo != null ? 'Seen $timeSeenAgo' : 'Sent',
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 10.0,
-              ),
+              style: TextStyle(fontSize: 10.0),
             ),
           ),
       ],

@@ -2,8 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/theme_notifier.dart';
+import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
 import 'package:studentup_mobile/services/storage/local_storage_service.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 import 'package:studentup_mobile/util/user_config.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -53,9 +55,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 'some of these settings might require you to refresh the pages affected or restart the app entirely.',
           ),
           SwitchListTile.adaptive(
-            title: const Text('Home: Newest Think Tanks First'),
+            title: const Text('Home: Trending First'),
             subtitle: const Text(
-                'The order in which you would like your feed to display think tanks will be newest think tanks first'),
+                'The order in which you would like your feed to display think tanks will be trending think tanks first'),
             value:
                 localStorage.getFromUserDisk(THINK_TANK_QUERY_ORDER) ?? false,
             onChanged: (bool value) async {
@@ -67,7 +69,7 @@ class _SettingsPageState extends State<SettingsPage> {
           SwitchListTile.adaptive(
             title: const Text('Home: Successful Startup Badges First'),
             subtitle: const Text(
-                'The order in which you would like your feed to display think tanks will be newest think tanks first'),
+                'The order in which you would like your feed to display startup badges will be successful first'),
             value: localStorage.getFromUserDisk(STARTUP_BADGES_QUERY_ORDER) ??
                 false,
             onChanged: (bool value) async {
@@ -79,7 +81,7 @@ class _SettingsPageState extends State<SettingsPage> {
           SwitchListTile.adaptive(
             title: const Text('Projects: Newest Projects First'),
             subtitle: const Text(
-                'The order in which you would like your feed to display projects will be newest think tanks first'),
+                'The order in which you would like your feed to display projects will be newest projects first'),
             value: localStorage.getFromUserDisk(PROJECTS_QUERY_ORDER) ?? false,
             onChanged: (bool value) async {
               await Locator.of<LocalStorageService>()
@@ -100,13 +102,16 @@ class _SettingsPageState extends State<SettingsPage> {
           ListTile(
             title: const Text(
               'Sign Out',
-              style: TextStyle(color: CupertinoColors.white),
+              style: TextStyle(color: CupertinoColors.destructiveRed),
             ),
             leading: const Icon(
               Icons.power_settings_new,
-              color: CupertinoColors.white,
+              color: CupertinoColors.destructiveRed,
             ),
-            onTap: () => print('Sign out'),
+            onTap: () async {
+              if (await Dialogs.showLogoutDialog(context))
+                Locator.of<BaseAuth>().logout();
+            },
           ),
           Container(
             color: CupertinoColors.destructiveRed,
@@ -119,7 +124,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 CupertinoIcons.delete_solid,
                 color: CupertinoColors.white,
               ),
-              onTap: () => print('delete account'),
+              onTap: () => Dialogs.showComingSoon(context),
             ),
           ),
         ],

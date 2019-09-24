@@ -103,6 +103,7 @@ class NewMessage extends StatelessWidget {
                             ),
                           const SizedBox(height: 24.0),
                           TextField(
+                            textCapitalization: TextCapitalization.sentences,
                             controller: notifier.newMessage,
                             maxLength: 1000,
                             maxLengthEnforced: true,

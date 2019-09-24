@@ -2,10 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Studentup uses location tracking for analytics purposes only.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Studentup uses location tracking for analytics purposes only.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Explain why your app uses the microphone</string>
+	<string>Studentup uses the microphone to allow users to record videos to submit.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Explain why your app uses the camera</string>
+	<string>Studentup uses the microphone to allow users to record videos or take pictures to submit.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -63,8 +67,8 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Explain why your app uses music</string>
+	<string>Studentup uses the microphone to allow users to submit musical records.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Explain why your app uses photo library</string>
+	<string>Studentup uses the microphone to allow users to submit images and picture records.</string>
 </dict>
 </plist>
