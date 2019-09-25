@@ -72,9 +72,7 @@ class _EditProjectPageState extends State<EditProjectPage> {
                                 TextField(
                                   textCapitalization:
                                       TextCapitalization.sentences,
-                                  controller: TextEditingController(
-                                    text: notifier.model.description,
-                                  ),
+                                  controller: _desc,
                                   maxLength: 400,
                                   maxLengthEnforced: true,
                                   minLines: 10,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+const PRIVACY_POLICY_URL = 'https://studentup.com/products-privacy-policy.html';
+const TERMS_OF_USE_URL = 'https://studentup.com/terms-of-use.html';
+
 const SIGNUP_STORAGE_KEY = '_signupKey';
 const HEADER_LOGO_HERO_TAG = '_heroLogo';
 const ACCOUNTS_LIST = 'user_accounts';
@@ -7,8 +10,7 @@ const NUM_ITEM_PREVIEW = 8;
 const NUM_ITEM_LIST = 20;
 
 const defaultImageUrl =
-    'https://firebasestorage.googleapis.com/v0/b/studentup-nl.appspot.com/o/default_files%2Fblack-and-white-black-and-white-rough-978503.jpg?alt=media&token=8cba65e5-d0c1-4828-9c25-ad66836ee658';
-
+    'https://studentup-e62de.firebaseapp.com/default-profile.png';
 const List<String> rulesUser = <String>[
   'Only during the next 24 hours, you can ...',
   'Hand in your masterpiece before the deadline.',
@@ -39,4 +41,6 @@ const List<IconData> iconsCompanies = <IconData>[
   Icons.import_contacts,
 ];
 
-const String termsAndConditions = 'TERMS AND CONDITIONS / PRIVACY POLICY';
+const String termsAndConditions =
+    'All users must accept the Terms of Use and Privacy Policy to use our app'
+    'Do read the documents as they outline the rules to follow as a user and the laws protecting you and your data.';

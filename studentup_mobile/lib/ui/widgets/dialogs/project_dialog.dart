@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ProjectDialog {
@@ -32,6 +33,33 @@ class ProjectDialog {
           ],
         );
       },
+    );
+  }
+}
+
+class ProjectDeadlineError {
+  void show(BuildContext context, {bool timetraveller}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(timetraveller ? 'No time travel!' : 'Keep it short!'),
+        content: Text(
+          timetraveller
+              ? 'The date you selected is before our earliest deadline possible. Please select a later date.'
+              : 'The date selected is too far in the future. Please select an earlier date',
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: const Text(
+              'OK',
+              style: TextStyle(color: CupertinoColors.activeBlue),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
     );
   }
 }

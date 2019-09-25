@@ -172,8 +172,8 @@ class InnerRouter {
   void goToNotifications() => _navBarController.index = 0;
   void resetRouter() => _navBarController.index = 0;
   void goToProfile() => _navBarController.index = _profileTab ?? 0;
-  void resetHomePage() => _homeController.jumpToPage(0);
-  void goToPage(int index) => _homeController.animateToPage(
+  void resetHomePage() => _homeController?.jumpToPage(0);
+  void goToPage(int index) => _homeController?.animateToPage(
         index,
         duration: kTabScrollDuration,
         curve: Curves.easeInOutQuad,

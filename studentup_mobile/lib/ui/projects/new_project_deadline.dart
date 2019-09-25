@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_clean_calendar/flutter_clean_calendar.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/project_creation_notifier.dart';
+import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 
 class NewProjectDeadline extends StatefulWidget {
   @override
@@ -13,29 +14,14 @@ class _NewProjectDeadlineState extends State<NewProjectDeadline> {
   void _setDeadline(DateTime date) {
     ProjectCreationNotifier _service =
         Provider.of<ProjectCreationNotifier>(context);
-    if (date.isAfter(_service.minimumDeadline) &&
-        date.isBefore(_service.maximumDeadline))
+    if (date
+        .isBefore(_service.minimumDeadline.subtract(const Duration(days: 1)))) {
+      Dialogs.showProjectDeadlineErrorDialog(context, timetraveller: true);
+    } else if (date.isAfter(_service.maximumDeadline)) {
+      Dialogs.showProjectDeadlineErrorDialog(context, timetraveller: false);
+    } else {
       _service.deadline = date;
-    else
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('No time travel!'),
-          content: const Text(
-              'The date you selected is before our earliest deadline possible. Please select a later date.'),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text(
-                'OK',
-                style: TextStyle(color: CupertinoColors.activeBlue),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      );
+    }
   }
 
   @override
@@ -62,6 +48,7 @@ class _NewProjectDeadlineState extends State<NewProjectDeadline> {
               ),
             ),
             const SizedBox(height: 32.0),
+            //TODO: change calendars to a more modular one.
             Consumer<ProjectCreationNotifier>(
               builder: (context, service, child) {
                 return Container(

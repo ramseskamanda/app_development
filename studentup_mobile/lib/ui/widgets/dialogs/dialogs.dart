@@ -22,6 +22,9 @@ class Dialogs {
       await ProjectDialog().show(context);
   static Future<bool> showProjectWithdrawalDialog(BuildContext context) async =>
       await ProjectDialog().show(context, withdraw: true);
+  static void showProjectDeadlineErrorDialog(BuildContext context,
+          {bool timetraveller}) =>
+      ProjectDeadlineError().show(context, timetraveller: timetraveller);
   static void showRatingFor(
     BuildContext context,
     String premise,

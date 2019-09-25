@@ -115,18 +115,15 @@ v-0.0.6:
   ☐ Add animation to posting a think tank and comment in a think tank
   ☐ New search screen
   ☐ Finish account switching
-  ☐ Add Terms and Conditions as WebView
+  ✔ Add Terms and Conditions as WebView @done(19-09-25 17:17)
   ☐ Fix blurriness of SplashScreen
-  ☐ Change default image
+  ✔ Change default image @done(19-09-25 17:34)
   ☐ Fix message read when user is in the conversation (probably have to look at QuerySnapshot.documentChanges)
   ☐ Add Saved Profiles
   ☐ Add a step to the signup process where a new user has to give their main marketable skill
-  ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, messaging, etc.
   ☐ Add email verification, email reset, and account removal emails
-  ☐ Add user's profile to messaging notifications
-  ☐ Implement general queue so that only a certain number of downloads can be started at the same time
   ☐ Migrate input field state management to BLoC (Search for TextEditingControllers in Notifiers)
-  ☐ add progress indicator on uploads and downloads
+  ☐ add progress indicator on uploads
   ☐ Delete profiles with inactivity for 3 months
   ✔ Refactor profile pages to use the same code @done(19-09-19 01:56)
   ☐ Refactor Think Tanks code to all use the same notifier
@@ -139,6 +136,11 @@ v-0.0.6:
   ☐ Add upload button
   ☐ Change text bubbles to have onLongPress show copy thingy
   ☐ Add support for CupertinoTextFields
+
+v-0.0.7:
+  ☐ Add support for opt-out of google analytics
+  ☐ Add pagination to Home Feed, Search Results, Projects, Think Tank comments, messaging, etc.
+
 
 Alpha Release:
   ✔ allow users to edit projects @done(19-09-24 15:44)

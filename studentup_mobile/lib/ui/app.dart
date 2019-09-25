@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/mixins/notification_mixin.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/profile_notifier.dart';
 import 'package:studentup_mobile/router.dart';
 import 'package:studentup_mobile/services/authentication/base_auth.dart';
 import 'package:studentup_mobile/services/locator.dart';
@@ -57,15 +56,13 @@ class _ApplicationState extends State<Application>
     if (SchedulerBinding.instance.schedulerPhase ==
         SchedulerPhase.persistentCallbacks)
       SchedulerBinding.instance.addPostFrameCallback(
-        (_) {
+        (_) async {
           if (Locator.of<BaseAuth>().currentUserisNew)
             CompleteProfileToast.show(
               context: context,
               stateManagerCallback: () =>
                   Provider.of<InnerRouter>(context, listen: false)
                       .goToProfile(),
-              isStartup: Provider.of<ProfileNotifier>(context, listen: false)
-                  .isStartup,
             );
         },
       );
