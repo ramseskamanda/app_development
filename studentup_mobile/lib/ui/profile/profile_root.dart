@@ -50,6 +50,7 @@ class ProfileRoot extends StatelessWidget {
         ],
       ),
       body: NetworkSensitive(
+        callback: Provider.of<ProfileNotifier>(context).fetchData,
         child: Consumer<ProfileNotifier>(
           builder: (context, notifier, child) {
             if (notifier.isLoading)

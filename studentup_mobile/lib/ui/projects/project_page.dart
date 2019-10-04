@@ -28,13 +28,14 @@ class ProjectPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => Navigator.of(context).canPop(),
-      child: ChangeNotifierProvider(
+      child: ChangeNotifierProvider<ProjectPageNotifier>(
         builder: (_) => ProjectPageNotifier(
           model,
-          Provider.of<ProfileNotifier>(context).preview,
+          Provider.of<ProfileNotifier>(context, listen: false).preview,
         ),
         child: Scaffold(
           body: NetworkSensitive(
+            callback: () async => print('rebuilding...'),
             child: SafeArea(
               top: false,
               child: Stack(

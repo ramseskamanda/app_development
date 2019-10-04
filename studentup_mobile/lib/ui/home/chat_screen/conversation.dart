@@ -130,19 +130,17 @@ class _ConversationState extends State<Conversation> {
             },
           ),
           actions: <Widget>[
-            Consumer<MessagingNotifier>(
-              builder: (context, service, child) {
-                return PopupMenuWithActions(
-                  onDelete: () {
-                    service.sendData(MessagingAction.DELETE);
-                    Navigator.of(context).pop();
-                  },
-                );
+            PopupMenuWithActions(
+              onDelete: () async {
+                final result =
+                    await messagingService.sendData(MessagingAction.DELETE);
+                if (result) Navigator.of(context).pop();
               },
             ),
           ],
         ),
         body: NetworkSensitive(
+          callback: messagingService.fetchData,
           child: Container(
             height: MediaQuery.of(context).size.height,
             child: Column(

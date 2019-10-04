@@ -28,6 +28,7 @@ class OtherProfileRoot extends StatelessWidget {
           title: const Text('Profile'),
         ),
         body: NetworkSensitive(
+          callback: notifier.fetchData,
           child: Consumer<ProfileNotifier>(
             builder: (context, notifier, child) {
               if (notifier.isLoading)

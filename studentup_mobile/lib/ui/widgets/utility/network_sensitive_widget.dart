@@ -1,43 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:studentup_mobile/enum/connectivity_status.dart';
+import 'package:connectivity_widget/connectivity_widget.dart';
 
 class NetworkSensitive extends StatelessWidget {
   final Widget child;
   final String text;
+  final Future<void> Function() callback;
 
   NetworkSensitive({
-    this.child,
+    @required this.child,
+    @required this.callback,
     this.text = 'You have no connection\n\n Please turn on your data',
   });
 
   @override
   Widget build(BuildContext context) {
-    // Get our connection status from the provider
-    var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    /// @deprecated
+    /// Get our connection status from the provider
+    /// var connectionStatus = Provider.of<ConnectivityStatus>(context);
+    /// if (connectionStatus == ConnectivityStatus.Offline)
 
-    if (connectionStatus == ConnectivityStatus.Offline)
-      return CustomScrollView(
-        slivers: <Widget>[
-          SliverFillViewport(
-            delegate: SliverChildListDelegate([
-              Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.8,
-                  ),
-                  child: Text(
-                    text,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.subhead,
+    //TODO: redesign this UI to have a proper interface to handle connectivity
+    return ConnectivityWidget(
+      onlineCallback: callback,
+      builder: (context, isOnline) {
+        if (isOnline) return child;
+        return CustomScrollView(
+          slivers: <Widget>[
+            SliverFillViewport(
+              delegate: SliverChildListDelegate([
+                Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width * 0.8,
+                    ),
+                    child: Text(
+                      text,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.subhead,
+                    ),
                   ),
                 ),
-              ),
-            ]),
-          ),
-        ],
-      );
-
-    return child;
+              ]),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

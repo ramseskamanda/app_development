@@ -15,8 +15,9 @@ import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dar
 class ProjectFeedRoot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<ProjectFeedNotifier>(
-      builder: (_) => ProjectFeedNotifier(),
+    final ProjectFeedNotifier notifier = ProjectFeedNotifier();
+    return ChangeNotifierProvider<ProjectFeedNotifier>.value(
+      value: notifier,
       child: Scaffold(
         drawer: InnerDrawerMenu(),
         appBar: AppBar(
@@ -36,19 +37,16 @@ class ProjectFeedRoot extends StatelessWidget {
             ),
           ],
         ),
-        floatingActionButton: Consumer<ProjectFeedNotifier>(
-          builder: (context, notifier, child) {
-            return PaddedFAB(
-              icon: Icons.add,
-              onPressed: () async {
-                final bool result =
-                    await Navigator.of(context).pushNamed(Router.newProject);
-                if (result ?? false) notifier.fetchData();
-              },
-            );
+        floatingActionButton: PaddedFAB(
+          icon: Icons.add,
+          onPressed: () async {
+            final bool result =
+                await Navigator.of(context).pushNamed(Router.newProject);
+            if (result ?? false) notifier.fetchData();
           },
         ),
         body: NetworkSensitive(
+          callback: notifier.fetchData,
           child: SafeArea(
             child: Consumer<ProjectFeedNotifier>(
               builder: (context, notifier, child) {

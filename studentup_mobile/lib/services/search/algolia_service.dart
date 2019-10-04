@@ -23,6 +23,9 @@ class AlgoliaService extends BaseSearchAPI {
 
   _removeDuplicates({List<AlgoliaObjectSnapshot> list, String property}) {
     final List<String> _valuesPresent = [];
+    print('[DEBUG] I get called');
+
+    assert(list != null);
     return list.where((value) {
       if (_valuesPresent.contains(value.data[property])) return false;
       _valuesPresent.add(value.data[property]);
@@ -40,26 +43,21 @@ class AlgoliaService extends BaseSearchAPI {
       if (cacheResult != null) return cacheResult;
       print('fetching from network');
 
-      String facet = category == SearchCategory.ALL
-          ? ''
-          : category.toString().split('.')[1].toLowerCase();
+      String facet = category == SearchCategory.ALL ? '' : toString(category);
+      print(facet);
       AlgoliaQuery query = category == SearchCategory.ALL
-          ? algolia.instance.index(skillsIndex).setLength(10)
-          : algolia.instance
-              .index(skillsIndex)
-              .setLength(10)
-              .setFilters('category:$facet');
+          ? algolia.instance.index(skillsIndex)
+          : algolia.instance.index(skillsIndex).setFilters('category:"$facet"');
       query = query.search(queryString);
+      print('[DEBUG] I get there');
 
       AlgoliaQuerySnapshot _objects = await query.getObjects();
+      print('[DEBUG] I get there');
 
       List<AlgoliaObjectSnapshot> _results = _removeDuplicates(
         list: _objects.hits,
         property: 'user_id',
       );
-
-      final String uid = Locator.of<BaseAuth>().currentUserId;
-      _results.removeWhere((result) => result.data['user_id'] == uid);
 
       print(_results.length);
 
@@ -84,15 +82,13 @@ class AlgoliaService extends BaseSearchAPI {
 
       print('fetching from network');
 
-      AlgoliaQuery query = algolia.instance.index(studentIndex).setLength(10);
+      AlgoliaQuery query =
+          algolia.instance.index(studentIndex); //.setLength(10);
       query = query.search(queryString);
 
       AlgoliaQuerySnapshot _objects = await query.getObjects();
 
       List<AlgoliaObjectSnapshot> _results = _objects.hits;
-
-      final String uid = Locator.of<BaseAuth>().currentUserId;
-      _results.removeWhere((result) => result.data['user_id'] == uid);
 
       List<UserInfoModel> _mappedResults = _results
           .map((snapshot) => UserInfoModel.fromIndex(snapshot))
@@ -116,7 +112,8 @@ class AlgoliaService extends BaseSearchAPI {
 
       print('fetching from network');
 
-      AlgoliaQuery query = algolia.instance.index(startupIndex).setLength(10);
+      AlgoliaQuery query =
+          algolia.instance.index(startupIndex); //.setLength(10);
       query = query.search(queryString);
 
       AlgoliaQuerySnapshot _objects = await query.getObjects();
@@ -148,7 +145,8 @@ class AlgoliaService extends BaseSearchAPI {
 
       print('fetching from network');
 
-      AlgoliaQuery query = algolia.instance.index(projectIndex).setLength(10);
+      AlgoliaQuery query =
+          algolia.instance.index(projectIndex); //.setLength(10);
       query = query.search(queryString);
 
       AlgoliaQuerySnapshot _objects = await query.getObjects();

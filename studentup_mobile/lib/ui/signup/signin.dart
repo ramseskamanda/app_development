@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
+import 'package:studentup_mobile/ui/signup/account_reminder.dart';
 import 'package:studentup_mobile/ui/signup/signin_button.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/google_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -38,70 +39,45 @@ class _SignInState extends State<SignIn> {
     super.dispose();
   }
 
-  Widget _buildAccountReminder(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const Text('Don\'t have an account yet? '),
-        GestureDetector(
-          onTap: widget.signupCallback,
-          child: Text(
-            'Register!',
-            style: TextStyle(decoration: TextDecoration.underline),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final AuthNotifier auth = Provider.of(context);
 
-    return Center(
-      child: SingleChildScrollView(
-        child: SizedBox(
-          // widthFactor: 0.86,
-          // heightFactor: 0.9,
-          height: MediaQuery.of(context).size.height * 0.9,
-          width: MediaQuery.of(context).size.width * 0.86,
-          child: Form(
-            autovalidate: true,
-            key: _key,
-            child: Column(
-              children: <Widget>[
-                Spacer(flex: 3),
-                Image.asset(
-                  'assets/logo.png',
-                  width: MediaQuery.of(context).size.width * 0.7,
-                ),
-                Spacer(flex: 2),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    const Text(
-                      'Sign In',
-                      style: TextStyle(fontSize: 28.0),
-                    ),
-                  ],
-                ),
-                Spacer(),
-                EmailTextFormField(
-                  sink: auth.bloc.email,
-                  nextNode: _passwordNode,
-                ),
-                SizedBox(height: 16.0),
-                PasswordTextFormField(
-                  sink: auth.bloc.password,
-                ),
-                Spacer(),
-                GoogleButton(),
-                SignInButton(formKey: _key),
-                _buildAccountReminder(context),
-                Spacer(flex: 4),
-              ],
+    return SingleChildScrollView(
+      child: Form(
+        autovalidate: true,
+        key: _key,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              'assets/logo.png',
+              width: MediaQuery.of(context).size.width * 0.7,
             ),
-          ),
+            const SizedBox(height: 24.0),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: const Text(
+                'Sign In',
+                style: TextStyle(fontSize: 28.0),
+              ),
+            ),
+            const SizedBox(height: 16.0),
+            EmailTextFormField(
+              sink: auth.bloc.email,
+              nextNode: _passwordNode,
+            ),
+            const SizedBox(height: 16.0),
+            PasswordTextFormField(
+              sink: auth.bloc.password,
+            ),
+            GoogleButton(),
+            SignInButton(formKey: _key),
+            AccountReminder(
+              reminder: 'Don\'t have an account yet?',
+              link: 'Register!',
+              callback: widget.signupCallback,
+            ),
+          ],
         ),
       ),
     );

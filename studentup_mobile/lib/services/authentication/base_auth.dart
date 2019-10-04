@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +17,7 @@ abstract class BaseAuth {
   BehaviorSubject<ProfileNotifier> subject;
   String _currentUserId;
   Map<Object, String> get errorMap;
-  Object get currentUser;
+  FutureOr<Object> get currentUser;
   Future<void> initialize();
   Future<void> attemptAutoLogin();
   Future<AuthStatus> signUpWithEmail(
@@ -55,6 +57,26 @@ abstract class BaseAuth {
     }
   }
 
+  void removeUserFromDisk() {
+    try {
+      print('Removing userID from disk');
+      final String userID = currentUserId;
+      if (userID == null || userID.isEmpty) return;
+      final List<String> accounts = List<String>.from(
+        Locator.of<LocalStorageService>().getFromDisk(ACCOUNTS_LIST) ?? [],
+        growable: true,
+      );
+      print(accounts);
+      if (!accounts.contains(userID)) return;
+      accounts.removeWhere((uid) => uid == userID);
+      Locator.of<LocalStorageService>().saveToDisk(ACCOUNTS_LIST, accounts);
+      print(accounts);
+    } catch (e) {
+      print(currentUserId + ' produced error:\n');
+      print(e.toString());
+    }
+  }
+
   Future<List<Preview>> getAccounts() async {
     try {
       final List<String> accounts = List<String>.from(
@@ -84,7 +106,7 @@ class FirebaseAuthService extends BaseAuth {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   @override
-  Object get currentUser async => await _auth.currentUser();
+  Future<FirebaseUser> get currentUser async => await _auth.currentUser();
 
   @override
   Future<void> initialize() async {
@@ -94,7 +116,7 @@ class FirebaseAuthService extends BaseAuth {
 
   @override
   Future<ProfileNotifier> attemptAutoLogin() async {
-    FirebaseUser current = await _auth.currentUser();
+    FirebaseUser current = await currentUser;
     _currentUserId = current?.uid;
     if (current != null) return ProfileNotifier(current.uid);
     return null;
@@ -132,21 +154,19 @@ class FirebaseAuthService extends BaseAuth {
   Future<AuthStatus> loginWithGoogle() async {
     try {
       final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) throw "Google Sign In Aborted";
       final GoogleSignInAuthentication googleAuth =
-          await googleUser?.authentication;
+          await googleUser.authentication;
 
       final AuthCredential credential = GoogleAuthProvider.getCredential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
 
       AuthResult result = await _auth.signInWithCredential(credential);
-      _isNewUser = result?.additionalUserInfo?.isNewUser ?? false;
-      final bool isSignedUp =
-          Locator.of<LocalStorageService>().getFromDisk(SIGNUP_STORAGE_KEY) ??
-              false;
-      if (!isSignedUp)
-        Locator.of<LocalStorageService>().saveToDisk(SIGNUP_STORAGE_KEY, true);
+      _isNewUser = result.additionalUserInfo.isNewUser ?? true;
+      Locator.of<LocalStorageService>()
+          .saveToDisk(result.user.uid + SIGNUP_STORAGE_KEY, true);
 
       if (_isNewUser)
         Locator.of<AnalyticsService>().logger.logSignUp(signUpMethod: 'Google');
@@ -170,8 +190,10 @@ class FirebaseAuthService extends BaseAuth {
   @override
   Future<AuthStatus> logout() async {
     try {
+      print('Logging out...');
       await _googleSignIn.signOut();
       await _auth.signOut();
+      removeUserFromDisk();
       currentUserId = null;
       return AuthStatus(authenticated: false);
     } catch (e) {

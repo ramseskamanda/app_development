@@ -76,6 +76,7 @@ class _FeedState extends State<Feed> with AutomaticKeepAliveClientMixin {
           },
         ),
         body: NetworkSensitive(
+          callback: () async => notifier.fetchData(),
           child: Consumer<FeedNotifier>(
             builder: (context, notifier, child) {
               return LiquidPullToRefresh(

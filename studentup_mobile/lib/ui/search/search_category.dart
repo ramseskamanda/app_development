@@ -1,86 +1,92 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:studentup_mobile/enum/search_enum.dart';
-import 'package:studentup_mobile/notifiers/view_notifiers/search_category_notifier.dart';
+import 'package:studentup_mobile/models/user_info_model.dart';
+import 'package:studentup_mobile/services/locator.dart';
+import 'package:studentup_mobile/services/search/base_search_api.dart';
 import 'package:studentup_mobile/ui/search/search_screen_delegate.dart';
 import 'package:studentup_mobile/ui/search/search_user_profile_card.dart';
 import 'package:studentup_mobile/ui/widgets/dialogs/dialogs.dart';
 import 'package:studentup_mobile/ui/widgets/utility/network_sensitive_widget.dart';
 
-class CategoryScreen extends StatelessWidget {
+class CategoryScreen extends StatefulWidget {
   final SearchCategory category;
 
   const CategoryScreen({Key key, @required this.category}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        print('object');
-        return true;
-      },
-      child: ChangeNotifierProvider<SearchCategoryNotifier>(
-        builder: (_) => SearchCategoryNotifier(category),
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(toString(category)),
-            backgroundColor: Colors.transparent,
-            elevation: 0.0,
-            centerTitle: true,
-            actions: <Widget>[
-              Consumer<SearchCategoryNotifier>(
-                builder: (context, notifier, child) {
-                  return IconButton(
-                    icon: const Icon(CupertinoIcons.search),
-                    iconSize: 28.0,
-                    onPressed: () async {
-                      await showSearch(
-                        context: context,
-                        delegate: SearchScreenDelegate(category),
-                      );
-                    },
-                  );
-                },
-              ),
-              IconButton(
-                icon: Icon(CupertinoIcons.heart),
-                onPressed: () => Dialogs.showComingSoon(context),
-              ),
-            ],
-          ),
-          body: NetworkSensitive(
-            child: Padding(
-              padding: const EdgeInsets.all(4.0),
-              child: Consumer<SearchCategoryNotifier>(
-                builder: (context, notifier, child) {
-                  if (notifier.hasError)
-                    return Center(
-                      child: Text(notifier.error.message),
-                    );
-                  if (notifier.isLoading)
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
+  _CategoryScreenState createState() => _CategoryScreenState();
+}
 
-                  if (notifier.users.isEmpty)
-                    return Center(
-                      child: Text(
-                          'Couldn\'t find a match for ${toString(category)}'),
-                    );
-                  return GridView.builder(
-                    itemCount: notifier.users.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 4.0,
-                      mainAxisSpacing: 4.0,
-                    ),
-                    itemBuilder: (context, index) =>
-                        UserProfileCard(model: notifier.users[index]),
-                  );
-                },
-              ),
-            ),
+class _CategoryScreenState extends State<CategoryScreen> {
+  Completer<List<UserInfoModel>> completer;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchData();
+  }
+
+  Future<void> _fetchData() async {
+    completer = Completer()
+      ..complete(Locator.of<BaseSearchAPI>()
+          .searchUsersWithFacets(category: widget.category));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(toString(widget.category)),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(CupertinoIcons.search),
+            iconSize: 28.0,
+            onPressed: () async {
+              await showSearch(
+                context: context,
+                delegate: SearchScreenDelegate(widget.category),
+              );
+            },
+          ),
+          IconButton(
+            icon: Icon(CupertinoIcons.heart),
+            onPressed: () => Dialogs.showComingSoon(context),
+          ),
+        ],
+      ),
+      body: NetworkSensitive(
+        callback: _fetchData,
+        child: Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: FutureBuilder<List<UserInfoModel>>(
+            future: completer.future,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                if (snapshot.hasError)
+                  return Center(child: Text(snapshot.error.toString()));
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.data.isEmpty)
+                return Center(
+                    child: Text(
+                        'No results found for: ${toString(widget.category)}'));
+              return GridView.builder(
+                itemCount: snapshot.data.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 4.0,
+                  mainAxisSpacing: 4.0,
+                ),
+                itemBuilder: (context, index) =>
+                    UserProfileCard(model: snapshot.data[index]),
+              );
+            },
           ),
         ),
       ),

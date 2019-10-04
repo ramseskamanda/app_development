@@ -6,6 +6,8 @@
 	<string>Studentup uses location tracking for analytics purposes only.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Studentup uses location tracking for analytics purposes only.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Studentup uses location tracking for analytics purposes only.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Studentup uses the microphone to allow users to record videos to submit.</string>
 	<key>NSCameraUsageDescription</key>

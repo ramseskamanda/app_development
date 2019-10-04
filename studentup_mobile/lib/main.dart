@@ -22,8 +22,6 @@ Future<void> main() async {
   await Locator.of<BaseAuth>().initialize();
   await Locator.of<AnalyticsService>().initialize();
   await Locator.of<NotificationService>().initialize();
-  // await Locator.of<NotificationService>().test();
-  // runApp(MyApp());
   Catcher(
     MyApp(),
     debugConfig: DevSettings.debugOptions,
@@ -52,10 +50,27 @@ class MyApp extends StatelessWidget {
               darkTheme: StudentupTheme.darkTheme,
               themeMode: ThemeMode.system,
             );
-          profile.fetchData();
-          return ChangeNotifierProvider<ProfileNotifier>(
-            builder: (_) => profile,
-            child: child,
+          return FutureBuilder(
+            initialData: null,
+            future: profile.fetchData(),
+            builder: (context, snapshot) {
+              print(snapshot.connectionState);
+              if (snapshot.connectionState != ConnectionState.done)
+                return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  home: Scaffold(
+                    body: Center(child: const CircularProgressIndicator()),
+                  ),
+                  theme: StudentupTheme.lightTheme,
+                  darkTheme: StudentupTheme.darkTheme,
+                  themeMode: ThemeMode.system,
+                );
+
+              return ChangeNotifierProvider<ProfileNotifier>(
+                builder: (_) => profile,
+                child: child,
+              );
+            },
           );
         },
         child: MultiProvider(
@@ -89,6 +104,7 @@ class Home extends StatelessWidget {
           children: <Widget>[
             Consumer<ProfileNotifier>(
               builder: (context, profile, child) {
+                print(profile.preview.uid);
                 if (profile.isLoading) return CircularProgressIndicator();
                 return Text(profile.preview.givenName);
               },
@@ -103,38 +119,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-
-/*
-//Maybe use a StreamProvider with Stream of ProfileNotifiers if null, then return the login page and if not null return the application
-return MultiProvider(
-      providers: Locator.providers,
-      child: Consumer<AuthNotifier>(
-        builder: (context, auth, child) {
-          if (auth.userIsAuthenticated)
-            return MultiProvider(
-              providers: Locator.userProviders,
-              child: Consumer<ThemeNotifier>(
-                builder: (context, theme, child) {
-                  return MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    navigatorKey: Catcher.navigatorKey,
-                    home: Scaffold(), //Application(),
-                    theme: StudentupTheme.lightTheme,
-                    darkTheme: StudentupTheme.darkTheme,
-                    themeMode: theme.mode,
-                    onGenerateRoute: Router.onGenerateRoute,
-                  );
-                },
-              ),
-            );
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            home: SignupRoot(login: auth.isRegistered),
-            theme: StudentupTheme.lightTheme,
-            darkTheme: StudentupTheme.darkTheme,
-            themeMode: ThemeMode.system,
-          );
-        },
-      ),
-    );
-*/

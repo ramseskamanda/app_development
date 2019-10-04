@@ -54,7 +54,7 @@ class SearchScreenDelegate extends SearchDelegate<UserInfoModel> {
 
   @override
   Widget buildResults(BuildContext context) {
-    Completer<List<UserInfoModel>> completer = Completer()
+    final Completer<List<UserInfoModel>> completer = Completer()
       ..complete(category != null
           ? _algoliaService.searchUsersWithFacets(
               category: category,

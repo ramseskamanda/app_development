@@ -16,8 +16,7 @@ List<Widget> get onboarding => <Widget>[
       ),
       OnaboardingScreen(
         title: 'Win attractive prizes each month.',
-        description:
-            'Get on top of the leaderboard by improving your profile and participating in projects and think-tanks.',
+        description: 'Find your future teammates and achieve more, together.',
         assetUri: 'assets/onboarding/3.png',
       ),
     ];
@@ -36,54 +35,53 @@ class OnaboardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    final MediaQueryData media = MediaQuery.of(context);
+    final TextTheme themeData = Theme.of(context).textTheme;
+    return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Spacer(),
-          Image(
-            image: AssetImage(assetUri),
+          Image.asset(
+            assetUri,
             fit: BoxFit.contain,
-            frameBuilder: (_, child, __, ___) {
-              return Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: child,
-              );
-            },
+            height: media.devicePixelRatio < 1.0
+                ? media.size.height * 0.25
+                : media.size.height * 0.3,
           ),
-          Spacer(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              title,
-              softWrap: true,
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .display1
-                  .copyWith(fontWeight: FontWeight.bold)
-                  .apply(
-                      color: Theme.of(context)
-                          .textTheme
-                          .display1
-                          .color
-                          .withAlpha(255)),
-            ),
+          const SizedBox(height: 24.0),
+          Text(
+            title,
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: media.devicePixelRatio < 1.0
+                ? themeData.title
+                    .copyWith(fontWeight: FontWeight.bold)
+                    .apply(color: themeData.display1.color.withAlpha(255))
+                : themeData.display1
+                    .copyWith(fontWeight: FontWeight.bold)
+                    .apply(color: themeData.display1.color.withAlpha(255)),
           ),
           const SizedBox(height: 16.0),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Text(
-              description,
-              softWrap: true,
-              textAlign: TextAlign.center,
-              style: Theme.of(context)
-                  .textTheme
-                  .title
-                  .copyWith(fontWeight: FontWeight.w600),
+          Text(
+            description,
+            softWrap: true,
+            textAlign: TextAlign.center,
+            style: themeData.title.copyWith(fontWeight: FontWeight.w600),
+          ),
+          Opacity(
+            opacity: 0.0,
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: FlatButton(
+                    child: const Text('Padding'),
+                    onPressed: null,
+                  ),
+                )
+              ],
             ),
           ),
-          Spacer(flex: 4),
         ],
       ),
     );

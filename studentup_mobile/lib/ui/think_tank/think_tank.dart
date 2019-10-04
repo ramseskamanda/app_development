@@ -54,6 +54,7 @@ class ThinkTank extends StatelessWidget {
         ),
       ),
       body: NetworkSensitive(
+        callback: notifier.fetchData,
         child: ChangeNotifierProvider<ThinkTankNotifier>.value(
           value: notifier,
           child: SafeArea(

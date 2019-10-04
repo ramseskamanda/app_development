@@ -8,7 +8,7 @@ class EmailTextFormField extends StatefulWidget {
   final Sink<String> sink;
   final FocusNode nextNode;
   final String hintText;
-  EmailTextFormField({
+  const EmailTextFormField({
     Key key,
     @required this.sink,
     @required this.nextNode,

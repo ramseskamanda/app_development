@@ -18,8 +18,9 @@ class _ChatsState extends State<Chats>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return ChangeNotifierProvider<ChatsNotifier>(
-      builder: (_) => ChatsNotifier(),
+    final ChatsNotifier notifier = ChatsNotifier();
+    return ChangeNotifierProvider<ChatsNotifier>.value(
+      value: notifier,
       child: WillPopScope(
         onWillPop: () async {
           Provider.of<InnerRouter>(context).goToPage(0);
@@ -35,7 +36,10 @@ class _ChatsState extends State<Chats>
               onPressed: () => Provider.of<InnerRouter>(context).goToPage(0),
             ),
           ),
-          body: NetworkSensitive(child: UserChats()),
+          body: NetworkSensitive(
+            callback: notifier.fetchData,
+            child: UserChats(),
+          ),
           floatingActionButton: FloatingActionButton(
             heroTag: 'new_message',
             backgroundColor: Theme.of(context).accentColor,

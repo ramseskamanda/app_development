@@ -47,8 +47,6 @@ class Locator {
   static List<SingleChildCloneableWidget> get userProviders {
     print('Setting Up User Specific Providers...');
     return [
-      // ChangeNotifierProvider<ProfileNotifier>(
-      //     builder: (_) => _locator<ProfileNotifier>()..fetchData()),
       ChangeNotifierProvider<ThemeNotifier>(builder: (_) => ThemeNotifier()),
     ];
   }

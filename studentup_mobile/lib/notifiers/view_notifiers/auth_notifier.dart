@@ -26,7 +26,7 @@ class AuthNotifier extends BaseNetworkNotifier {
   }) async {
     isLoading = true;
     AuthStatus status;
-    if (isSignup || authType == AuthType.google)
+    if (authType == AuthType.google || isSignup)
       status = await signup(authType, isStartup);
     else
       status = await login(authType);
@@ -72,10 +72,21 @@ class AuthNotifier extends BaseNetworkNotifier {
         break;
     }
 
+    print("User is authenticated: " + status.authenticated.toString());
+    print("Authentication has error: " + status.error.toString());
+    print("User is new: " + auth.currentUserisNew.toString());
+    print("User is a startup: " + isStartup.toString());
+
     if (!auth.currentUserisNew) return status;
-    if (status.authenticated && isStartup)
-      _signupStartup(authType);
-    else if (status.authenticated && !isStartup) _signupUser(authType);
+    if (status.authenticated) {
+      if (isStartup) {
+        await _signupStartup(authType);
+      } else {
+        await _signupUser(authType);
+      }
+    } else {
+      print('User Failed To Authenticate');
+    }
 
     return status;
   }
@@ -84,7 +95,8 @@ class AuthNotifier extends BaseNetworkNotifier {
   Future<void> _signupStartup(AuthType authType) async {
     StartupInfoModel model;
     if (authType == AuthType.google) {
-      FirebaseUser user = auth.currentUser as FirebaseUser;
+      FirebaseUser user = await auth.currentUser;
+
       model = StartupInfoModel(
         name: user.displayName,
         imageUrl: user.photoUrl,
@@ -102,9 +114,11 @@ class AuthNotifier extends BaseNetworkNotifier {
 
   @protected
   Future<void> _signupUser(AuthType authType) async {
+    print('Attempting to create user with authtype: $authType');
     UserInfoModel model;
+    FirebaseUser user = await auth.currentUser;
+    print('CurrentUser: $user');
     if (authType == AuthType.google) {
-      FirebaseUser user = auth.currentUser as FirebaseUser;
       model = UserInfoModel(
         givenName: user.displayName,
         mediaRef: user.photoUrl,
@@ -115,7 +129,8 @@ class AuthNotifier extends BaseNetworkNotifier {
         mediaRef: null,
       );
     }
-    await Locator.of<BaseAPIWriter>().createUser(auth.currentUserId, model);
+    await Locator.of<BaseAPIWriter>().createUser(user.uid, model);
+    print('Created User: ' + user.uid);
   }
 
   @override

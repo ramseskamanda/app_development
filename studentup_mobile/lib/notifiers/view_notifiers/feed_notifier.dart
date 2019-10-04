@@ -24,15 +24,7 @@ class FeedNotifier extends NetworkIO {
   Future fetchData([dynamic data]) async {
     isReading = true;
     try {
-      //fetch startup data
-      //TODO: Fix this to sort startups by a new metric of success
-      // QueryOrder _startupsOrder = Locator.of<LocalStorageService>()
-      //             .getFromUserDisk(STARTUP_BADGES_QUERY_ORDER) ??
-      //         false
-      //     ? QueryOrder.popularity
-      //     : QueryOrder.newest;
       _startups = await reader.fetchStartups(QueryOrder.newest);
-      //fetch think tanks data
       QueryOrder _tanksOrder = Locator.of<LocalStorageService>()
                   .getFromUserDisk(THINK_TANK_QUERY_ORDER) ??
               false

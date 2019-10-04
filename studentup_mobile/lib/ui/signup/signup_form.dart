@@ -1,5 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:studentup_mobile/notifiers/view_notifiers/auth_notifier.dart';
+import 'package:studentup_mobile/ui/signup/account_reminder.dart';
 import 'package:studentup_mobile/ui/signup/signup_button.dart';
 import 'package:studentup_mobile/ui/widgets/buttons/google_button.dart';
 import 'package:flutter/cupertino.dart';
@@ -45,90 +46,69 @@ class _SignUpFormState extends State<SignUpForm> {
     super.dispose();
   }
 
-  Widget _buildAccountReminder(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        const Text('Already have an account? '),
-        GestureDetector(
-          onTap: widget.loginCallback,
-          child: Text(
-            'Sign in!',
-            style: TextStyle(decoration: TextDecoration.underline),
-          ),
-        ),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final AuthNotifier auth = Provider.of(context);
-    return Center(
-      child: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.9,
-          width: MediaQuery.of(context).size.width * 0.86,
-          child: Form(
-            autovalidate: true,
-            key: _key,
-            child: Column(
+    return SingleChildScrollView(
+      child: Form(
+        autovalidate: true,
+        key: _key,
+        child: Column(
+          children: <Widget>[
+            Image.asset(
+              'assets/logo.png',
+              width: MediaQuery.of(context).size.width * 0.7,
+            ),
+            const SizedBox(height: 24.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Spacer(flex: 3),
-                Image.asset(
-                  'assets/logo.png',
-                  width: MediaQuery.of(context).size.width * 0.7,
-                ),
-                Spacer(flex: 2),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text(
-                      'Register',
-                      style: TextStyle(fontSize: 28.0),
-                    ),
-                    Spacer(),
-                    const Text(
-                      'Startup?',
-                      style: TextStyle(fontSize: 24.0),
-                    ),
-                    Switch.adaptive(
-                      value: _isStartup,
-                      onChanged: (value) => setState(() => _isStartup = value),
-                    ),
-                  ],
+                const Text(
+                  'Register',
+                  style: TextStyle(fontSize: 28.0),
                 ),
                 Spacer(),
-                NameTextFormField(
-                  hintText: _isStartup ? 'Startup Name' : 'Full Name',
-                  sink: auth.bloc.name,
-                  nextNode: _emailNode,
+                const Text(
+                  'Startup?',
+                  style: TextStyle(fontSize: 24.0),
                 ),
-                SizedBox(height: 16.0),
-                EmailTextFormField(
-                  hintText: _isStartup ? 'Company Email' : 'Email',
-                  sink: auth.bloc.email,
-                  nextNode: _passwordNode,
+                Switch.adaptive(
+                  value: _isStartup,
+                  onChanged: (value) => setState(() => _isStartup = value),
                 ),
-                SizedBox(height: 16.0),
-                PasswordTextFormField(
-                  sink: auth.bloc.password,
-                  nextNode: _passwordConfirmNode,
-                ),
-                SizedBox(height: 16.0),
-                PasswordTextFormField(
-                  confirm: true,
-                  sink: auth.bloc.confirm,
-                  validator: auth.bloc.passwordValidator,
-                ),
-                Spacer(),
-                GoogleButton(isStartup: _isStartup),
-                SignUpButton(formKey: _key, isStartup: _isStartup),
-                _buildAccountReminder(context),
-                Spacer(flex: 4),
               ],
             ),
-          ),
+            NameTextFormField(
+              hintText: _isStartup ? 'Startup Name' : 'Full Name',
+              sink: auth.bloc.name,
+              nextNode: _emailNode,
+            ),
+            const SizedBox(height: 16.0),
+            EmailTextFormField(
+              hintText: _isStartup ? 'Company Email' : 'Email',
+              sink: auth.bloc.email,
+              nextNode: _passwordNode,
+            ),
+            const SizedBox(height: 16.0),
+            PasswordTextFormField(
+              sink: auth.bloc.password,
+              nextNode: _passwordConfirmNode,
+            ),
+            const SizedBox(height: 16.0),
+            PasswordTextFormField(
+              confirm: true,
+              sink: auth.bloc.confirm,
+              validator: auth.bloc.passwordValidator,
+            ),
+            const SizedBox(height: 24.0),
+            GoogleButton(isStartup: _isStartup),
+            SignUpButton(formKey: _key, isStartup: _isStartup),
+            AccountReminder(
+              reminder: 'Already have an account?',
+              link: 'Sign in!',
+              callback: widget.loginCallback,
+            ),
+          ],
         ),
       ),
     );

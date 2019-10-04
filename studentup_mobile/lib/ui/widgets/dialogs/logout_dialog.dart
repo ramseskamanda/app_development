@@ -13,7 +13,6 @@ class LogoutDialog {
           ),
           actions: <Widget>[
             FlatButton(
-              textColor: CupertinoColors.black,
               child: const Text('Cancel'),
               onPressed: () => Navigator.of(_).pop(false),
             ),

@@ -146,3 +146,10 @@ Alpha Release:
   ✔ allow users to edit projects @done(19-09-24 15:44)
   ✔ fix startup bug @done(19-09-24 15:51)
   ✔ artificial intelligence @done(19-09-24 15:59)
+
+Beta Release:
+  ☐ Independent Auth Service
+  ☐ Migration to independent auth service
+  ☐ Fix bugs
+  ☐ Firebase extensions
+  ☐ ETC.

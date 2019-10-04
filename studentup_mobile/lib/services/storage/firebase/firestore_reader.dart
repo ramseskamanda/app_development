@@ -221,7 +221,6 @@ class FirestoreReader implements BaseAPIReader {
           .collection(projectCollection)
           .where('creator_id', isEqualTo: uid)
           .orderBy(field, descending: true)
-          // .limit(NUM_ITEM_PREVIEW)
           .snapshots()
           .map((snapshot) => snapshot.documents
               .map((doc) => ProjectModel.fromDoc(doc))
@@ -423,15 +422,9 @@ class FirestoreReader implements BaseAPIReader {
       {QueryOrder order = QueryOrder.newest}) {
     final String field =
         order == QueryOrder.newest ? 'lastActivity' : 'commentCount';
-    _firestore
-        .collection(thinkTanksCollection)
-        .where('askerId', isEqualTo: uid)
-        .orderBy(field)
-        .getDocuments()
-        .then((v) => print(v.documents.length));
     final Stream<List<ThinkTankModel>> stream = _firestore
         .collection(thinkTanksCollection)
-        .where('askerId', isEqualTo: uid)
+        .where('asker_id', isEqualTo: uid)
         .orderBy(field)
         .snapshots()
         .map((snap) =>

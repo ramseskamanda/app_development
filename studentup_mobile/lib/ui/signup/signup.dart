@@ -103,29 +103,33 @@ class _SignUpState extends State<SignupRoot> {
       ),
       body: ChangeNotifierProvider<AuthNotifier>(
         builder: (_) => AuthNotifier(),
-        child: SafeArea(
-          child: Stack(
-            children: <Widget>[
-              PageView(
-                physics: NeverScrollableScrollPhysics(),
-                controller: _controller,
-                onPageChanged: _onPageChanged,
-                children: _pages,
-              ),
-              if (!_authPage)
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: StadiumButton(
-                    text: 'Next',
-                    onPressed: () {
-                      _controller.nextPage(
-                        duration: kTabScrollDuration,
-                        curve: Curves.easeInOutCirc,
-                      );
-                    },
-                  ),
+        child: Center(
+          child: FractionallySizedBox(
+            widthFactor: 0.86,
+            heightFactor: 0.9,
+            child: Stack(
+              children: <Widget>[
+                PageView.builder(
+                  physics: NeverScrollableScrollPhysics(),
+                  controller: _controller,
+                  onPageChanged: _onPageChanged,
+                  itemBuilder: (context, index) => Center(child: _pages[index]),
                 ),
-            ],
+                if (!_authPage)
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: StadiumButton(
+                      text: 'Next',
+                      onPressed: () {
+                        _controller.nextPage(
+                          duration: kTabScrollDuration,
+                          curve: Curves.easeInOutCirc,
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
