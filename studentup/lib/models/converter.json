@@ -1,8 +1,0 @@
-{
-    "amount": 1,
-    "business": "string",
-    "object": "string",
-    "status": "string",
-    "timestamp": "string",
-    "user_id": "string"
-}

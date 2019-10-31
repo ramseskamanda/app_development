@@ -1,13 +1,10 @@
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:ui_development/models.dart';
 import 'package:uuid/uuid.dart';
 
-const String loremIpsum =
-    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eu enim efficitur orci porta varius. Vestibulum tincidunt sagittis velit. Nunc et diam massa. Cras ultrices lacinia scelerisque. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam feugiat feugiat ligula sit amet feugiat. Maecenas sit amet accumsan enim. In maximus consectetur pharetra. Aliquam facilisis ac libero sit amet pharetra. Donec lorem elit, auctor non egestas laoreet, mollis at dui."
-    "Proin condimentum tincidunt lectus, in vestibulum ligula sodales eu. Sed volutpat, dolor a viverra volutpat, dui justo faucibus elit, at dictum tortor lorem vitae arcu. Praesent id porta velit, sit amet volutpat mauris. Sed a sem nec nulla auctor sagittis. Phasellus non lacus eros. Maecenas congue, leo sed elementum vestibulum, enim lectus facilisis ante, sed molestie justo elit nec sem. Curabitur consequat lobortis neque vitae semper. Aenean ultrices cursus elit in tincidunt. Donec sagittis a justo vitae venenatis. Mauris blandit arcu nulla, egestas suscipit nibh lacinia lobortis. Integer nec sollicitudin risus. Curabitur in molestie urna. Ut a tempus nunc. Nam in massa tempus, mollis felis vel, dapibus tellus. Vestibulum congue orci non arcu bibendum, a tincidunt nibh maximus."
-    "Vivamus odio ex, volutpat quis elementum ut, semper pulvinar libero. Nullam sed mauris nibh. Aenean lobortis quis nulla nec vestibulum. Vivamus tristique, dolor at varius pretium, velit felis dictum nunc, nec ullamcorper lectus justo eu nibh. Nullam diam dui, posuere eu dolor ut, elementum faucibus velit. Ut iaculis vitae ex id aliquet. Vestibulum luctus diam quam, id tristique est condimentum et. Curabitur vulputate orci nec rhoncus luctus. Ut consequat commodo congue. Cras fringilla eros non nunc dapibus, eu gravida eros vestibulum. Maecenas eu sapien at nisl cursus finibus sed et sem. Donec vel lacus ante. Donec tempor congue velit a convallis. Sed nisi leo, sodales vitae cursus ut, facilisis eget mauris."
-    "Sed nisi ipsum, dapibus ac tortor nec, convallis laoreet odio. Etiam vel ante vel lectus aliquet vestibulum. Phasellus nulla velit, aliquam in hendrerit eu, accumsan at ex. Aenean faucibus suscipit mollis. Fusce eu urna tellus. Nam a velit libero. Mauris congue libero mi, non pharetra libero laoreet et. Ut feugiat arcu vel convallis tincidunt. Nunc posuere eros vitae tortor venenatis, sed mattis dui dictum. Maecenas volutpat nibh eu mauris blandit, ultrices vehicula magna rutrum. Maecenas porttitor nulla vitae eros ultrices, ut viverra nibh facilisis. Phasellus ut urna quam. Vestibulum vitae auctor arcu, vitae accumsan arcu. Nullam egestas eros id nunc sollicitudin congue. Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-    "Nam in tortor id nisi porttitor hendrerit ac ac metus. Suspendisse potenti. Phasellus sapien risus, porttitor quis eros a, ornare accumsan lacus. Aenean nibh nibh, efficitur vitae accumsan sed, commodo euismod leo. In id eleifend ipsum. Donec cursus dolor viverra tellus euismod fringilla et quis turpis. Ut consequat ultrices eros, at volutpat tortor blandit eget.";
+const faker = Faker();
+
 final List<Widget> listTileWidgets = <Widget>[
   ListTile(
     title: Text('The Castro Theater',
@@ -100,25 +97,27 @@ const CommunityModel defaultCommunity = CommunityModel(
   description: 'All your communities',
 );
 final UserModel testUser1 = UserModel(
-  name: 'Monkey D. Luffy',
+  name: faker.person.name(), //'Monkey D. Luffy',
   adminRoles: [],
-  photoUrl:
-      'https://res.cloudinary.com/teepublic/image/private/s--vnhpoh0D--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1555139745/production/designs/4629733_0.jpg',
+  photoUrl: 'https://randomuser.me/api/portraits/lego/4.jpg',
+  //'https://res.cloudinary.com/teepublic/image/private/s--vnhpoh0D--/t_Preview/b_rgb:484849,c_limit,f_jpg,h_630,q_90,w_630/v1555139745/production/designs/4629733_0.jpg',
 );
 final UserModel testUser2 = UserModel(
-  name: 'Shanks LeRoux',
+  name: faker.person.name(), //'Shanks LeRoux',
   adminRoles: ['1', '2'],
-  photoUrl:
-      'https://media1.tenor.com/images/662e705815b4ea0d0c5939d07aec3e33/tenor.gif?itemid=12003987',
+  photoUrl: 'https://randomuser.me/api/portraits/lego/1.jpg',
+  //'https://media1.tenor.com/images/662e705815b4ea0d0c5939d07aec3e33/tenor.gif?itemid=12003987',
 );
 final UserModel currentUser = testUser1;
 final List<CommunityModel> listCommunities = [
   CommunityModel(
     id: '1',
-    name: 'Straw Hat Pirates',
+    name: faker.company.name(),
+    // 'Straw Hat Pirates',
     public: true,
     creator: testUser1,
-    description: 'A crew of friendly pirates.',
+    description: faker.lorem.sentence(),
+    // 'A crew of friendly pirates.',
     members: [
       testUser2,
     ],
@@ -126,22 +125,26 @@ final List<CommunityModel> listCommunities = [
     posts: [
       CommunityPostModel(
         originalPoster: testUser1,
-        content: "I'm going to become the King of Pirates!",
+        content: faker.lorem.sentence(),
+        // "I'm going to become the King of Pirates!",
         postedAt: DateTime.now().subtract(const Duration(minutes: 2)),
       ),
       CommunityPostModel(
         originalPoster: testUser1,
-        content: "I just met a really cool swordsman!",
+        content: faker.lorem.sentence(),
+        // "I just met a really cool swordsman!",
         postedAt: DateTime.now(),
       ),
     ],
   ),
   CommunityModel(
     id: '2',
-    name: 'Red Hair Pirates',
+    name: faker.company.name(),
+    // 'Red Hair Pirates',
     public: false,
     creator: testUser2,
-    description: 'A cool crew of red haired pirates.',
+    description: faker.lorem.sentence(),
+    //'A cool crew of red haired pirates.',
     posts: [
       CommunityPostModel(
         originalPoster: testUser2,
@@ -151,34 +154,34 @@ final List<CommunityModel> listCommunities = [
           FileAsset(
             id: Uuid().v4(),
             fileName: 'image test',
-            downloadUrl:
-                'http://24.media.tumblr.com/tumblr_mbji56MFHl1rffshko1_500.gif',
+            downloadUrl: 'https://source.unsplash.com/random/200x200',
+            //'http://24.media.tumblr.com/tumblr_mbji56MFHl1rffshko1_500.gif',
             fileType: 'image',
           ),
           FileAsset(
             id: Uuid().v4(),
             fileName: 'image test',
-            downloadUrl:
-                'http://24.media.tumblr.com/tumblr_mbji56MFHl1rffshko1_500.gif',
+            downloadUrl: 'https://source.unsplash.com/random/250x250',
+            //'http://24.media.tumblr.com/tumblr_mbji56MFHl1rffshko1_500.gif',
             fileType: 'image',
           ),
           FileAsset(
             id: Uuid().v4(),
             fileName: 'image test',
-            downloadUrl:
-                'http://24.media.tumblr.com/tumblr_mbji56MFHl1rffshko1_500.gif',
+            downloadUrl: 'https://source.unsplash.com/random/300x300',
+            // 'http://24.media.tumblr.com/tumblr_mbji56MFHl1rffshko1_500.gif',
             fileType: 'image',
           ),
           FileAsset(
             id: Uuid().v4(),
             fileName: 'image test',
-            downloadUrl:
-                'http://24.media.tumblr.com/tumblr_mbji56MFHl1rffshko1_500.gif',
+            downloadUrl: 'https://source.unsplash.com/random/200x200',
+            // 'http://24.media.tumblr.com/tumblr_mbji56MFHl1rffshko1_500.gif',
             fileType: 'image',
           ),
           FileAsset(
             id: Uuid().v4(),
-            fileName: 'something.pdf',
+            fileName: 'sample.pdf',
             downloadUrl: 'http://www.africau.edu/images/default/sample.pdf',
           ),
         ],
@@ -186,13 +189,13 @@ final List<CommunityModel> listCommunities = [
         replies: [
           CommunityPostModel(
             originalPoster: testUser1,
-            content: "Yo Shanks!",
+            content: "Yo ${faker.person.name()}!",
             postedAt: DateTime.now(),
             replyGeneration: 1,
           ),
           CommunityPostModel(
             originalPoster: testUser2,
-            content: "Luffy! How are you liking my hat?",
+            content: "${faker.person.name()}! How are you liking my hat?",
             postedAt: DateTime.now(),
             replyGeneration: 1,
           ),

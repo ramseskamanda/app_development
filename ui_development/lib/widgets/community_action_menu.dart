@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ui_development/main.dart';
+import 'package:ui_development/widgets/reaction_picker.dart';
 
 enum CommunityActions {
   REPORT,

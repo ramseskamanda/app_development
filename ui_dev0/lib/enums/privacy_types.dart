@@ -1,0 +1,4 @@
+enum CommunityPrivacy {
+  private,
+  public,
+}
