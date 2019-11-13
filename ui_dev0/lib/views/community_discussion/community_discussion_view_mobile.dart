@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ui_dev0/views/communities/common/community_post.dart';
 import 'package:ui_dev0/views/community_discussion/state/discussion_controller.dart';
+import 'package:ui_dev0/views/community_page/common/community_input.dart';
 import 'package:ui_dev0/widgets/base_model_widget.dart';
 
 class CommunityDiscussionViewMobilPortrait
@@ -30,11 +31,19 @@ class CommunityDiscussionViewMobilPortrait
         ),
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: CommunityPost(
-            post: controller.root,
-            communityName: controller.root.communityName,
-          ),
+        child: Stack(
+          children: <Widget>[
+            SingleChildScrollView(
+              child: CommunityPost(
+                post: controller.root,
+                communityName: controller.root.communityName,
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: CommunityTextField(),
+            ),
+          ],
         ),
       ),
     );

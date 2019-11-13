@@ -1,9 +1,7 @@
 import 'package:ui_dev0/data_models/user_model.dart';
-import 'package:ui_dev0/enums/controller_states.dart';
 import 'package:ui_dev0/enums/privacy_types.dart';
-import 'package:ui_dev0/widgets/base_controller.dart';
 
-class DataSender extends BaseController {
+class DataSender {
   String name;
   String description;
   CommunityPrivacy privacy;
@@ -18,12 +16,14 @@ class DataSender extends BaseController {
   }
 
   Future<void> sendData() async {
-    if (!_validate()) return;
-    state = ControllerState.BUSY;
-    print(
-      'Sending ------\n $name\n$description\nprivacy: $privacy\nlist: $members',
-    );
+    if (!_validate()) throw 'Invalid';
+    print('Sending');
     await Future.delayed(Duration(seconds: 2));
-    state = ControllerState.IDLE;
+    print('------\n$name\n$description\nprivacy: $privacy\nlist: $members');
+  }
+
+  @override
+  String toString() {
+    return '$name : $description : $privacy : ${members?.length ?? 0} | ${members}';
   }
 }

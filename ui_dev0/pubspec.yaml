@@ -32,8 +32,8 @@ dependencies:
   rxdart:
   extended_image:
   jiffy: ^1.1.0
-  progress_button:
   get_it: ^3.0.3
+  rubber: ^0.4.0
 
 dev_dependencies:
   flutter_test:

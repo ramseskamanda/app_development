@@ -28,8 +28,10 @@ class CommunityPostsFeed extends StatelessWidget {
             );
           return ListView.builder(
             shrinkWrap: true,
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data.length + 1,
             itemBuilder: (context, index) {
+              if (index == snapshot.data.length)
+                return const SizedBox(height: kToolbarHeight);
               return Card(
                 child: CommunityPost.preview(
                   post: snapshot.data[index],

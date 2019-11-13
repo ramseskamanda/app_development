@@ -13,17 +13,19 @@ class ReactionPicker extends StatelessWidget {
             SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
         children: reactionEmojis
             .map(
-              (emoji) => IconButton(
-                icon: Text(
-                  emoji,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 40,
+              (emoji) => Center(
+                child: InkWell(
+                  child: Text(
+                    emoji,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 40,
+                    ),
                   ),
+                  onTap: () {
+                    Navigator.of(context).pop<String>(emoji);
+                  },
                 ),
-                onPressed: () {
-                  Navigator.of(context).pop<String>(emoji);
-                },
               ),
             )
             .toList(),

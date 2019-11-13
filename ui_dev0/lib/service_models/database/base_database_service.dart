@@ -10,8 +10,10 @@ abstract class BaseDatabaseService {
   Observable<List<CommunityModel>> fetchUserCommunities();
   Observable<List<CommunityModel>> fetchUserCommunityJoinRequests();
   Observable<List<CommunityPostModel>> fetchPostsFeed(
-      {QueryOrder queryOrder = QueryOrder.INTEREST, List<String> communityIds});
-  Observable<List<FileAsset>> fetchCommunityFiles({List<String> communityIds});
+      {QueryOrder queryOrder = QueryOrder.INTEREST,
+      List<CommunityModel> communities});
+  Observable<List<FileAsset>> fetchCommunityFiles(
+      {List<CommunityModel> communities});
   Observable<List<CommunityPostModel>> fetchConversations(
       {List<String> conversationIds});
 }

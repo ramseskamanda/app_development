@@ -1,5 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:ui_dev0/data_models/community_model.dart';
+import 'package:ui_dev0/data_models/community_post_model.dart';
 import 'package:ui_dev0/enums/controller_states.dart';
 import 'package:ui_dev0/service_models/database/base_database_service.dart';
 import 'package:ui_dev0/service_models/locator.dart';
@@ -12,6 +13,7 @@ class CommunitiesController extends BaseController {
   List<CommunityModel> _communities = [];
   Observable<List<CommunityModel>> userCommunities;
   Observable<List<CommunityModel>> userRequests;
+  Observable<List<CommunityPostModel>> userPostFeed;
 
   List<CommunityModel> get communities => _communities;
   CommunityModel get selected => _selected;
@@ -25,6 +27,8 @@ class CommunitiesController extends BaseController {
     _communities = await _databaseService.fetchCommunities();
     userCommunities = _databaseService.fetchUserCommunities();
     userRequests = _databaseService.fetchUserCommunityJoinRequests();
+    userPostFeed = userCommunities.concatMap<List<CommunityPostModel>>(
+        (coms) => _databaseService.fetchPostsFeed(communities: coms ?? []));
     state = ControllerState.IDLE;
   }
 }

@@ -17,4 +17,11 @@ class _DataProviderElement<T> extends ComponentElement {
 
   @override
   Widget build() => widget.build(this, Provider.of<T>(this));
+
+  @override
+  void update(BaseModelWidget<T> newWidget) {
+    super.update(newWidget);
+    assert(widget == newWidget);
+    super.markNeedsBuild();
+  }
 }

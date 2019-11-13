@@ -25,7 +25,6 @@ class NetworkLoaderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(state);
     switch (state) {
       case ControllerState.IDLE:
         return child;

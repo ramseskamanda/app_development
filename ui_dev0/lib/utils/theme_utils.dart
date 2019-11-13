@@ -14,12 +14,12 @@ const Map<String, String> chipEmojis = {
   'thumbsup': '👍',
 };
 const List<String> reactionEmojis = [
-  '😁',
+  '🔥',
+  '🎉',
   '😂',
-  '🤣',
-  '😃',
-  '😄',
-  '😅',
-  '😆',
-  '😉',
+  '🤯',
+  '🤔',
+  '😢',
+  '🤬',
+  '💩',
 ];

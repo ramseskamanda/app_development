@@ -72,13 +72,15 @@ class CommunityMemberAdder extends StatelessWidget {
                     return CircleAvatar(backgroundImage: image);
                   },
                 ),
-                trailing: IconButton(
-                  icon: Icon(
-                    CupertinoIcons.delete,
-                    color: CupertinoColors.destructiveRed,
-                  ),
-                  onPressed: () => onDelete(member),
-                ),
+                trailing: member.isUser
+                    ? null
+                    : IconButton(
+                        icon: Icon(
+                          CupertinoIcons.delete,
+                          color: CupertinoColors.destructiveRed,
+                        ),
+                        onPressed: () => onDelete(member),
+                      ),
                 onTap: () => print('GO TO PROFILE'),
               );
             },

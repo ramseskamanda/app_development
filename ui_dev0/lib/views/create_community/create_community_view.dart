@@ -19,11 +19,11 @@ class CreateCommunityView extends StatelessWidget {
             builder: (_) => CommunityPrivacyPicker()),
         ChangeNotifierProvider<CommunityMemberAdderController>(
             builder: (_) => CommunityMemberAdderController()),
-        ChangeNotifierProxyProvider3<CommunityInfoBloc, CommunityPrivacyPicker,
+        ProxyProvider3<CommunityInfoBloc, CommunityPrivacyPicker,
             CommunityMemberAdderController, DataSender>(
           initialBuilder: (_) => DataSender(),
           builder: (context, info, privacy, members, controller) {
-            print('Im proxying some values');
+            print('hello :: $controller');
             return controller
               ..name = info.name.value
               ..description = info.description.value

@@ -19,7 +19,7 @@ class CommunityController extends BaseController {
   Observable<List<FileAsset>> get files => _files;
 
   void fetchData() {
-    _posts = _databaseService.fetchPostsFeed(communityIds: [model.id]);
-    _files = _databaseService.fetchCommunityFiles(communityIds: [model.id]);
+    _posts = _databaseService.fetchPostsFeed(communities: [model]);
+    _files = _databaseService.fetchCommunityFiles(communities: [model]);
   }
 }

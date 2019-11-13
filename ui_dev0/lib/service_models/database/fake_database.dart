@@ -17,36 +17,47 @@ class FakeDatabase extends BaseDatabaseService {
 
   @override
   Observable<List<CommunityModel>> fetchUserCommunities() {
-    return Observable.periodic(const Duration(seconds: 5),
-        (i) => FakeData.listCommunities.take(i).toList()).asBroadcastStream();
+    return Observable.fromFuture(
+      Future.delayed(
+        const Duration(seconds: 2),
+        () => FakeData.listCommunities,
+      ),
+    ).asBroadcastStream();
   }
 
   @override
   Observable<List<CommunityPostModel>> fetchPostsFeed({
     QueryOrder queryOrder = QueryOrder.INTEREST,
-    List<String> communityIds,
+    List<CommunityModel> communities,
   }) {
     final List<CommunityPostModel> _posts = FakeData.listCommunities
         .expand((com) => com.posts)
         .toList()
           ..sort((a, b) => a.postedAt.compareTo(b.postedAt));
 
-    return Observable.periodic(
-            const Duration(seconds: 5), (i) => _posts.take(i).toList())
-        .asBroadcastStream();
+    return Observable.fromFuture(
+      Future.delayed(
+        const Duration(seconds: 2),
+        () => _posts,
+      ),
+    ).asBroadcastStream();
   }
 
   @override
-  Observable<List<FileAsset>> fetchCommunityFiles({List<String> communityIds}) {
+  Observable<List<FileAsset>> fetchCommunityFiles(
+      {List<CommunityModel> communities}) {
     final List<FileAsset> _files = FakeData.listCommunities
         .expand((com) => com.posts)
         .expand((post) => post.files)
         .toList()
           ..sort((a, b) => a.postedAt.compareTo(b.postedAt));
 
-    return Observable.periodic(
-            const Duration(seconds: 5), (i) => _files.take(i).toList())
-        .asBroadcastStream();
+    return Observable.fromFuture(
+      Future.delayed(
+        const Duration(seconds: 2),
+        () => _files,
+      ),
+    ).asBroadcastStream();
   }
 
   @override
@@ -61,8 +72,11 @@ class FakeDatabase extends BaseDatabaseService {
     final List<CommunityPostModel> _files =
         FakeData.listCommunities[1].posts[0].replies;
 
-    return Observable.periodic(
-            const Duration(seconds: 5), (i) => _files.take(i).toList())
-        .asBroadcastStream();
+    return Observable.fromFuture(
+      Future.delayed(
+        const Duration(seconds: 2),
+        () => _files,
+      ),
+    ).asBroadcastStream();
   }
 }
